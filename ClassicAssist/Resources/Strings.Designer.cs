@@ -79,6 +79,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Agents.
+        /// </summary>
+        public static string Agents {
+            get {
+                return ResourceManager.GetString("Agents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build Date:.
+        /// </summary>
+        public static string Build_Date_ {
+            get {
+                return ResourceManager.GetString("Build Date:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Character.
         /// </summary>
         public static string Character {
@@ -88,11 +106,29 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connected:.
+        /// </summary>
+        public static string Connected_ {
+            get {
+                return ResourceManager.GetString("Connected:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         public static string General {
             get {
                 return ResourceManager.GetString("General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items:.
+        /// </summary>
+        public static string Items_ {
+            get {
+                return ResourceManager.GetString("Items:", resourceCulture);
             }
         }
         
@@ -124,11 +160,29 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mobiles:.
+        /// </summary>
+        public static string Mobiles_ {
+            get {
+                return ResourceManager.GetString("Mobiles:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name:.
         /// </summary>
         public static string Name_ {
             get {
                 return ResourceManager.GetString("Name:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Player.
+        /// </summary>
+        public static string Player {
+            get {
+                return ResourceManager.GetString("Player", resourceCulture);
             }
         }
         
@@ -142,11 +196,83 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Product:.
+        /// </summary>
+        public static string Product_ {
+            get {
+                return ResourceManager.GetString("Product:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready....
+        /// </summary>
+        public static string Ready___ {
+            get {
+                return ResourceManager.GetString("Ready...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Serial:.
+        /// </summary>
+        public static string Serial_ {
+            get {
+                return ResourceManager.GetString("Serial:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server.
         /// </summary>
         public static string Server {
             get {
                 return ResourceManager.GetString("Server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show World Items.
+        /// </summary>
+        public static string Show_World_Items {
+            get {
+                return ResourceManager.GetString("Show World Items", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Software.
+        /// </summary>
+        public static string Software {
+            get {
+                return ResourceManager.GetString("Software", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status:.
+        /// </summary>
+        public static string Status_ {
+            get {
+                return ResourceManager.GetString("Status:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version:.
+        /// </summary>
+        public static string Version_ {
+            get {
+                return ResourceManager.GetString("Version:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to World Status.
+        /// </summary>
+        public static string World_Status {
+            get {
+                return ResourceManager.GetString("World_Status", resourceCulture);
             }
         }
     }

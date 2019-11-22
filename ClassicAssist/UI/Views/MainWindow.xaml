@@ -1,32 +1,42 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+﻿<mah:MetroWindow x:Class="ClassicAssist.UI.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ca="clr-namespace:ClassicAssist"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ui="clr-namespace:ClassicAssist.UI.Views;assembly=ClassicAssist"
-        xmlns:r="clr-namespace:ClassicAssist.Resources"
+        xmlns:local="clr-namespace:ClassicAssist.UI.Views"
         xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
-        mc:Ignorable="d" Height="500" Width="493"
-        x:Class="ClassicAssist.UI.Views.MainWindow"
-        Icon="/UI/Assets/avalonia-logo.ico"
-        Title="ClassicAssist" Topmost="True">
-
-    <Design.DataContext>
+        xmlns:r="clr-namespace:ClassicAssist.Resources"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="600">
+    <Window.DataContext>
         <viewModels:MainWindowViewModel/>
-    </Design.DataContext>
-
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-    </Grid.RowDefinitions>
-    <TabControl Grid.Row="0">
-      <TabItem Header="{x:Static r:Strings.General}">
-          <ui:GeneralTab Margin="5"/>
-      </TabItem>
-      <TabItem Header="{x:Static r:Strings.About}">
-        <ui:AboutTab Margin="5"/>
-      </TabItem>
-    </TabControl>
-  </Grid>
-
-</Window>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="5">
+            <TabControl>
+                <TabItem Header="{x:Static r:Strings.General}"/>
+                <TabItem Header="{x:Static r:Strings.Agents}"/>
+                <TabItem Header="{x:Static r:Strings.About}">
+                    <local:AboutControl/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <StatusBar Grid.Row="1" Padding="0" Margin="0">
+            <StatusBarItem Padding="0" Margin="5">
+                <Label Content="{Binding Status}" Padding="0" Margin="0"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</mah:MetroWindow>

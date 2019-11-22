@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Serilog;
 
 namespace ClassicAssist.UO.Objects
 {
@@ -33,8 +31,6 @@ namespace ClassicAssist.UO.Objects
             return GetEnumerator();
         }
 
-        public event dContainerContentsChanged ContainerContentsChanged;
-
         public bool FindItem(int id, out Item item)
         {
             item = SelectEntity(i => i.ID == id);
@@ -55,7 +51,7 @@ namespace ClassicAssist.UO.Objects
 
             if (added)
             {
-                ContainerContentsChanged?.Invoke(true, new[] { entity });
+                OnCollectionChanged();
             }
 
             return added;
@@ -67,7 +63,7 @@ namespace ClassicAssist.UO.Objects
 
             if (added)
             {
-                ContainerContentsChanged?.Invoke(true, entities);
+                OnCollectionChanged();
             }
 
             return added;
@@ -208,7 +204,7 @@ namespace ClassicAssist.UO.Objects
 
             if (changed)
             {
-                ContainerContentsChanged?.Invoke(false, new[] { entity });
+                OnCollectionChanged();
             }
 
             return changed;
@@ -271,7 +267,7 @@ namespace ClassicAssist.UO.Objects
 
             if (changed && item != null)
             {
-                ContainerContentsChanged?.Invoke(false, new[] { item });
+                OnCollectionChanged();
             }
 
             return changed;
@@ -315,10 +311,6 @@ namespace ClassicAssist.UO.Objects
             }
 
             return itemList.Count > 0 ? itemList.ToArray() : null;
-        }
-
-        protected override void OnCollectionChanged()
-        {
         }
 
         public override Item SelectEntity(Func<Item, bool> func)

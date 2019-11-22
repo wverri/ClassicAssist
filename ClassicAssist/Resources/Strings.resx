@@ -123,11 +123,23 @@
   <data name="Address:" xml:space="preserve">
     <value>Address:</value>
   </data>
+  <data name="Agents" xml:space="preserve">
+    <value>Agents</value>
+  </data>
+  <data name="Build Date:" xml:space="preserve">
+    <value>Build Date:</value>
+  </data>
   <data name="Character" xml:space="preserve">
     <value>Character</value>
   </data>
+  <data name="Connected:" xml:space="preserve">
+    <value>Connected:</value>
+  </data>
   <data name="General" xml:space="preserve">
     <value>General</value>
+  </data>
+  <data name="Items:" xml:space="preserve">
+    <value>Items:</value>
   </data>
   <data name="Latency:" xml:space="preserve">
     <value>Latency:</value>
@@ -138,13 +150,43 @@
   <data name="Map:" xml:space="preserve">
     <value>Map:</value>
   </data>
+  <data name="Mobiles:" xml:space="preserve">
+    <value>Mobiles:</value>
+  </data>
   <data name="Name:" xml:space="preserve">
     <value>Name:</value>
+  </data>
+  <data name="Player" xml:space="preserve">
+    <value>Player</value>
   </data>
   <data name="Port:" xml:space="preserve">
     <value>Port:</value>
   </data>
+  <data name="Product:" xml:space="preserve">
+    <value>Product:</value>
+  </data>
+  <data name="Ready..." xml:space="preserve">
+    <value>Ready...</value>
+  </data>
+  <data name="Serial:" xml:space="preserve">
+    <value>Serial:</value>
+  </data>
   <data name="Server" xml:space="preserve">
     <value>Server</value>
+  </data>
+  <data name="Show World Items" xml:space="preserve">
+    <value>Show World Items</value>
+  </data>
+  <data name="Software" xml:space="preserve">
+    <value>Software</value>
+  </data>
+  <data name="Status:" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="Version:" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="World_Status" xml:space="preserve">
+    <value>World Status</value>
   </data>
 </root>

@@ -12,6 +12,11 @@ namespace ClassicAssist.UO.Objects
             _linkedItemCollection = linkedItemCollection;
         }
 
+        public Mobile GetMobile( int serial )
+        {
+            return GetEntity( serial );
+        }
+
         public bool GetMobile(int serial, out Mobile mobile)
         {
             mobile = GetEntity(serial);
@@ -45,15 +50,6 @@ namespace ClassicAssist.UO.Objects
 
             if (changed)
                 OnCollectionChanged();
-        }
-
-        public delegate void dCollectionChanged(int totalCount);
-
-        public event dCollectionChanged CollectionChanged;
-
-        protected override void OnCollectionChanged()
-        {
-            CollectionChanged?.Invoke( EntityList.Count );
         }
 
         public IEnumerator<Mobile> GetEnumerator()

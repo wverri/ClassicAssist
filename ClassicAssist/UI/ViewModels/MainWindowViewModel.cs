@@ -1,10 +1,19 @@
 ﻿using ClassicAssist.Resources;
-using ClassicAssist.ViewModels;
 
 namespace ClassicAssist.UI.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : BaseViewModel
     {
-        public string Greeting => Strings.General;
+        private string _status = Strings.Ready___;
+
+        public string Status
+        {
+            get => _status;
+            set => SetProperty(ref _status, value);
+        }
+
+        public MainWindowViewModel()
+        {
+        }
     }
 }
