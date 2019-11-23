@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Assistant;
+using ClassicAssist.Resources;
 using ClassicAssist.UI.Views;
+using ClassicAssist.UO;
 using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
@@ -18,20 +19,15 @@ namespace ClassicAssist.UI.ViewModels
     {
         private bool _connected;
         private DateTime _connectedTime;
-        private Timer _timer;
-        private int _playerSerial;
-        private string _playerName;
+        private ICommand _inspectObjectCommand;
         private int _itemCount;
-        private int _mobileCount;
-        private ICommand _showItemsCommand;
         private double _latency;
+        private int _mobileCount;
         private Timer _pingTimer;
-
-        public double Latency
-        {
-            get => _latency;
-            set => SetProperty(ref _latency, value);
-        }
+        private string _playerName;
+        private int _playerSerial;
+        private ICommand _showItemsCommand;
+        private Timer _timer;
 
         public AboutControlViewModel()
         {
@@ -48,62 +44,6 @@ namespace ClassicAssist.UI.ViewModels
             Engine.Mobiles.CollectionChanged += MobilesOnCollectionChanged;
         }
 
-        private void MobilesOnCollectionChanged( int totalcount )
-        {
-            MobileCount = totalcount;
-        }
-
-        private void ItemsOnCollectionChanged( int totalcount )
-        {
-            ItemCount = Engine.Items.GetTotalItemCount();
-        }
-
-        public ICommand ShowItemsCommand =>
-            ( _showItemsCommand ?? ( _showItemsCommand = new RelayCommand( ShowItems, o => Connected ) ) );
-
-        private static void ShowItems( object obj )
-        {
-            Dispatcher.CurrentDispatcher.Invoke( () =>
-            {
-                EntityCollectionViewer window = new EntityCollectionViewer()
-                {
-                    DataContext = new EntityCollectionViewerViewModel( Engine.Items )
-                };
-
-                window.Show();
-            } );
-        }
-
-        public int ItemCount
-        {
-            get => _itemCount;
-            set => SetProperty(ref _itemCount, value);
-        }
-
-        public int MobileCount
-        {
-            get => _mobileCount;
-            set => SetProperty(ref _mobileCount, value);
-        }
-
-        private void PlayerInitializedEvent( PlayerMobile player )
-        {
-            PlayerSerial = player.Serial;
-            PlayerName = player.Name;
-        }
-
-        public int PlayerSerial
-        {
-            get => _playerSerial;
-            set => SetProperty(ref _playerSerial, value);
-        }
-
-        public string PlayerName
-        {
-            get => _playerName;
-            set => SetProperty(ref _playerName, value);
-        }
-
         public string BuildDate { get; set; }
 
         public bool Connected
@@ -118,14 +58,105 @@ namespace ClassicAssist.UI.ViewModels
             set => SetProperty( ref _connectedTime, value );
         }
 
-        public string Product { get; } = "ClassicAssist";
+        public ICommand InspectObjectCommand =>
+            _inspectObjectCommand ??
+            ( _inspectObjectCommand = new RelayCommandAsync( InspectObject, o => Engine.Connected ) );
+
+        public int ItemCount
+        {
+            get => _itemCount;
+            set => SetProperty( ref _itemCount, value );
+        }
+
+        public double Latency
+        {
+            get => _latency;
+            set => SetProperty( ref _latency, value );
+        }
+
+        public int MobileCount
+        {
+            get => _mobileCount;
+            set => SetProperty( ref _mobileCount, value );
+        }
+
+        public string PlayerName
+        {
+            get => _playerName;
+            set => SetProperty( ref _playerName, value );
+        }
+
+        public int PlayerSerial
+        {
+            get => _playerSerial;
+            set => SetProperty( ref _playerSerial, value );
+        }
+
+        public string Product { get; } = Strings.ProductName;
+
+        public ICommand ShowItemsCommand =>
+            _showItemsCommand ?? ( _showItemsCommand = new RelayCommand( ShowItems, o => Connected ) );
+
         public string Version { get; set; }
+
+        private void MobilesOnCollectionChanged( int totalcount )
+        {
+            MobileCount = totalcount;
+        }
+
+        private void ItemsOnCollectionChanged( int totalcount )
+        {
+            ItemCount = Engine.Items.GetTotalItemCount();
+        }
+
+        private static void ShowItems( object obj )
+        {
+            Item[] e = ItemCollection.GetAllItems( Engine.Items.GetItems() );
+
+            Dispatcher.CurrentDispatcher.Invoke( () =>
+            {
+                EntityCollectionViewer window = new EntityCollectionViewer
+                {
+                    DataContext =
+                        new EntityCollectionViewerViewModel(
+                            new ItemCollection( 0 ) { e } )
+                };
+
+                window.Show();
+            } );
+        }
+
+        private void PlayerInitializedEvent( PlayerMobile player )
+        {
+            PlayerSerial = player.Serial;
+            PlayerName = player.Name;
+        }
 
         private void OnDisconnectedEvent()
         {
             Connected = false;
 
             _timer.Stop();
+        }
+
+        private static async Task InspectObject( object arg )
+        {
+            int serial = await Commands.GetTargeSerialAsync( Strings.Target_object___, 30000 );
+
+            if ( serial > 0 )
+            {
+                Entity entity = UOMath.IsMobile( serial )
+                    ? (Entity) Engine.Mobiles.GetMobile( serial )
+                    : Engine.Items.GetItem( serial );
+
+                if ( entity == null )
+                    return;
+
+                ObjectInspectorWindow window =
+                    new ObjectInspectorWindow { DataContext = new ObjectInspectorViewModel( entity ) };
+
+                window.Show();
+            }
         }
 
         private void OnConnectedEvent()
@@ -136,7 +167,6 @@ namespace ClassicAssist.UI.ViewModels
             _timer = new Timer( 1000 ) { AutoReset = true };
             _timer.Elapsed += ( sender, args ) => { NotifyPropertyChanged( nameof( ConnectedTime ) ); };
             _timer.Start();
-
 
             _pingTimer = new Timer( 3000 ) { AutoReset = true };
             _pingTimer.Elapsed += ( sender, args ) => PingServer();
@@ -149,13 +179,13 @@ namespace ClassicAssist.UI.ViewModels
 
             Random random = new Random();
 
-            byte value = (byte)random.Next( 1, byte.MaxValue );
+            byte value = (byte) random.Next( 1, byte.MaxValue );
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
             WaitEntries.WaitEntry we = Engine.WaitEntries.AddWait(
-                new PacketFilterInfo( 0x73, new PacketFilterCondition( 1, new[] { value }, 1 ) ),
+                new PacketFilterInfo( 0x73, new[] { new PacketFilterCondition( 1, new[] { value }, 1 ) } ),
                 WaitEntries.PacketDirection.Incoming );
 
             Engine.SendPacketToServer( new PingPacket( value ) );

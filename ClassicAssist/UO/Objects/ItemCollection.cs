@@ -88,7 +88,7 @@ namespace ClassicAssist.UO.Objects
         /// </summary>
         /// <param name="items">Item array to flatten.</param>
         /// <returns>Array of flattened items.</returns>
-        internal static Item[] GetAllItems(Item[] items)
+        public static Item[] GetAllItems(Item[] items)
         {
             List<Item> output = new List<Item>();
 

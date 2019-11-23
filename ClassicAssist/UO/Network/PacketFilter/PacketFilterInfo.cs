@@ -26,10 +26,6 @@ namespace ClassicAssist.UO.Network.PacketFilter
             Action = onMatch;
         }
 
-        public PacketFilterInfo(int packetId, PacketFilterCondition condition, Action<byte[], PacketFilterInfo> onMatch = null) : this(packetId, new[] { condition }, onMatch)
-        {
-        }
-
         public override bool Equals(object obj)
         {
             if (!(obj is PacketFilterInfo pfi))

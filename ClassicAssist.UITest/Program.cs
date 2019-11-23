@@ -1,5 +1,8 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
+using System.Windows.Shapes;
 using System.Windows.Threading;
+using ClassicAssist.Data;
 using ClassicAssist.UI.Views;
 
 namespace ClassicAssist.UITest
@@ -11,11 +14,12 @@ namespace ClassicAssist.UITest
 
         static void Main(string[] args)
         {
-            _mainThread = new Thread( () =>
-            {
-                _window = new MainWindow();
-                _window.ShowDialog();
-            } ) { IsBackground = true };
+            _mainThread = new Thread(() =>
+           {
+               _window = new MainWindow();
+               _window.ShowDialog();
+           })
+            { IsBackground = true };
 
             _mainThread.SetApartmentState(ApartmentState.STA);
             _mainThread.Start();

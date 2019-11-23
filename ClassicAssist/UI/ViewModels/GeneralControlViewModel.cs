@@ -1,0 +1,98 @@
+﻿using System;
+using System.Linq;
+using Assistant;
+using ClassicAssist.Data;
+using ClassicAssist.Data.Filters;
+using ClassicAssist.Misc;
+using ClassicAssist.UI.Misc;
+using Newtonsoft.Json.Linq;
+
+namespace ClassicAssist.UI.ViewModels
+{
+    public class GeneralControlViewModel : BaseViewModel, ISettingProvider
+    {
+        public GeneralControlViewModel()
+        {
+            Type[] filterTypes = { typeof( WeatherFilter ), typeof( SeasonFilter ), typeof( LightLevelFilter ) };
+
+            foreach ( Type type in filterTypes )
+            {
+                FilterEntry fe = (FilterEntry) Activator.CreateInstance( type );
+                Filters.Add( fe );
+            }
+        }
+
+        public bool ActionDelay
+        {
+            get => Options.CurrentOptions.ActionDelay;
+            set => Options.CurrentOptions.ActionDelay = value;
+        }
+
+        public int ActionDelayMS
+        {
+            get => Options.CurrentOptions.ActionDelayMS;
+            set => Options.CurrentOptions.ActionDelayMS = value;
+        }
+
+        public bool AlwaysOnTop
+        {
+            get => Options.CurrentOptions.AlwaysOnTop;
+            set => Options.CurrentOptions.AlwaysOnTop = value;
+        }
+
+        public ObservableCollectionEx<FilterEntry> Filters { get; set; } = new ObservableCollectionEx<FilterEntry>();
+
+        public int LightLevel
+        {
+            get => Options.CurrentOptions.LightLevel;
+            set => Options.CurrentOptions.LightLevel = value;
+        }
+
+        [OptionsBinding( Property = "LightLevel" )]
+        public int LightLevelListen
+        {
+            get => throw new NotImplementedException();
+            set
+            {
+                FilterEntry filter = Filters.FirstOrDefault( f => f is LightLevelFilter );
+
+                if ( filter == null || !filter.Enabled )
+                {
+                    return;
+                }
+
+                byte[] packet = { 0x4F, (byte) value };
+
+                Engine.SendPacketToClient( packet, packet.Length );
+            }
+        }
+
+        public void Serialize( JObject json )
+        {
+            JObject obj = new JObject
+            {
+                ["AlwaysOnTop"] = Options.CurrentOptions.AlwaysOnTop,
+                ["LightLevel"] = Options.CurrentOptions.LightLevel,
+                ["ActionDelay"] = Options.CurrentOptions.ActionDelay,
+                ["ActionDelayMS"] = Options.CurrentOptions.ActionDelayMS
+            };
+
+            json.Add( "General", obj );
+        }
+
+        public void Deserialize( JObject json, Options options )
+        {
+            if ( json["General"] == null )
+            {
+                return;
+            }
+
+            JToken general = json["General"];
+
+            SetOptionsNotify( nameof( AlwaysOnTop ), general["AlwaysOnTop"]?.ToObject<bool>(), false );
+            SetOptionsNotify( nameof( LightLevel ), general["LightLevel"]?.ToObject<int>(), 100 );
+            SetOptionsNotify( nameof( ActionDelay ), general["ActionDelay"]?.ToObject<bool>(), false );
+            SetOptionsNotify( nameof( ActionDelayMS ), general["ActionDelayMS"]?.ToObject<int>(), 900 );
+        }
+    }
+}

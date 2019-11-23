@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Threading;
+using ClassicAssist.Data;
+using ClassicAssist.Data.Skills;
 using ClassicAssist.Misc;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO.Data;
@@ -25,6 +26,11 @@ namespace Assistant
 
         public delegate void dPlayerInitialized( PlayerMobile player );
 
+        public delegate void dSkillList( SkillInfo[] skills );
+
+        public delegate void dSkillUpdated( int id, float value, float baseValue, LockStatus lockStatus,
+            float skillCap );
+
         private const int MAX_DISTANCE = 32;
 
         private static OnConnected _onConnected;
@@ -40,29 +46,30 @@ namespace Assistant
         private static ThreadQueue<Packet> _outgoingQueue;
         private static MainWindow _window;
         private static Thread _mainThread;
+        private static OnClientClose _onClientClosing;
+        private static readonly PacketFilter _incomingPacketFilter = new PacketFilter();
+        private static readonly PacketFilter _outgoingPacketFilter = new PacketFilter();
+
+        private static readonly object _actionDelayLock = new object();
         public static string ClientPath { get; set; }
         public static bool Connected { get; set; }
         public static ItemCollection Items { get; set; } = new ItemCollection( 0 );
         public static MobileCollection Mobiles { get; set; } = new MobileCollection( Items );
 
+        public static DateTime NextActionTime { get; set; }
         public static PlayerMobile Player { get; private set; }
-
         public static string StartupPath { get; set; }
-
         public static WaitEntries WaitEntries { get; set; }
 
         public static event dConnected ConnectedEvent;
         public static event dDisconnected DisconnectedEvent;
         public static event dPlayerInitialized PlayerInitializedEvent;
+        public static event dSkillUpdated SkillUpdatedEvent;
+        public static event dSkillList SkillsListEvent;
 
         public static unsafe void Install( PluginHeader* plugin )
         {
             Initialize();
-
-            while ( !Debugger.IsAttached )
-            {
-                Thread.Sleep( 100 );
-            }
 
             InitializePlugin( plugin );
 
@@ -84,12 +91,14 @@ namespace Assistant
             _onReceive = OnPacketReceive;
             _onSend = OnPacketSend;
             _onPlayerPositionChanged = OnPlayerPositionChanged;
+            _onClientClosing = OnClientClosing;
 
             plugin->OnConnected = Marshal.GetFunctionPointerForDelegate( _onConnected );
             plugin->OnDisconnected = Marshal.GetFunctionPointerForDelegate( _onDisconnected );
             plugin->OnRecv = Marshal.GetFunctionPointerForDelegate( _onReceive );
             plugin->OnSend = Marshal.GetFunctionPointerForDelegate( _onSend );
             plugin->OnPlayerPositionChanged = Marshal.GetFunctionPointerForDelegate( _onPlayerPositionChanged );
+            plugin->OnClientClosing = Marshal.GetFunctionPointerForDelegate( _onClientClosing );
 
             _getPacketLength = Utility.GetDelegateForFunctionPointer<OnGetPacketLength>( plugin->GetPacketLength );
             _getUOFilePath = Utility.GetDelegateForFunctionPointer<OnGetUOFilePath>( plugin->GetUOFilePath );
@@ -100,7 +109,35 @@ namespace Assistant
 
             Art.Initialize( ClientPath );
             Cliloc.Initialize( ClientPath );
+            Skills.Initialize( ClientPath );
             TileData.Initialize( ClientPath );
+        }
+
+        public static void CheckActionDelay()
+        {
+            lock ( _actionDelayLock )
+            {
+                while ( NextActionTime > DateTime.Now )
+                {
+                    Thread.Sleep( 100 );
+                }
+            }
+        }
+
+        public static void SetActionDelay()
+        {
+            lock ( _actionDelayLock )
+            {
+                if ( Options.CurrentOptions.ActionDelay )
+                {
+                    NextActionTime = DateTime.Now + TimeSpan.FromMilliseconds( Options.CurrentOptions.ActionDelayMS );
+                }
+            }
+        }
+
+        private static void OnClientClosing()
+        {
+            Options.Save( StartupPath );
         }
 
         private static void OnPlayerPositionChanged( int x, int y, int z )
@@ -120,6 +157,11 @@ namespace Assistant
 
         public static Mobile GetOrCreateMobile( int serial )
         {
+            if ( Player?.Serial == serial )
+            {
+                return Player;
+            }
+
             return Mobiles.GetMobile( serial, out Mobile mobile ) ? mobile : new Mobile( serial );
         }
 
@@ -149,6 +191,9 @@ namespace Assistant
 
             _incomingQueue = new ThreadQueue<Packet>( ProcessIncomingQueue );
             _outgoingQueue = new ThreadQueue<Packet>( ProcessOutgoingQueue );
+
+            _incomingPacketFilter.Initialize( "Receive Filter" );
+            _outgoingPacketFilter.Initialize( "Send Filter" );
 
             IncomingPacketHandlers.Initialize();
             OutgoingPacketHandlers.Initialize();
@@ -208,7 +253,26 @@ namespace Assistant
 
         public static void SendPacketToServer( byte[] packet, int length )
         {
-            _sendToServer( ref packet, ref length );
+            _sendToServer?.Invoke( ref packet, ref length );
+        }
+
+        public static void SendPacketToClient( byte[] packet, int length )
+        {
+            _sendToClient?.Invoke( ref packet, ref length );
+        }
+
+        public static void SendPacketToClient( PacketWriter packet )
+        {
+            byte[] data = packet.ToArray();
+
+            SendPacketToClient( data, data.Length );
+        }
+
+        public static void SendPacketToServer( PacketWriter packet )
+        {
+            byte[] data = packet.ToArray();
+
+            SendPacketToServer( data, data.Length );
         }
 
         public static void SendPacketToServer( Packets packet )
@@ -216,6 +280,36 @@ namespace Assistant
             byte[] data = packet.ToArray();
 
             SendPacketToServer( data, data.Length );
+        }
+
+        public static void AddSendFilter( PacketFilterInfo pfi )
+        {
+            _outgoingPacketFilter.Add( pfi );
+        }
+
+        public static void AddReceiveFilter( PacketFilterInfo pfi )
+        {
+            _incomingPacketFilter.Add( pfi );
+        }
+
+        public static void RemoveReceiveFilter( PacketFilterInfo pfi )
+        {
+            _incomingPacketFilter.Remove( pfi );
+        }
+
+        public static void RemoveSendFilter( PacketFilterInfo pfi )
+        {
+            _outgoingPacketFilter.Remove( pfi );
+        }
+
+        public static void OnSkillUpdate( int id, float value, float baseValue, LockStatus lockStatus, float skillCap )
+        {
+            SkillUpdatedEvent?.Invoke( id, value, baseValue, lockStatus, skillCap );
+        }
+
+        public static void OnSkillList( SkillInfo[] skills )
+        {
+            SkillsListEvent?.Invoke( skills );
         }
 
         #region UI Code
@@ -226,13 +320,35 @@ namespace Assistant
 
         private static bool OnPacketSend( ref byte[] data, ref int length )
         {
+            if ( _outgoingPacketFilter.MatchFilterAll( data, out PacketFilterInfo[] pfis ) > 0 )
+            {
+                foreach ( PacketFilterInfo pfi in pfis )
+                {
+                    pfi.Action?.Invoke( data, pfi );
+                }
+
+                return false;
+            }
+
             _outgoingQueue.Enqueue( new Packet( data, length ) );
+
+            WaitEntries.CheckWait( data, WaitEntries.PacketDirection.Incoming );
 
             return true;
         }
 
         private static bool OnPacketReceive( ref byte[] data, ref int length )
         {
+            if ( _incomingPacketFilter.MatchFilterAll( data, out PacketFilterInfo[] pfis ) > 0 )
+            {
+                foreach ( PacketFilterInfo pfi in pfis )
+                {
+                    pfi.Action?.Invoke( data, pfi );
+                }
+
+                return false;
+            }
+
             _incomingQueue.Enqueue( new Packet( data, length ) );
 
             WaitEntries.CheckWait( data, WaitEntries.PacketDirection.Incoming );
@@ -253,6 +369,7 @@ namespace Assistant
 
             Items.Clear();
             Mobiles.Clear();
+            Player = null;
 
             DisconnectedEvent?.Invoke();
         }

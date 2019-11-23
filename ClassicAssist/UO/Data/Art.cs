@@ -309,19 +309,6 @@ namespace ClassicAssist.UO.Data
             }
         }
 
-        [StructLayout(LayoutKind.Explicit, Size = 28)]
-        private struct UOPFormatHeader
-        {
-            [FieldOffset(0)]
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            public readonly byte[] Magic;
-            [FieldOffset(4)] public readonly uint Version;
-            [FieldOffset(8)] public readonly uint Signature;
-            [FieldOffset(12)] public readonly long FirstAddress;
-            [FieldOffset(20)] public readonly uint MaximumFiles;
-            [FieldOffset(24)] public readonly uint NumberOfFiles;
-        }
-
         [StructLayout(LayoutKind.Explicit, Size = 12)]
         private struct UOPBlockHeader
         {

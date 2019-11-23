@@ -47,6 +47,12 @@
         </GroupBox>
         <GroupBox Header="{x:Static r:Strings.World_Status}" Grid.Row="0" Grid.Column="1">
             <StackPanel>
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Width" Value="150"/>
+                    </Style>
+                </StackPanel.Resources>
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Left">
                         <Label Content="{x:Static r:Strings.Connected_}"/>
@@ -62,6 +68,7 @@
                     </StackPanel>
                 </DockPanel>
                 <Button Content="{x:Static r:Strings.Show_World_Items}" IsEnabled="{Binding Connected}" Command="{Binding ShowItemsCommand}"/>
+                <Button Content="{x:Static r:Strings.Object_Inspector}" Command="{Binding InspectObjectCommand}"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="{x:Static r:Strings.Player}" Grid.Row="1" Grid.Column="1">

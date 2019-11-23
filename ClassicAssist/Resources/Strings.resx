@@ -120,11 +120,17 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="Action Delay:" xml:space="preserve">
+    <value>Action Delay:</value>
+  </data>
   <data name="Address:" xml:space="preserve">
     <value>Address:</value>
   </data>
   <data name="Agents" xml:space="preserve">
     <value>Agents</value>
+  </data>
+  <data name="Always On Top" xml:space="preserve">
+    <value>Always On Top</value>
   </data>
   <data name="Build Date:" xml:space="preserve">
     <value>Build Date:</value>
@@ -135,6 +141,18 @@
   <data name="Connected:" xml:space="preserve">
     <value>Connected:</value>
   </data>
+  <data name="Dress" xml:space="preserve">
+    <value>Dress</value>
+  </data>
+  <data name="Entity Collection Viewer" xml:space="preserve">
+    <value>Entity Collection Viewer</value>
+  </data>
+  <data name="Entity Viewer" xml:space="preserve">
+    <value>Entity Viewer</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Filters</value>
+  </data>
   <data name="General" xml:space="preserve">
     <value>General</value>
   </data>
@@ -143,6 +161,12 @@
   </data>
   <data name="Latency:" xml:space="preserve">
     <value>Latency:</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Light Level" xml:space="preserve">
+    <value>Light Level</value>
   </data>
   <data name="Location:" xml:space="preserve">
     <value>Location:</value>
@@ -156,6 +180,9 @@
   <data name="Name:" xml:space="preserve">
     <value>Name:</value>
   </data>
+  <data name="Object Inspector" xml:space="preserve">
+    <value>Object Inspector</value>
+  </data>
   <data name="Player" xml:space="preserve">
     <value>Player</value>
   </data>
@@ -165,8 +192,17 @@
   <data name="Product:" xml:space="preserve">
     <value>Product:</value>
   </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>ClassicAssist</value>
+  </data>
+  <data name="Property" xml:space="preserve">
+    <value>Property</value>
+  </data>
   <data name="Ready..." xml:space="preserve">
     <value>Ready...</value>
+  </data>
+  <data name="Seasons" xml:space="preserve">
+    <value>Seasons</value>
   </data>
   <data name="Serial:" xml:space="preserve">
     <value>Serial:</value>
@@ -177,14 +213,29 @@
   <data name="Show World Items" xml:space="preserve">
     <value>Show World Items</value>
   </data>
+  <data name="Skills" xml:space="preserve">
+    <value>Skills</value>
+  </data>
   <data name="Software" xml:space="preserve">
     <value>Software</value>
   </data>
   <data name="Status:" xml:space="preserve">
     <value>Status:</value>
   </data>
+  <data name="Target object..." xml:space="preserve">
+    <value>Target object...</value>
+  </data>
+  <data name="Timeout..." xml:space="preserve">
+    <value>Timeout...</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
   <data name="Version:" xml:space="preserve">
     <value>Version:</value>
+  </data>
+  <data name="Weather" xml:space="preserve">
+    <value>Weather</value>
   </data>
   <data name="World_Status" xml:space="preserve">
     <value>World Status</value>

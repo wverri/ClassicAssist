@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Assistant;
+using ClassicAssist.Data.Skills;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
 
@@ -19,10 +21,177 @@ namespace ClassicAssist.UO.Network
 
             Register( 0x11, 0, OnMobileStatus );
             Register( 0x1B, 37, OnInitializePlayer );
+            Register( 0x1D, 5, OnItemDeleted );
+            Register( 0x25, 21, OnItemAddedToContainer );
+            Register( 0x2E, 15, OnItemEquipped );
+            Register( 0x3A, 0, OnSkillsList );
             Register( 0x3C, 0, OnContainerContents );
             Register( 0x78, 0, OnMobileIncoming );
+            Register( 0xBF, 0, OnExtendedCommand );
             Register( 0xD6, 0, OnProperties );
             Register( 0xF3, 26, OnSAWorldItem );
+
+            RegisterExtended( 0x08, 0, OnMapChange );
+        }
+
+        private static void OnSkillsList( PacketReader reader )
+        {
+            /*byte type = */
+            reader.ReadByte();
+            int id = reader.ReadInt16();
+            int value = reader.ReadInt16();
+            int baseValue = reader.ReadInt16();
+            LockStatus lockStatus = (LockStatus) reader.ReadByte();
+            int skillCap = reader.ReadInt16();
+
+            if ( reader.Size <= 13 )
+            {
+                Engine.OnSkillUpdate(id, (float)value / 10, (float)baseValue / 10, lockStatus, (float)skillCap / 10);
+            }
+            else
+            {
+                SkillInfo si = new SkillInfo
+                {
+                    Value = (float)value / 10,
+                    BaseValue = (float)baseValue / 10,
+                    LockStatus = lockStatus,
+                    SkillCap = (float)skillCap / 10,
+                    ID = id - 1
+                };
+
+                List<SkillInfo> skillInfoList = new List<SkillInfo>(128) { si };
+
+                for (; ; )
+                {
+                    id = reader.ReadInt16();
+                    if (id == 0) break;
+                    value = reader.ReadInt16();
+                    baseValue = reader.ReadInt16();
+                    lockStatus = (LockStatus)reader.ReadByte();
+                    skillCap = reader.ReadInt16();
+
+                    si = new SkillInfo
+                    {
+                        Value = (float)value / 10,
+                        BaseValue = (float)baseValue / 10,
+                        LockStatus = lockStatus,
+                        SkillCap = (float)skillCap / 10,
+                        ID = id - 1
+                    };
+
+                    skillInfoList.Add(si);
+                }
+
+                Engine.OnSkillList( skillInfoList.ToArray() );
+            }
+        }
+
+        private static void OnExtendedCommand( PacketReader reader )
+        {
+            int command = reader.ReadInt16();
+
+            PacketHandler handler = GetExtendedHandler( command );
+            handler?.OnReceive( reader );
+        }
+
+        private static void OnMapChange( PacketReader reader )
+        {
+            if ( Engine.Player != null )
+            {
+                Engine.Player.Map = (Map) reader.ReadByte();
+            }
+        }
+
+        private static void OnItemAddedToContainer( PacketReader reader )
+        {
+            int serial = reader.ReadInt32();
+            int id = reader.ReadUInt16();
+            reader.ReadByte(); // offset
+            int count = reader.ReadUInt16();
+            int x = reader.ReadInt16();
+            int y = reader.ReadInt16();
+            int grid = reader.ReadByte();
+            int containerSerial = reader.ReadInt32();
+            int hue = reader.ReadUInt16();
+
+            Item item = Engine.GetOrCreateItem( serial, containerSerial );
+            item.ID = id;
+            item.Count = count;
+            item.X = x;
+            item.Y = y;
+            item.Grid = grid;
+            item.Owner = containerSerial;
+            item.Hue = hue;
+
+            if ( UOMath.IsMobile( containerSerial ) )
+            {
+                item.Owner = containerSerial;
+                Engine.Items.Add( item );
+            }
+            else
+            {
+                Item container = Engine.GetOrCreateItem( containerSerial );
+
+                item.Owner = container.Serial;
+
+                if ( container.Container == null )
+                {
+                    container.Container = new ItemCollection( containerSerial );
+                }
+
+                container.Container.Add( item );
+            }
+        }
+
+        private static void OnItemDeleted( PacketReader reader )
+        {
+            int serial = reader.ReadInt32();
+
+            Mobile mobile = Engine.Mobiles
+                .FirstOrDefault( m => m.GetEquippedItems().Any( i => i.Serial == serial ) );
+
+            if ( mobile != null )
+            {
+                Item item = Engine.Items.GetItem( serial );
+
+                if ( item != null )
+                {
+                    mobile.SetLayer( item.Layer, 0 );
+                }
+            }
+
+            if ( UOMath.IsMobile( serial ) )
+            {
+                Engine.Mobiles.Remove( serial );
+                Engine.Items.RemoveByOwner( serial );
+            }
+            else
+            {
+                Engine.Items.Remove( serial );
+            }
+        }
+
+        private static void OnItemEquipped( PacketReader reader )
+        {
+            int serial = reader.ReadInt32();
+            int id = reader.ReadInt16();
+            reader.ReadByte(); // BYTE 0x00
+            int layer = reader.ReadByte();
+            int mobileSerial = reader.ReadInt32();
+            int hue = reader.ReadUInt16();
+
+            Item item = Engine.GetOrCreateItem( serial );
+
+            item.Owner = mobileSerial;
+            item.Layer = (Layer) layer;
+            item.Hue = hue;
+            item.ID = id;
+
+            Mobile mobile = Engine.GetOrCreateMobile( mobileSerial );
+
+            mobile.SetLayer( item.Layer, item.Serial );
+            mobile.Equipment.Add( item );
+            Engine.Items.Add( item );
         }
 
         private static void OnProperties( PacketReader reader )
@@ -109,7 +278,7 @@ namespace ClassicAssist.UO.Network
             int serial = reader.ReadInt32();
             ItemCollection container = new ItemCollection( serial, 125 );
 
-            Mobile mobile = Engine.GetOrCreateMobile( serial );
+            Mobile mobile = serial == Engine.Player?.Serial ? Engine.Player : Engine.GetOrCreateMobile( serial );
 
             mobile.ID = reader.ReadInt16();
             mobile.X = reader.ReadInt16();
@@ -117,8 +286,8 @@ namespace ClassicAssist.UO.Network
             mobile.Z = reader.ReadSByte();
             mobile.Direction = (Direction) ( reader.ReadByte() & 0x07 );
             mobile.Hue = reader.ReadUInt16();
-            mobile.Status = reader.ReadByte();
-            mobile.Notoriety = reader.ReadByte();
+            mobile.Status = (MobileStatus) reader.ReadByte();
+            mobile.Notoriety = (Notoriety) reader.ReadByte();
 
             for ( ;; )
             {
@@ -132,11 +301,19 @@ namespace ClassicAssist.UO.Network
                 Item item = Engine.GetOrCreateItem( itemSerial );
                 item.Owner = serial;
                 item.ID = reader.ReadUInt16();
-                item.Layer = reader.ReadByte();
+                item.Layer = (Layer) reader.ReadByte();
 
                 item.Hue = reader.ReadUInt16();
 
                 container.Add( item );
+            }
+
+            mobile.Equipment.Clear();
+            mobile.Equipment.Add( container.GetItems() );
+
+            foreach ( Item item in container.GetItems() )
+            {
+                mobile.SetLayer( item.Layer, item.Serial );
             }
 
             Engine.Items.Add( container.GetItems() );
@@ -196,6 +373,8 @@ namespace ClassicAssist.UO.Network
 
                 container.Add( item );
             }
+
+            Engine.Items.Add( container?.GetItems() );
         }
 
         private static void OnSAWorldItem( PacketReader reader )

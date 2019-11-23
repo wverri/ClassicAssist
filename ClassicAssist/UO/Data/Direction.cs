@@ -1,4 +1,4 @@
-﻿namespace ClassicAssist.UO
+﻿namespace ClassicAssist.UO.Data
 {
     public enum Direction : byte
     {

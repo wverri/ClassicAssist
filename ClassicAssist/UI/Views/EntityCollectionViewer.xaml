@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassicAssist.UI.Views"
              xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
+             xmlns:resources="clr-namespace:ClassicAssist.Resources"
              mc:Ignorable="d" 
-             Width="600" Height="400">
+             Width="600" Height="400" Title="{x:Static resources:Strings.Entity_Collection_Viewer}">
     <Window.DataContext>
         <viewModels:EntityCollectionViewerViewModel/>
     </Window.DataContext>
@@ -30,7 +31,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <ListView ItemsSource="{Binding Entities}" ItemContainerStyle="{StaticResource FileItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListView x:Name="listView" ItemsSource="{Binding Entities}" ItemContainerStyle="{StaticResource FileItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel/>
@@ -39,6 +40,9 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <DockPanel x:Name="DockPanel" Background="Transparent">
+                        <DockPanel.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.ItemDoubleClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding SelectedItem, ElementName=listView}"/>
+                        </DockPanel.InputBindings>
                         <StackPanel>
                             <Image Source="{Binding Bitmap}" Height="32" DockPanel.Dock="Top" Stretch="Uniform" HorizontalAlignment="Center"/>
                             <TextBlock x:Name="TextBlock" Text="{Binding Name}" TextAlignment="Center" DockPanel.Dock="Bottom" Padding="1" TextWrapping="WrapWithOverflow"/>
