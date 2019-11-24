@@ -174,17 +174,6 @@ namespace Assistant
                 throw new InvalidOperationException();
             }
 
-            string[] assembles =
-            {
-                Path.Combine( StartupPath, "System.Runtime.CompilerServices.Unsafe.dll" ),
-                Path.Combine( StartupPath, "ReactiveUI.dll" )
-            };
-
-            foreach ( string assembly in assembles )
-            {
-                Assembly.LoadFile( assembly );
-            }
-
             AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
             WaitEntries = new WaitEntries();

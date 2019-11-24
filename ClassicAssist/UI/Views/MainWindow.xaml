@@ -12,7 +12,6 @@
         mc:Ignorable="d"
         Height="500" Width="593" Style="{DynamicResource WindowStyle}" Topmost="{Binding AlwaysOnTop}" Title="{Binding Title}" ResizeMode="CanMinimize">
     <i:Interaction.Behaviors>
-        <misc:HideCloseButtonOnWindow />
         <misc:LoadOptionsOnWindowLoaded/>
     </i:Interaction.Behaviors>
     <Window.DataContext>
@@ -33,6 +32,9 @@
             <TabControl Style="{StaticResource TabControlStyle}">
                 <TabItem Header="{x:Static r:Strings.General}">
                     <local:GeneralControl/>
+                </TabItem>
+                <TabItem Header="{x:Static r:Strings.Hotkeys}">
+                    <local:HotkeysTabControl/>
                 </TabItem>
                 <TabItem Header="{x:Static r:Strings.Dress}">
                     <local:DressTabControl/>

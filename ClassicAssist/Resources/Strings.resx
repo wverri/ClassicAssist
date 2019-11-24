@@ -156,6 +156,9 @@
   <data name="General" xml:space="preserve">
     <value>General</value>
   </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Hotkeys</value>
+  </data>
   <data name="Items:" xml:space="preserve">
     <value>Items:</value>
   </data>

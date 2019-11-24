@@ -34,12 +34,15 @@ namespace ClassicAssist.UI.ViewModels
         private DressAgentEntry _selectedItem;
         private ICommand _undressAllItemsCommand;
         private bool _useUo3DPackets;
+        private readonly HotkeyManager _hotkeys;
 
         public DressTabViewModel()
         {
             DressAgentEntry i = new DressAgentEntry { Name = "Dress-1", Items = new List<DressAgentItem>() };
 
             Items.Add( i );
+
+            _hotkeys = HotkeyManager.GetInstance();
 
             SetHotkeyEntries();
         }
@@ -195,7 +198,7 @@ namespace ClassicAssist.UI.ViewModels
         {
             HotkeyEntry category = new HotkeyEntry { Name = "Dress", IsCategory = true };
 
-            //_hotkeys.Items.Add(category);
+            _hotkeys.Items.Add(category);
 
             Items.CollectionChanged += ( sender, args ) => { SetHotkeyChildren( category ); };
             SetHotkeyChildren( category );
