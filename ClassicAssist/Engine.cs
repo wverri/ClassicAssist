@@ -29,15 +29,12 @@ namespace Assistant
 
         public delegate void dPlayerInitialized( PlayerMobile player );
 
+        public delegate void dSendRecvPacket( byte[] data, int length );
+
         public delegate void dSkillList( SkillInfo[] skills );
 
         public delegate void dSkillUpdated( int id, float value, float baseValue, LockStatus lockStatus,
             float skillCap );
-
-        public delegate void dSendRecvPacket( byte[] data, int length );
-
-        public static event dSendRecvPacket PacketReceivedEvent;
-        public static event dSendRecvPacket PacketSentEvent;
 
         private const int MAX_DISTANCE = 32;
 
@@ -58,17 +55,21 @@ namespace Assistant
         private static readonly PacketFilter _incomingPacketFilter = new PacketFilter();
         private static readonly PacketFilter _outgoingPacketFilter = new PacketFilter();
 
-        private static readonly object _actionDelayLock = new object();
+        //private static readonly object _actionDelayLock = new object();
         public static string ClientPath { get; set; }
         public static bool Connected { get; set; }
         public static ItemCollection Items { get; set; } = new ItemCollection( 0 );
         public static MobileCollection Mobiles { get; set; } = new MobileCollection( Items );
 
-        public static DateTime NextActionTime { get; set; }
+        //public static DateTime NextActionTime { get; set; }
         public static PlayerMobile Player { get; private set; }
         public static string StartupPath { get; set; }
         public static WaitEntries WaitEntries { get; set; }
 
+        public static event dSendRecvPacket PacketReceivedEvent;
+        public static event dSendRecvPacket PacketSentEvent;
+        public static event dSendRecvPacket SentPacketFilteredEvent;
+        public static event dSendRecvPacket ReceivedPacketFilteredEvent;
         public static event dConnected ConnectedEvent;
         public static event dDisconnected DisconnectedEvent;
         public static event dPlayerInitialized PlayerInitializedEvent;
@@ -121,27 +122,27 @@ namespace Assistant
             TileData.Initialize( ClientPath );
         }
 
-        public static void CheckActionDelay()
-        {
-            lock ( _actionDelayLock )
-            {
-                while ( NextActionTime > DateTime.Now )
-                {
-                    Thread.Sleep( 100 );
-                }
-            }
-        }
+        //public static void CheckActionDelay()
+        //{
+        //    lock ( _actionDelayLock )
+        //    {
+        //        while ( NextActionTime > DateTime.Now )
+        //        {
+        //            Thread.Sleep( 100 );
+        //        }
+        //    }
+        //}
 
-        public static void SetActionDelay()
-        {
-            lock ( _actionDelayLock )
-            {
-                if ( Options.CurrentOptions.ActionDelay )
-                {
-                    NextActionTime = DateTime.Now + TimeSpan.FromMilliseconds( Options.CurrentOptions.ActionDelayMS );
-                }
-            }
-        }
+        //public static void SetActionDelay()
+        //{
+        //    lock ( _actionDelayLock )
+        //    {
+        //        if ( Options.CurrentOptions.ActionDelay )
+        //        {
+        //            NextActionTime = DateTime.Now + TimeSpan.FromMilliseconds( Options.CurrentOptions.ActionDelayMS );
+        //        }
+        //    }
+        //}
 
         private static void OnClientClosing()
         {
@@ -206,7 +207,7 @@ namespace Assistant
 
         private static void ProcessOutgoingQueue( Packet packet )
         {
-            PacketSentEvent?.Invoke(packet.GetPacket(), packet.GetLength());
+            PacketSentEvent?.Invoke( packet.GetPacket(), packet.GetLength() );
 
             PacketHandler handler = OutgoingPacketHandlers.GetHandler( packet.GetPacketID() );
 
@@ -321,12 +322,14 @@ namespace Assistant
                     pfi.Action?.Invoke( data, pfi );
                 }
 
+                SentPacketFilteredEvent?.Invoke( data, data.Length );
+
                 return false;
             }
 
             _outgoingQueue.Enqueue( new Packet( data, length ) );
 
-            WaitEntries.CheckWait( data, WaitEntries.PacketDirection.Incoming );
+            WaitEntries.CheckWait( data, WaitEntries.PacketDirection.Outgoing );
 
             return true;
         }
@@ -339,6 +342,8 @@ namespace Assistant
                 {
                     pfi.Action?.Invoke( data, pfi );
                 }
+
+                ReceivedPacketFilteredEvent?.Invoke( data, data.Length );
 
                 return false;
             }
@@ -369,5 +374,15 @@ namespace Assistant
         }
 
         #endregion
+
+        public static void ClearSendFilter()
+        {
+            _outgoingPacketFilter?.Clear();
+        }
+
+        public static void ClearReceiveFilter()
+        {
+            _incomingPacketFilter?.Clear();
+        }
     }
 }
