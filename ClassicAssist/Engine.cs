@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Threading;
@@ -14,6 +15,8 @@ using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using CUO_API;
+
+[assembly: InternalsVisibleTo( "ClassicAssist.Tests" )]
 
 // ReSharper disable once CheckNamespace
 namespace Assistant
@@ -30,6 +33,11 @@ namespace Assistant
 
         public delegate void dSkillUpdated( int id, float value, float baseValue, LockStatus lockStatus,
             float skillCap );
+
+        public delegate void dSendRecvPacket( byte[] data, int length );
+
+        public static event dSendRecvPacket PacketReceivedEvent;
+        public static event dSendRecvPacket PacketSentEvent;
 
         private const int MAX_DISTANCE = 32;
 
@@ -84,7 +92,7 @@ namespace Assistant
             _mainThread.Start();
         }
 
-        private static unsafe void InitializePlugin( PluginHeader* plugin )
+        internal static unsafe void InitializePlugin( PluginHeader* plugin )
         {
             _onConnected = OnConnected;
             _onDisconnected = OnDisconnected;
@@ -100,10 +108,10 @@ namespace Assistant
             plugin->OnPlayerPositionChanged = Marshal.GetFunctionPointerForDelegate( _onPlayerPositionChanged );
             plugin->OnClientClosing = Marshal.GetFunctionPointerForDelegate( _onClientClosing );
 
-            _getPacketLength = Utility.GetDelegateForFunctionPointer<OnGetPacketLength>( plugin->GetPacketLength );
-            _getUOFilePath = Utility.GetDelegateForFunctionPointer<OnGetUOFilePath>( plugin->GetUOFilePath );
-            _sendToClient = Utility.GetDelegateForFunctionPointer<OnPacketSendRecv>( plugin->Recv );
-            _sendToServer = Utility.GetDelegateForFunctionPointer<OnPacketSendRecv>( plugin->Send );
+            _getPacketLength = Marshal.GetDelegateForFunctionPointer<OnGetPacketLength>( plugin->GetPacketLength );
+            _getUOFilePath = Marshal.GetDelegateForFunctionPointer<OnGetUOFilePath>( plugin->GetUOFilePath );
+            _sendToClient = Marshal.GetDelegateForFunctionPointer<OnPacketSendRecv>( plugin->Recv );
+            _sendToServer = Marshal.GetDelegateForFunctionPointer<OnPacketSendRecv>( plugin->Send );
 
             ClientPath = _getUOFilePath();
 
@@ -152,7 +160,7 @@ namespace Assistant
 
         public static Item GetOrCreateItem( int serial, int containerSerial = -1 )
         {
-            return Items.GetItem( serial ) != null ? Items.GetItem( serial ) : new Item( serial, containerSerial );
+            return Items.GetItem( serial ) ?? new Item( serial, containerSerial );
         }
 
         public static Mobile GetOrCreateMobile( int serial )
@@ -181,15 +189,14 @@ namespace Assistant
             _incomingQueue = new ThreadQueue<Packet>( ProcessIncomingQueue );
             _outgoingQueue = new ThreadQueue<Packet>( ProcessOutgoingQueue );
 
-            _incomingPacketFilter.Initialize( "Receive Filter" );
-            _outgoingPacketFilter.Initialize( "Send Filter" );
-
             IncomingPacketHandlers.Initialize();
             OutgoingPacketHandlers.Initialize();
         }
 
         private static void ProcessIncomingQueue( Packet packet )
         {
+            PacketReceivedEvent?.Invoke( packet.GetPacket(), packet.GetLength() );
+
             PacketHandler handler = IncomingPacketHandlers.GetHandler( packet.GetPacketID() );
 
             int length = _getPacketLength( packet.GetPacketID() );
@@ -199,6 +206,8 @@ namespace Assistant
 
         private static void ProcessOutgoingQueue( Packet packet )
         {
+            PacketSentEvent?.Invoke(packet.GetPacket(), packet.GetLength());
+
             PacketHandler handler = OutgoingPacketHandlers.GetHandler( packet.GetPacketID() );
 
             int length = _getPacketLength( packet.GetPacketID() );
@@ -300,10 +309,6 @@ namespace Assistant
         {
             SkillsListEvent?.Invoke( skills );
         }
-
-        #region UI Code
-
-        #endregion
 
         #region ClassicUO Events
 

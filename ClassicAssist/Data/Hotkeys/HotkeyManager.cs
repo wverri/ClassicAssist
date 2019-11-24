@@ -14,16 +14,30 @@ namespace ClassicAssist.Data.Hotkeys
         }
 
         private static HotkeyManager _instance;
+        private static readonly object _instanceLock = new object();
+
         private ObservableCollectionEx<HotkeyEntry> _items = new ObservableCollectionEx<HotkeyEntry>();
 
-        public HotkeyManager()
+        private HotkeyManager()
         {
             
         }
 
         public static HotkeyManager GetInstance()
         {
-            return _instance ?? ( _instance = new HotkeyManager() );
+            // ReSharper disable once InvertIf
+            if ( _instance == null )
+            {
+                lock ( _instanceLock )
+                {
+                    if ( _instance == null )
+                    {
+                        _instance = new HotkeyManager();
+                    }
+                }
+            }
+
+            return _instance;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

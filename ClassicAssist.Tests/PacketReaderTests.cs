@@ -1,17 +1,16 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using ClassicAssist.UO.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ClassicAssist.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class PacketReaderTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void PacketReaderWillReadCorrect()
         {
-            byte[] packet = new byte[] { 0x1B, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x0A };
+            byte[] packet = { 0x1B, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x0A };
 
             PacketReader reader = new PacketReader( packet, packet.Length, true );
 

@@ -36,6 +36,9 @@
                 <TabItem Header="{x:Static r:Strings.Hotkeys}">
                     <local:HotkeysTabControl/>
                 </TabItem>
+                <TabItem Header="{x:Static r:Strings.Macros}">
+                    <local:MacrosTabControl/>
+                </TabItem>
                 <TabItem Header="{x:Static r:Strings.Dress}">
                     <local:DressTabControl/>
                 </TabItem>

@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,7 +60,6 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -69,10 +68,9 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -87,10 +85,9 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -112,138 +109,9 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="About" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="Action Delay:" xml:space="preserve">
-    <value>Action Delay:</value>
-  </data>
-  <data name="Address:" xml:space="preserve">
-    <value>Address:</value>
-  </data>
-  <data name="Agents" xml:space="preserve">
-    <value>Agents</value>
-  </data>
-  <data name="Always On Top" xml:space="preserve">
-    <value>Always On Top</value>
-  </data>
-  <data name="Build Date:" xml:space="preserve">
-    <value>Build Date:</value>
-  </data>
-  <data name="Character" xml:space="preserve">
-    <value>Character</value>
-  </data>
-  <data name="Connected:" xml:space="preserve">
-    <value>Connected:</value>
-  </data>
-  <data name="Dress" xml:space="preserve">
-    <value>Dress</value>
-  </data>
-  <data name="Entity Collection Viewer" xml:space="preserve">
-    <value>Entity Collection Viewer</value>
-  </data>
-  <data name="Entity Viewer" xml:space="preserve">
-    <value>Entity Viewer</value>
-  </data>
-  <data name="Filters" xml:space="preserve">
-    <value>Filters</value>
-  </data>
-  <data name="General" xml:space="preserve">
-    <value>General</value>
-  </data>
-  <data name="Hotkeys" xml:space="preserve">
-    <value>Hotkeys</value>
-  </data>
-  <data name="Items:" xml:space="preserve">
-    <value>Items:</value>
-  </data>
-  <data name="Latency:" xml:space="preserve">
-    <value>Latency:</value>
-  </data>
-  <data name="Light" xml:space="preserve">
-    <value>Light</value>
-  </data>
-  <data name="Light Level" xml:space="preserve">
-    <value>Light Level</value>
-  </data>
-  <data name="Location:" xml:space="preserve">
-    <value>Location:</value>
-  </data>
-  <data name="Macros" xml:space="preserve">
-    <value>Macros</value>
-  </data>
-  <data name="Map:" xml:space="preserve">
-    <value>Map:</value>
-  </data>
-  <data name="Mobiles:" xml:space="preserve">
-    <value>Mobiles:</value>
-  </data>
-  <data name="Name:" xml:space="preserve">
-    <value>Name:</value>
-  </data>
-  <data name="Object Inspector" xml:space="preserve">
-    <value>Object Inspector</value>
-  </data>
-  <data name="Player" xml:space="preserve">
-    <value>Player</value>
-  </data>
-  <data name="Port:" xml:space="preserve">
-    <value>Port:</value>
-  </data>
-  <data name="Product:" xml:space="preserve">
-    <value>Product:</value>
-  </data>
-  <data name="ProductName" xml:space="preserve">
-    <value>ClassicAssist</value>
-  </data>
-  <data name="Property" xml:space="preserve">
-    <value>Property</value>
-  </data>
-  <data name="Ready..." xml:space="preserve">
-    <value>Ready...</value>
-  </data>
-  <data name="Seasons" xml:space="preserve">
-    <value>Seasons</value>
-  </data>
-  <data name="Serial:" xml:space="preserve">
-    <value>Serial:</value>
-  </data>
-  <data name="Server" xml:space="preserve">
-    <value>Server</value>
-  </data>
-  <data name="Show World Items" xml:space="preserve">
-    <value>Show World Items</value>
-  </data>
-  <data name="Skills" xml:space="preserve">
-    <value>Skills</value>
-  </data>
-  <data name="Software" xml:space="preserve">
-    <value>Software</value>
-  </data>
-  <data name="Status:" xml:space="preserve">
-    <value>Status:</value>
-  </data>
-  <data name="Target object..." xml:space="preserve">
-    <value>Target object...</value>
-  </data>
-  <data name="Timeout..." xml:space="preserve">
-    <value>Timeout...</value>
-  </data>
-  <data name="Value" xml:space="preserve">
-    <value>Value</value>
-  </data>
-  <data name="Version:" xml:space="preserve">
-    <value>Version:</value>
-  </data>
-  <data name="Weather" xml:space="preserve">
-    <value>Weather</value>
-  </data>
-  <data name="World_Status" xml:space="preserve">
-    <value>World Status</value>
-  </data>
 </root>

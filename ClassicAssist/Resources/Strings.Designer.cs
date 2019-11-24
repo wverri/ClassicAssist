@@ -232,6 +232,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Macros.
+        /// </summary>
+        public static string Macros {
+            get {
+                return ResourceManager.GetString("Macros", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Map:.
         /// </summary>
         public static string Map_ {
