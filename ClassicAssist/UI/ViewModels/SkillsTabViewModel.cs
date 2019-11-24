@@ -7,6 +7,7 @@ using ClassicAssist.Data.Skills;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
 
 namespace ClassicAssist.UI.ViewModels
 {
@@ -39,8 +40,8 @@ namespace ClassicAssist.UI.ViewModels
         {
             Items.CollectionChanged += (sender, args) => { UpdateTotalBase(); };
 
-            Engine.SkillUpdatedEvent += OnSkillUpdatedEvent;
-            Engine.SkillsListEvent += OnSkillsListEvent;
+            IncomingPacketHandlers.SkillUpdatedEvent += OnSkillUpdatedEvent;
+            IncomingPacketHandlers.SkillsListEvent += OnSkillsListEvent;
 
             if ( Engine.Player != null )
             {

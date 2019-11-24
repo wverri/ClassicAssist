@@ -11,8 +11,15 @@ namespace ClassicAssist.UO.Network
 {
     public static class IncomingPacketHandlers
     {
+        public delegate void dSkillList( SkillInfo[] skills );
+
+        public delegate void dSkillUpdated( int id, float value, float baseValue, LockStatus lockStatus,
+            float skillCap );
+
         private static PacketHandler[] _handlers;
         private static PacketHandler[] _extendedHandlers;
+        public static event dSkillUpdated SkillUpdatedEvent;
+        public static event dSkillList SkillsListEvent;
 
         public static void Initialize()
         {
@@ -46,43 +53,48 @@ namespace ClassicAssist.UO.Network
 
             if ( reader.Size <= 13 )
             {
-                Engine.OnSkillUpdate(id, (float)value / 10, (float)baseValue / 10, lockStatus, (float)skillCap / 10);
+                SkillUpdatedEvent?.Invoke( id, value, baseValue, lockStatus, skillCap );
             }
             else
             {
                 SkillInfo si = new SkillInfo
                 {
-                    Value = (float)value / 10,
-                    BaseValue = (float)baseValue / 10,
+                    Value = (float) value / 10,
+                    BaseValue = (float) baseValue / 10,
                     LockStatus = lockStatus,
-                    SkillCap = (float)skillCap / 10,
+                    SkillCap = (float) skillCap / 10,
                     ID = id - 1
                 };
 
-                List<SkillInfo> skillInfoList = new List<SkillInfo>(128) { si };
+                List<SkillInfo> skillInfoList = new List<SkillInfo>( 128 ) { si };
 
-                for (; ; )
+                for ( ;; )
                 {
                     id = reader.ReadInt16();
-                    if (id == 0) break;
+
+                    if ( id == 0 )
+                    {
+                        break;
+                    }
+
                     value = reader.ReadInt16();
                     baseValue = reader.ReadInt16();
-                    lockStatus = (LockStatus)reader.ReadByte();
+                    lockStatus = (LockStatus) reader.ReadByte();
                     skillCap = reader.ReadInt16();
 
                     si = new SkillInfo
                     {
-                        Value = (float)value / 10,
-                        BaseValue = (float)baseValue / 10,
+                        Value = (float) value / 10,
+                        BaseValue = (float) baseValue / 10,
                         LockStatus = lockStatus,
-                        SkillCap = (float)skillCap / 10,
+                        SkillCap = (float) skillCap / 10,
                         ID = id - 1
                     };
 
-                    skillInfoList.Add(si);
+                    skillInfoList.Add( si );
                 }
 
-                Engine.OnSkillList( skillInfoList.ToArray() );
+                SkillsListEvent?.Invoke( skillInfoList.ToArray() );
             }
         }
 

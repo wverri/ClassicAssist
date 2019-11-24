@@ -12,12 +12,13 @@ using Newtonsoft.Json.Linq;
 namespace ClassicAssist.Tests
 {
     [TestClass]
+    [TestCategory( "Engine" )]
     public class EngineTests
     {
         private const string CLIENT_PATH = @"C:\Users\johns\Desktop\KvG Client 2.0";
-        private static int[] _packetLengths;
         private OnGetPacketLength _getPacketLength;
         private OnGetUOFilePath _getUOFilePath;
+        private int[] _packetLengths;
         private PluginHeader _pluginHeader;
         private OnPacketSendRecv _receivePacket;
         private OnPacketSendRecv _sendPacket;
@@ -115,6 +116,7 @@ namespace ClassicAssist.Tests
                         Assert.Fail();
                     }
 
+                    // ReSharper disable once AccessToDisposedClosure
                     are.Set();
                 }
 
@@ -160,6 +162,7 @@ namespace ClassicAssist.Tests
                             Assert.Fail();
                         }
 
+                        // ReSharper disable once AccessToDisposedClosure
                         are.Set();
                     }
 
@@ -208,6 +211,7 @@ namespace ClassicAssist.Tests
                             Assert.Fail();
                         }
 
+                        // ReSharper disable once AccessToDisposedClosure
                         are.Set();
                     }
 
@@ -294,6 +298,7 @@ namespace ClassicAssist.Tests
             {
                 void OnDisconnectedEvent()
                 {
+                    // ReSharper disable once AccessToDisposedClosure
                     are.Set();
                 }
 
@@ -320,6 +325,7 @@ namespace ClassicAssist.Tests
             {
                 void OnConnectedEvent()
                 {
+                    // ReSharper disable once AccessToDisposedClosure
                     are.Set();
                 }
 

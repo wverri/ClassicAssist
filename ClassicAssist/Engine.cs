@@ -31,11 +31,6 @@ namespace Assistant
 
         public delegate void dSendRecvPacket( byte[] data, int length );
 
-        public delegate void dSkillList( SkillInfo[] skills );
-
-        public delegate void dSkillUpdated( int id, float value, float baseValue, LockStatus lockStatus,
-            float skillCap );
-
         private const int MAX_DISTANCE = 32;
 
         private static OnConnected _onConnected;
@@ -73,8 +68,6 @@ namespace Assistant
         public static event dConnected ConnectedEvent;
         public static event dDisconnected DisconnectedEvent;
         public static event dPlayerInitialized PlayerInitializedEvent;
-        public static event dSkillUpdated SkillUpdatedEvent;
-        public static event dSkillList SkillsListEvent;
 
         public static unsafe void Install( PluginHeader* plugin )
         {
@@ -281,36 +274,6 @@ namespace Assistant
             SendPacketToServer( data, data.Length );
         }
 
-        public static void AddSendFilter( PacketFilterInfo pfi )
-        {
-            _outgoingPacketFilter.Add( pfi );
-        }
-
-        public static void AddReceiveFilter( PacketFilterInfo pfi )
-        {
-            _incomingPacketFilter.Add( pfi );
-        }
-
-        public static void RemoveReceiveFilter( PacketFilterInfo pfi )
-        {
-            _incomingPacketFilter.Remove( pfi );
-        }
-
-        public static void RemoveSendFilter( PacketFilterInfo pfi )
-        {
-            _outgoingPacketFilter.Remove( pfi );
-        }
-
-        public static void OnSkillUpdate( int id, float value, float baseValue, LockStatus lockStatus, float skillCap )
-        {
-            SkillUpdatedEvent?.Invoke( id, value, baseValue, lockStatus, skillCap );
-        }
-
-        public static void OnSkillList( SkillInfo[] skills )
-        {
-            SkillsListEvent?.Invoke( skills );
-        }
-
         #region ClassicUO Events
 
         private static bool OnPacketSend( ref byte[] data, ref int length )
@@ -375,6 +338,28 @@ namespace Assistant
 
         #endregion
 
+        #region Filters
+
+        public static void AddSendFilter( PacketFilterInfo pfi )
+        {
+            _outgoingPacketFilter.Add( pfi );
+        }
+
+        public static void AddReceiveFilter( PacketFilterInfo pfi )
+        {
+            _incomingPacketFilter.Add( pfi );
+        }
+
+        public static void RemoveReceiveFilter( PacketFilterInfo pfi )
+        {
+            _incomingPacketFilter.Remove( pfi );
+        }
+
+        public static void RemoveSendFilter( PacketFilterInfo pfi )
+        {
+            _outgoingPacketFilter.Remove( pfi );
+        }
+
         public static void ClearSendFilter()
         {
             _outgoingPacketFilter?.Clear();
@@ -384,5 +369,7 @@ namespace Assistant
         {
             _incomingPacketFilter?.Clear();
         }
+
+        #endregion
     }
 }

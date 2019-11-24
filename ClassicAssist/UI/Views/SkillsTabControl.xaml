@@ -71,7 +71,7 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <misc1:SkillsGridViewColumn Header="Name" DisplayMemberBinding="{Binding Skill}" Width="120" SortField="Name"/>
+                    <misc1:SkillsGridViewColumn Header="Name" DisplayMemberBinding="{Binding Skill}" Width="170" SortField="Name"/>
                     <misc1:SkillsGridViewColumn Header="Value" Width="50" SortField="Value">
                         <misc1:SkillsGridViewColumn.CellTemplate>
                             <DataTemplate>
