@@ -9,8 +9,12 @@
              xmlns:valueConverters="clr-namespace:ClassicAssist.UI.ValueConverters"
              xmlns:local="clr-namespace:ClassicAssist.Data.Macros"
              xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
+             xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500" Background="White" Padding="5">
+    <UserControl.DataContext>
+        <viewModels:MacrosTabViewModel/>
+    </UserControl.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
