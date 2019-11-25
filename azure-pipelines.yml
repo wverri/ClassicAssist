@@ -33,5 +33,5 @@ steps:
     configuration: '$(buildConfiguration)'
 - task: PublishTestResults@2
   inputs:
-    testResultsFormat: 'JUnit'
+    testResultsFormat: 'VSTest'
     testResultsFiles: '**/TEST-*.trx'
