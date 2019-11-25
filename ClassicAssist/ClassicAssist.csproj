@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Python.xshd" />
+    <None Remove="Resources\bug.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Python.xshd">
@@ -36,6 +37,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\bug.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -48,6 +52,9 @@
     </Compile>
     <Compile Update="UI\Views\HotkeysTabControl.xaml.cs">
       <DependentUpon>HotkeysTabControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Views\DebugWindow.xaml.cs">
+      <DependentUpon>DebugWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

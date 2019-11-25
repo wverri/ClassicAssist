@@ -162,6 +162,12 @@
   <data name="Items:" xml:space="preserve">
     <value>Items:</value>
   </data>
+  <data name="Last Target" xml:space="preserve">
+    <value>Last Target</value>
+  </data>
+  <data name="Last Target:" xml:space="preserve">
+    <value>Last Target:</value>
+  </data>
   <data name="Latency:" xml:space="preserve">
     <value>Latency:</value>
   </data>

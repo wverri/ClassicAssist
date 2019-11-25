@@ -196,6 +196,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last Target.
+        /// </summary>
+        public static string Last_Target {
+            get {
+                return ResourceManager.GetString("Last Target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Target:.
+        /// </summary>
+        public static string Last_Target_ {
+            get {
+                return ResourceManager.GetString("Last Target:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latency:.
         /// </summary>
         public static string Latency_ {

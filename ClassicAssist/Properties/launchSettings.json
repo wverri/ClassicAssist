@@ -2,7 +2,8 @@
   "profiles": {
     "ClassicAssist": {
       "commandName": "Executable",
-      "executablePath": "C:\\Users\\johns\\Documents\\Code\\ClassicUO\\bin\\Debug\\ClassicUO.exe"
+      "executablePath": "C:\\Program Files (x86)\\Outlands Ultima Online\\ClassicUO\\ClassicUO.exe",
+      "workingDirectory": "C:\\Program Files (x86)\\Outlands Ultima Online\\ClassicUO\\"
     }
   }
 }

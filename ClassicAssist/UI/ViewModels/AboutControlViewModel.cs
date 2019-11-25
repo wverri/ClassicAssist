@@ -9,6 +9,8 @@ using Assistant;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO;
+using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
@@ -21,6 +23,7 @@ namespace ClassicAssist.UI.ViewModels
         private DateTime _connectedTime;
         private ICommand _inspectObjectCommand;
         private int _itemCount;
+        private int _lastTargetSerial;
         private double _latency;
         private int _mobileCount;
         private Timer _pingTimer;
@@ -42,6 +45,8 @@ namespace ClassicAssist.UI.ViewModels
             Engine.PlayerInitializedEvent += PlayerInitializedEvent;
             Engine.Items.CollectionChanged += ItemsOnCollectionChanged;
             Engine.Mobiles.CollectionChanged += MobilesOnCollectionChanged;
+
+            OutgoingPacketHandlers.TargetSentEvent += OnTargetSentEvent;
         }
 
         public string BuildDate { get; set; }
@@ -66,6 +71,12 @@ namespace ClassicAssist.UI.ViewModels
         {
             get => _itemCount;
             set => SetProperty( ref _itemCount, value );
+        }
+
+        public int LastTargetSerial
+        {
+            get => _lastTargetSerial;
+            set => SetProperty( ref _lastTargetSerial, value );
         }
 
         public double Latency
@@ -98,6 +109,12 @@ namespace ClassicAssist.UI.ViewModels
             _showItemsCommand ?? ( _showItemsCommand = new RelayCommand( ShowItems, o => Connected ) );
 
         public string Version { get; set; }
+
+        private void OnTargetSentEvent( TargetType targettype, int senderserial, int flags, int serial, int x, int y,
+            int z, int id )
+        {
+            LastTargetSerial = Engine.Player.LastTargetSerial;
+        }
 
         private void MobilesOnCollectionChanged( int totalcount )
         {
@@ -150,7 +167,9 @@ namespace ClassicAssist.UI.ViewModels
                     : Engine.Items.GetItem( serial );
 
                 if ( entity == null )
+                {
                     return;
+                }
 
                 ObjectInspectorWindow window =
                     new ObjectInspectorWindow { DataContext = new ObjectInspectorViewModel( entity ) };

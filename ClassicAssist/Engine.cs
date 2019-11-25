@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Threading;
 using ClassicAssist.Data;
-using ClassicAssist.Data.Skills;
 using ClassicAssist.Misc;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO.Data;
@@ -52,12 +51,14 @@ namespace Assistant
 
         //private static readonly object _actionDelayLock = new object();
         public static string ClientPath { get; set; }
+        public static Version ClientVersion { get; set; }
         public static bool Connected { get; set; }
+        public static FeatureFlags Features { get; set; }
         public static ItemCollection Items { get; set; } = new ItemCollection( 0 );
         public static MobileCollection Mobiles { get; set; } = new MobileCollection( Items );
 
         //public static DateTime NextActionTime { get; set; }
-        public static PlayerMobile Player { get; private set; }
+        public static PlayerMobile Player { get; set; }
         public static string StartupPath { get; set; }
         public static WaitEntries WaitEntries { get; set; }
 
@@ -108,6 +109,11 @@ namespace Assistant
             _sendToServer = Marshal.GetDelegateForFunctionPointer<OnPacketSendRecv>( plugin->Send );
 
             ClientPath = _getUOFilePath();
+
+            if ( !Path.IsPathRooted( ClientPath ) )
+            {
+                ClientPath = Path.GetFullPath( ClientPath );
+            }
 
             Art.Initialize( ClientPath );
             Cliloc.Initialize( ClientPath );

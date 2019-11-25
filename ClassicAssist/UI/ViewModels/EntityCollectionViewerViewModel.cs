@@ -15,6 +15,13 @@ namespace ClassicAssist.UI.ViewModels
         private ObservableCollection<EntityCollectionData> _entities;
         private ICommand _itemDoubleClickCommand;
         private bool _showProperties;
+        private bool _topmost;
+
+        public bool Topmost
+        {
+            get => _topmost;
+            set => SetProperty(ref _topmost, value);
+        }
 
         public EntityCollectionViewerViewModel()
         {

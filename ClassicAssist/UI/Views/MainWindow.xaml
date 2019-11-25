@@ -10,7 +10,7 @@
         xmlns:misc="clr-namespace:ClassicAssist.Misc"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Height="500" Width="593" Style="{DynamicResource WindowStyle}" Topmost="{Binding AlwaysOnTop}" Title="{Binding Title}" ResizeMode="CanMinimize">
+        Height="500" Width="625" Style="{DynamicResource WindowStyle}" Topmost="{Binding AlwaysOnTop}" Title="{Binding Title}" ResizeMode="CanMinimize">
     <i:Interaction.Behaviors>
         <misc:LoadOptionsOnWindowLoaded/>
     </i:Interaction.Behaviors>
@@ -27,8 +27,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Margin="5">
+        <Grid Grid.Row="0" Margin="10">
             <TabControl Style="{StaticResource TabControlStyle}">
                 <TabItem Header="{x:Static r:Strings.General}">
                     <local:GeneralControl/>
@@ -49,6 +50,11 @@
                     <local:AboutControl/>
                 </TabItem>
             </TabControl>
+        </Grid>
+        <Grid Grid.Row="1" HorizontalAlignment="Left" Margin="5,0,5,5">
+            <Button Command="{Binding DebugCommand}">
+                <Image Source="../../Resources/bug.png" Height="16" Width="16"></Image>
+            </Button>
         </Grid>
     </Grid>
 </Window>

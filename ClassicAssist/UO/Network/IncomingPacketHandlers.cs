@@ -34,11 +34,17 @@ namespace ClassicAssist.UO.Network
             Register( 0x3A, 0, OnSkillsList );
             Register( 0x3C, 0, OnContainerContents );
             Register( 0x78, 0, OnMobileIncoming );
+            Register(0xB9, 5, OnSupportedFeatures);
             Register( 0xBF, 0, OnExtendedCommand );
             Register( 0xD6, 0, OnProperties );
             Register( 0xF3, 26, OnSAWorldItem );
 
             RegisterExtended( 0x08, 0, OnMapChange );
+        }
+
+        private static void OnSupportedFeatures( PacketReader reader )
+        {
+            Engine.Features = (FeatureFlags)reader.ReadInt32();
         }
 
         private static void OnSkillsList( PacketReader reader )
@@ -53,7 +59,7 @@ namespace ClassicAssist.UO.Network
 
             if ( reader.Size <= 13 )
             {
-                SkillUpdatedEvent?.Invoke( id, value, baseValue, lockStatus, skillCap );
+                SkillUpdatedEvent?.Invoke( id, (float)value / 10, (float)baseValue / 10, lockStatus, (float)skillCap / 10 );
             }
             else
             {
@@ -199,7 +205,7 @@ namespace ClassicAssist.UO.Network
             item.Hue = hue;
             item.ID = id;
 
-            Mobile mobile = Engine.GetOrCreateMobile( mobileSerial );
+            Mobile mobile = serial == Engine.Player.Serial ? Engine.Player : Engine.GetOrCreateMobile( mobileSerial );
 
             mobile.SetLayer( item.Layer, item.Serial );
             mobile.Equipment.Add( item );
@@ -301,6 +307,10 @@ namespace ClassicAssist.UO.Network
             mobile.Status = (MobileStatus) reader.ReadByte();
             mobile.Notoriety = (Notoriety) reader.ReadByte();
 
+            long remaining = reader.Size - 23;
+
+            bool useNewIncoming = remaining % 9 == 0;
+
             for ( ;; )
             {
                 int itemSerial = reader.ReadInt32();
@@ -315,7 +325,18 @@ namespace ClassicAssist.UO.Network
                 item.ID = reader.ReadUInt16();
                 item.Layer = (Layer) reader.ReadByte();
 
-                item.Hue = reader.ReadUInt16();
+                if ( useNewIncoming )
+                {
+                    item.Hue = reader.ReadUInt16();
+                }
+                else
+                {
+                    if ( ( item.ID & 0x8000 ) != 0 )
+                    {
+                        item.ID ^= 0x8000;
+                        item.Hue = reader.ReadUInt16();
+                    }
+                }
 
                 container.Add( item );
             }
@@ -386,7 +407,19 @@ namespace ClassicAssist.UO.Network
                 container.Add( item );
             }
 
-            Engine.Items.Add( container?.GetItems() );
+            Item containerItem = Engine.Items.GetItem( container.Serial );
+
+            if ( containerItem.Container == null )
+            {
+                containerItem.Container = container;
+            }
+            else
+            {
+                containerItem.Container.Clear();
+                containerItem.Container.Add( container.GetItems() );
+            }
+
+            Engine.Items.Add( containerItem );
         }
 
         private static void OnSAWorldItem( PacketReader reader )
@@ -415,7 +448,21 @@ namespace ClassicAssist.UO.Network
         private static void OnInitializePlayer( PacketReader reader )
         {
             int serial = reader.ReadInt32();
-            PlayerMobile mobile = new PlayerMobile( serial );
+
+            PlayerMobile mobile;
+
+            // ClassicUO seems to send other packets before InitializePlayer that can cause the mobile to already exist before we
+            // know it's the player, if already in collection, copy and delete.
+
+            if ( Engine.Mobiles.GetMobile( serial, out Mobile m ) )
+            {
+                mobile = m as PlayerMobile;
+                Engine.Mobiles.Remove( m );
+            }
+            else
+            {
+                mobile = new PlayerMobile( serial );
+            }
 
             reader.ReadInt32(); // DWORD 0
 

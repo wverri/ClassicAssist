@@ -5,6 +5,9 @@
     <Compile Update="UI\Controls\EditTextBlock.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\Controls\HexDumpControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\Controls\TestBoxKey.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -32,6 +35,9 @@
     <Compile Update="UI\Views\ObjectInpectorWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\Views\DebugWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\Views\SkillsTabControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -46,6 +52,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Controls\EditTextBlock.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Controls\HexDumpControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Controls\TestBoxKey.xaml">
@@ -73,6 +82,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\ObjectInpectorWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Views\DebugWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\SkillsTabControl.xaml">

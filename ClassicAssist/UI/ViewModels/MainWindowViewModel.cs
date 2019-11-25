@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Reflection;
+using System.Windows.Input;
 using Assistant;
-using ClassicAssist.Data;
 using ClassicAssist.Resources;
+using ClassicAssist.UI.Views;
 using ClassicAssist.UO.Objects;
 
 namespace ClassicAssist.UI.ViewModels
@@ -13,6 +12,8 @@ namespace ClassicAssist.UI.ViewModels
         private string _status = Strings.Ready___;
         private bool _alwaysOnTop;
         private string _title = Strings.ProductName;
+        private DebugWindow _debugWindow;
+        private ICommand _debugCommand;
 
         [OptionsBinding(Property = "AlwaysOnTop")]
         public bool AlwaysOnTop
@@ -41,6 +42,14 @@ namespace ClassicAssist.UI.ViewModels
         {
             get => _title;
             set => SetProperty(ref _title, value);
+        }
+
+        public ICommand DebugCommand => _debugCommand ?? ( _debugCommand = new RelayCommand( ShowDebugWindow, o => true ) );
+
+        private void ShowDebugWindow( object obj )
+        {
+            _debugWindow = new DebugWindow();
+            _debugWindow.Show();
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Assistant;
 using ClassicAssist.Data;
 using ClassicAssist.UI.Views;
 
