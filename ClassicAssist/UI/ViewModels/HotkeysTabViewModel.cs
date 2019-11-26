@@ -83,7 +83,7 @@ namespace ClassicAssist.UI.ViewModels
 
             _commandsCategory.Children = children;
 
-            _hotkeyManager.Items.Add( _commandsCategory );
+            _hotkeyManager.Items.AddSorted( _commandsCategory );
 
             JToken hotkeys = json["Hotkeys"];
 

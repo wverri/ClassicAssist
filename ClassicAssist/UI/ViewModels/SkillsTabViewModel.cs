@@ -127,7 +127,7 @@ namespace ClassicAssist.UI.ViewModels
 
             _hotkeyCategory = new HotkeyEntry { IsCategory = true, Name = "Skills", Children = hotkeyEntries };
 
-            hotkey.Items.Add( _hotkeyCategory );
+            hotkey.Items.AddSorted( _hotkeyCategory );
         }
 
         private void SetAllSkillLocks( object obj )

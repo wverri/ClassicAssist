@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using ClassicAssist.Annotations;
 using ClassicAssist.UI.Misc;
 
 namespace ClassicAssist.Data.Hotkeys
 {
-    public class HotkeyEntry : INotifyPropertyChanged
+    public class HotkeyEntry : INotifyPropertyChanged, IComparable<HotkeyEntry>
     {
         private ObservableCollectionEx<HotkeySettable> _children;
         private bool _isCategory;
@@ -54,6 +55,21 @@ namespace ClassicAssist.Data.Hotkeys
         public override string ToString()
         {
             return _name;
+        }
+
+        public int CompareTo( HotkeyEntry other )
+        {
+            if ( ReferenceEquals( this, other ) )
+            {
+                return 0;
+            }
+
+            if ( ReferenceEquals( null, other ) )
+            {
+                return 1;
+            }
+
+            return string.Compare( _name, other._name, StringComparison.Ordinal );
         }
     }
 }
