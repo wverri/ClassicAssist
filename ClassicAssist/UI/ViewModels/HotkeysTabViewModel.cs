@@ -7,6 +7,7 @@ using ClassicAssist.Data;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Data.Hotkeys.Commands;
 using ClassicAssist.Misc;
+using ClassicAssist.Resources;
 using ClassicAssist.UI.Misc;
 using Newtonsoft.Json.Linq;
 
@@ -70,7 +71,7 @@ namespace ClassicAssist.UI.ViewModels
             IEnumerable<Type> hotkeyCommands = Assembly.GetExecutingAssembly().GetTypes()
                 .Where( i => i.IsSubclassOf( typeof( HotkeyCommand ) ) );
 
-            _commandsCategory = new HotkeyEntry { IsCategory = true, Name = "Commands" };
+            _commandsCategory = new HotkeyEntry { IsCategory = true, Name = Strings.Commands };
 
             ObservableCollectionEx<HotkeySettable> children = new ObservableCollectionEx<HotkeySettable>();
 

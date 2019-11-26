@@ -9,6 +9,7 @@ using ClassicAssist.Data.Hotkeys.Commands;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Data.Skills;
 using ClassicAssist.Misc;
+using ClassicAssist.Resources;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
@@ -125,7 +126,7 @@ namespace ClassicAssist.UI.ViewModels
                 }
             }
 
-            _hotkeyCategory = new HotkeyEntry { IsCategory = true, Name = "Skills", Children = hotkeyEntries };
+            _hotkeyCategory = new HotkeyEntry { IsCategory = true, Name = Strings.Skills, Children = hotkeyEntries };
 
             hotkey.Items.AddSorted( _hotkeyCategory );
         }
