@@ -165,6 +165,11 @@ namespace ClassicAssist.UO.Objects
             return itemArray;
         }
 
+        public int GetItemCount()
+        {
+            return EntityList.Count;
+        }
+
         public int GetTotalItemCount()
         {
             int count = 0;

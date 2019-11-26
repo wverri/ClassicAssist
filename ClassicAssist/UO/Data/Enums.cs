@@ -2,10 +2,72 @@
 
 namespace ClassicAssist.UO.Data
 {
-    public enum TargetType
+    public enum TargetType : byte
     {
         Object,
         Tile
+    }
+
+    public enum Skill : byte
+    {
+        Alchemy,
+        Anatomy,
+        Animal_Lore,
+        Item_Identification,
+        Arms_Lore,
+        Parrying,
+        Begging,
+        Blacksmithy,
+        Bowcraft_Fletching,
+        Peacemaking,
+        Camping,
+        Carpentry,
+        Cartography,
+        Cooking,
+        Detecting_Hidden,
+        Discordance,
+        Evaluating_Intelligence,
+        Healing,
+        Fishing,
+        Forensic_Evaluation,
+        Herding,
+        Hiding,
+        Provocation,
+        Inscription,
+        Lockpicking,
+        Magery,
+        Resisting_Spells,
+        Tactics,
+        Snooping,
+        Musicianship,
+        Poisoning,
+        Archery,
+        Spirit_Speak,
+        Stealing,
+        Tailoring,
+        Animal_Taming,
+        Taste_Identification,
+        Tinkering,
+        Tracking,
+        Veterinary,
+        Swordsmanship,
+        Mace_Fighting,
+        Fencing,
+        Wrestling,
+        Lumberjacking,
+        Mining,
+        Meditation,
+        Stealth,
+        Remove_Trap,
+        Necromancy,
+        Focus,
+        Chivalry,
+        Bushido,
+        Ninjitsu,
+        Spellweaving,
+        Mysticism,
+        Imbuing,
+        Throwing
     }
 
     [Flags]

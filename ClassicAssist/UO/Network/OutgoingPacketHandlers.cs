@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Assistant;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network.PacketFilter;
 
 namespace ClassicAssist.UO.Network
 {
@@ -40,6 +43,19 @@ namespace ClassicAssist.UO.Network
             int y = reader.ReadInt16();
             int z = reader.ReadInt16();
             int id = reader.ReadInt16();
+
+            //if ( flags == 0x03 )
+            //{
+            //    // Cancel wait entries waiting...
+
+            //    IEnumerable<WaitEntry> targetEntries = Engine.WaitEntries.GetEntries().Where( ( we ) => we.PFI.PacketID == 0x6C );
+
+            //    foreach ( WaitEntry targetEntry in targetEntries )
+            //    {
+            //        targetEntry.Packet = null;
+            //        targetEntry.Lock.Set();
+            //    }
+            //}
 
             if ( targetType == TargetType.Object && flags != 0x03 )
             {

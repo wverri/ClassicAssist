@@ -9,6 +9,7 @@ using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Objects;
+using Skill = ClassicAssist.UO.Data.Skill;
 
 namespace ClassicAssist.UO
 {
@@ -35,9 +36,9 @@ namespace ClassicAssist.UO
             PacketWriter pw = new PacketWriter( 15 );
             pw.Write( (byte) 0x08 );
             pw.Write( serial );
-            pw.Write( (short) 0xFF );
-            pw.Write( (short) 0xFF );
-            pw.Write( (sbyte) 0 );
+            pw.Write( (short) -1 );
+            pw.Write( (short) -1 );
+            pw.Write( (sbyte) -1 );
             pw.Write( (byte) 0 );
             pw.Write( containerSerial );
 
@@ -190,6 +191,226 @@ namespace ClassicAssist.UO
             packet[5] = (byte) lockStatus;
 
             Engine.SendPacketToServer( packet, packet.Length );
+        }
+
+        public static void UseSkill(Skill skill)
+        {
+            byte[] shortBaseSkillPacket = { 0x12, 0x00, 0x08, 0x24, 0x00, 0x20, 0x30, 0x00 };
+            byte[] longBaseSkillPacket = { 0x12, 0x00, 0x09, 0x24, 0x00, 0x00, 0x20, 0x30, 0x00 };
+
+            switch (skill)
+            {
+                case Skill.Anatomy:
+                    shortBaseSkillPacket[4] = 0x31;
+                    Engine.SendPacketToServer(shortBaseSkillPacket, shortBaseSkillPacket.Length);
+                    break;
+                case Skill.Animal_Lore:
+                    shortBaseSkillPacket[4] = 0x32;
+                    Engine.SendPacketToServer(shortBaseSkillPacket, shortBaseSkillPacket.Length);
+                    break;
+                case Skill.Animal_Taming:
+                    longBaseSkillPacket[4] = 0x33;
+                    longBaseSkillPacket[5] = 0x35;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Arms_Lore:
+                    shortBaseSkillPacket[4] = 0x34;
+                    Engine.SendPacketToServer(shortBaseSkillPacket, shortBaseSkillPacket.Length);
+                    break;
+                case Skill.Begging:
+                    shortBaseSkillPacket[4] = 0x36;
+                    Engine.SendPacketToServer(shortBaseSkillPacket, shortBaseSkillPacket.Length);
+                    break;
+                case Skill.Cartography:
+                    longBaseSkillPacket[4] = 0x31;
+                    longBaseSkillPacket[5] = 0x32;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Detecting_Hidden:
+                    longBaseSkillPacket[4] = 0x31;
+                    longBaseSkillPacket[5] = 0x34;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Discordance:
+                    longBaseSkillPacket[4] = 0x31;
+                    longBaseSkillPacket[5] = 0x35;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Evaluating_Intelligence:
+                    longBaseSkillPacket[4] = 0x31;
+                    longBaseSkillPacket[5] = 0x36;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Forensic_Evaluation:
+                    longBaseSkillPacket[4] = 0x31;
+                    longBaseSkillPacket[5] = 0x39;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Hiding:
+                    longBaseSkillPacket[4] = 0x32;
+                    longBaseSkillPacket[5] = 0x31;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Inscription:
+                    longBaseSkillPacket[4] = 0x32;
+                    longBaseSkillPacket[5] = 0x33;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Item_Identification:
+                    shortBaseSkillPacket[4] = 0x33;
+                    Engine.SendPacketToServer(shortBaseSkillPacket, shortBaseSkillPacket.Length);
+                    break;
+                case Skill.Meditation:
+                    longBaseSkillPacket[4] = 0x34;
+                    longBaseSkillPacket[5] = 0x36;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Peacemaking:
+                    shortBaseSkillPacket[4] = 0x39;
+                    Engine.SendPacketToServer(shortBaseSkillPacket, shortBaseSkillPacket.Length);
+                    break;
+                case Skill.Poisoning:
+                    longBaseSkillPacket[4] = 0x33;
+                    longBaseSkillPacket[5] = 0x30;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Provocation:
+                    longBaseSkillPacket[4] = 0x32;
+                    longBaseSkillPacket[5] = 0x32;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Remove_Trap:
+                    longBaseSkillPacket[4] = 0x34;
+                    longBaseSkillPacket[5] = 0x38;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Spirit_Speak:
+                    longBaseSkillPacket[4] = 0x33;
+                    longBaseSkillPacket[5] = 0x32;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Stealing:
+                    longBaseSkillPacket[4] = 0x33;
+                    longBaseSkillPacket[5] = 0x33;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Stealth:
+                    longBaseSkillPacket[4] = 0x34;
+                    longBaseSkillPacket[5] = 0x37;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Taste_Identification:
+                    longBaseSkillPacket[4] = 0x33;
+                    longBaseSkillPacket[5] = 0x36;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Tracking:
+                    longBaseSkillPacket[4] = 0x33;
+                    longBaseSkillPacket[5] = 0x38;
+                    Engine.SendPacketToServer(longBaseSkillPacket, longBaseSkillPacket.Length);
+                    break;
+                case Skill.Alchemy:
+                    break;
+                case Skill.Parrying:
+                    break;
+                case Skill.Blacksmithy:
+                    break;
+                case Skill.Bowcraft_Fletching:
+                    break;
+                case Skill.Camping:
+                    break;
+                case Skill.Carpentry:
+                    break;
+                case Skill.Cooking:
+                    break;
+                case Skill.Healing:
+                    break;
+                case Skill.Fishing:
+                    break;
+                case Skill.Herding:
+                    break;
+                case Skill.Lockpicking:
+                    break;
+                case Skill.Magery:
+                    break;
+                case Skill.Resisting_Spells:
+                    break;
+                case Skill.Tactics:
+                    break;
+                case Skill.Snooping:
+                    break;
+                case Skill.Musicianship:
+                    break;
+                case Skill.Archery:
+                    break;
+                case Skill.Tailoring:
+                    break;
+                case Skill.Tinkering:
+                    break;
+                case Skill.Veterinary:
+                    break;
+                case Skill.Swordsmanship:
+                    break;
+                case Skill.Mace_Fighting:
+                    break;
+                case Skill.Fencing:
+                    break;
+                case Skill.Wrestling:
+                    break;
+                case Skill.Lumberjacking:
+                    break;
+                case Skill.Mining:
+                    break;
+                case Skill.Necromancy:
+                    break;
+                case Skill.Focus:
+                    break;
+                case Skill.Chivalry:
+                    break;
+                case Skill.Bushido:
+                    break;
+                case Skill.Ninjitsu:
+                    break;
+                case Skill.Spellweaving:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(skill), skill, null);
+            }
+        }
+
+        public static bool WaitForTarget( int timeout )
+        {
+            PacketFilterInfo pfi = new PacketFilterInfo( 0x6C );
+
+            WaitEntry we = Engine.WaitEntries.AddWait( pfi, PacketDirection.Incoming );
+
+            try
+            {
+                do
+                {
+                    bool result = we.Lock.WaitOne( timeout );
+
+                    if ( !result )
+                        return false;
+
+                    if ( we.Packet[6] == 0x03 )
+                        continue;
+
+                    return true;
+                }
+                while ( true );
+            }
+            finally
+            {
+                Engine.WaitEntries.RemoveWait( we );
+            }
+        }
+
+        public static void Resync()
+        {
+            byte[] packet = { 0x22, 0x00, 0x00 };
+
+            Engine.SendPacketToServer(packet, packet.Length);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace ClassicAssist.Data.Macros
             runtime.LoadAssembly(Assembly.GetExecutingAssembly());
         }
 
-        private string GetScriptingImports()
+        private static string GetScriptingImports()
         {
             string prepend = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.Namespace != null && t.IsPublic && t.IsClass && t.Namespace.EndsWith("Macros.Commands")).Aggregate(string.Empty, (current, t) => current + $"from {t.FullName} import * \n");
 

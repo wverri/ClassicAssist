@@ -52,7 +52,7 @@ namespace ClassicAssist.UO.Data
 
         internal static SkillData[] GetSkills()
         {
-            return (SkillData[]) _lazySkillData.Value.Clone();
+            return (SkillData[]) _lazySkillData?.Value.Clone();
         }
 
         internal static SkillData[] LoadSkills()

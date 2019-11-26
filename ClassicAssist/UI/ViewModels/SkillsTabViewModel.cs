@@ -3,42 +3,33 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Assistant;
+using ClassicAssist.Data;
+using ClassicAssist.Data.Hotkeys;
+using ClassicAssist.Data.Hotkeys.Commands;
+using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Data.Skills;
+using ClassicAssist.Misc;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network;
+using Newtonsoft.Json.Linq;
+using Skill = ClassicAssist.Data.Skills.Skill;
 
 namespace ClassicAssist.UI.ViewModels
 {
-    public class SkillsTabViewModel : BaseViewModel
+    public class SkillsTabViewModel : BaseViewModel, ISettingProvider
     {
+        private HotkeyEntry _hotkeyCategory;
         private ObservableCollectionEx<SkillEntry> _items = new ObservableCollectionEx<SkillEntry>();
         private SkillEntry[] _selectedItems;
         private SkillEntry _selectedSkillEntry;
-        private float _totalBase;
-        private readonly Dispatcher _dispatcher;
         private ICommand _setAllSkillLocksCommand;
-
-        public ICommand SetAllSkillLocksCommand => _setAllSkillLocksCommand ?? (_setAllSkillLocksCommand = new RelayCommand(SetAllSkillLocks, o => true));
-
-        private void SetAllSkillLocks( object obj )
-        {
-            LockStatus lockStatus = (LockStatus)(int)obj;
-
-            IEnumerable<SkillEntry> skillsToSet = Items.Where(i => i.LockStatus != lockStatus);
-
-            foreach ( SkillEntry skillEntry in skillsToSet )
-            {
-                Commands.ChangeSkillLock( skillEntry, lockStatus );
-            }
-
-            Commands.MobileQuery(Engine.Player.Serial, Commands.MobileQueryType.SkillsRequest );
-        }
+        private float _totalBase;
 
         public SkillsTabViewModel()
         {
-            Items.CollectionChanged += (sender, args) => { UpdateTotalBase(); };
+            Items.CollectionChanged += ( sender, args ) => { UpdateTotalBase(); };
 
             IncomingPacketHandlers.SkillUpdatedEvent += OnSkillUpdatedEvent;
             IncomingPacketHandlers.SkillsListEvent += OnSkillsListEvent;
@@ -49,11 +40,6 @@ namespace ClassicAssist.UI.ViewModels
             }
 
             _dispatcher = Dispatcher.CurrentDispatcher;
-        }
-
-        private void UpdateTotalBase()
-        {
-            TotalBase = Items.Sum(se => se.Base);
         }
 
         public ObservableCollectionEx<SkillEntry> Items
@@ -74,10 +60,93 @@ namespace ClassicAssist.UI.ViewModels
             set => SetProperty( ref _selectedSkillEntry, value );
         }
 
+        public ICommand SetAllSkillLocksCommand =>
+            _setAllSkillLocksCommand ?? ( _setAllSkillLocksCommand = new RelayCommand( SetAllSkillLocks, o => true ) );
+
         public float TotalBase
         {
             get => _totalBase;
             set => SetProperty( ref _totalBase, value );
+        }
+
+        public void Serialize( JObject json )
+        {
+            JArray skills = new JArray();
+
+            if ( _hotkeyCategory?.Children == null )
+            {
+                return;
+            }
+
+            foreach ( HotkeySettable hks in _hotkeyCategory.Children )
+            {
+                skills.Add( new JObject
+                {
+                    { "Name", hks.Name }, { "Keys", hks.Hotkey.ToJObject() }, { "PassToUO", hks.PassToUO }
+                } );
+            }
+
+            json.Add( "Skills", skills );
+        }
+
+        public void Deserialize( JObject json, Options options )
+        {
+            HotkeyManager hotkey = HotkeyManager.GetInstance();
+
+            if ( Skills.GetSkills() == null )
+            {
+                return;
+            }
+
+            IOrderedEnumerable<SkillData> skills = Skills.GetSkills().Where( s => s.Invokable ).OrderBy( s => s.Name );
+
+            ObservableCollectionEx<HotkeySettable> hotkeyEntries = new ObservableCollectionEx<HotkeySettable>();
+
+            foreach ( SkillData skill in skills )
+            {
+                hotkeyEntries.Add( new HotkeyCommand
+                {
+                    Action = hks => SkillCommands.UseSkill( skill.Name ), Name = skill.Name
+                } );
+            }
+
+            if ( json["Skills"] != null )
+            {
+                foreach ( HotkeySettable hke in hotkeyEntries )
+                {
+                    JToken token = json["Skills"].FirstOrDefault( jo => jo["Name"].ToObject<string>() == hke.Name );
+
+                    if ( token != null )
+                    {
+                        hke.Hotkey = new ShortcutKeys( token["Keys"]["Modifier"].ToObject<Key>(),
+                            token["Keys"]["Keys"].ToObject<Key>() );
+                        hke.PassToUO = token["PassToUO"].ToObject<bool>();
+                    }
+                }
+            }
+
+            _hotkeyCategory = new HotkeyEntry { IsCategory = true, Name = "Skills", Children = hotkeyEntries };
+
+            hotkey.Items.Add( _hotkeyCategory );
+        }
+
+        private void SetAllSkillLocks( object obj )
+        {
+            LockStatus lockStatus = (LockStatus) (int) obj;
+
+            IEnumerable<SkillEntry> skillsToSet = Items.Where( i => i.LockStatus != lockStatus );
+
+            foreach ( SkillEntry skillEntry in skillsToSet )
+            {
+                Commands.ChangeSkillLock( skillEntry, lockStatus );
+            }
+
+            Commands.MobileQuery( Engine.Player.Serial, Commands.MobileQueryType.SkillsRequest );
+        }
+
+        private void UpdateTotalBase()
+        {
+            TotalBase = Items.Sum( se => se.Base );
         }
 
         private void OnSkillsListEvent( SkillInfo[] skills )

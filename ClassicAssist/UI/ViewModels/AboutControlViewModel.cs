@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Assistant;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Views;
-using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Network.PacketFilter;
@@ -21,7 +19,6 @@ namespace ClassicAssist.UI.ViewModels
     {
         private bool _connected;
         private DateTime _connectedTime;
-        private ICommand _inspectObjectCommand;
         private int _itemCount;
         private int _lastTargetSerial;
         private double _latency;
@@ -46,6 +43,7 @@ namespace ClassicAssist.UI.ViewModels
             Engine.Items.CollectionChanged += ItemsOnCollectionChanged;
             Engine.Mobiles.CollectionChanged += MobilesOnCollectionChanged;
 
+            IncomingPacketHandlers.MobileUpdatedEvent += OnMobileUpdatedEvent;
             OutgoingPacketHandlers.TargetSentEvent += OnTargetSentEvent;
         }
 
@@ -62,10 +60,6 @@ namespace ClassicAssist.UI.ViewModels
             get => _connectedTime;
             set => SetProperty( ref _connectedTime, value );
         }
-
-        public ICommand InspectObjectCommand =>
-            _inspectObjectCommand ??
-            ( _inspectObjectCommand = new RelayCommandAsync( InspectObject, o => Engine.Connected ) );
 
         public int ItemCount
         {
@@ -109,6 +103,14 @@ namespace ClassicAssist.UI.ViewModels
             _showItemsCommand ?? ( _showItemsCommand = new RelayCommand( ShowItems, o => Connected ) );
 
         public string Version { get; set; }
+
+        private void OnMobileUpdatedEvent( Mobile mobile )
+        {
+            if ( mobile.Serial == Engine.Player?.Serial )
+            {
+                PlayerInitializedEvent( Engine.Player );
+            }
+        }
 
         private void OnTargetSentEvent( TargetType targettype, int senderserial, int flags, int serial, int x, int y,
             int z, int id )
@@ -156,28 +158,6 @@ namespace ClassicAssist.UI.ViewModels
             _timer.Stop();
         }
 
-        private static async Task InspectObject( object arg )
-        {
-            int serial = await Commands.GetTargeSerialAsync( Strings.Target_object___, 30000 );
-
-            if ( serial > 0 )
-            {
-                Entity entity = UOMath.IsMobile( serial )
-                    ? (Entity) Engine.Mobiles.GetMobile( serial )
-                    : Engine.Items.GetItem( serial );
-
-                if ( entity == null )
-                {
-                    return;
-                }
-
-                ObjectInspectorWindow window =
-                    new ObjectInspectorWindow { DataContext = new ObjectInspectorViewModel( entity ) };
-
-                window.Show();
-            }
-        }
-
         private void OnConnectedEvent()
         {
             Connected = true;
@@ -203,9 +183,9 @@ namespace ClassicAssist.UI.ViewModels
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            WaitEntries.WaitEntry we = Engine.WaitEntries.AddWait(
+            WaitEntry we = Engine.WaitEntries.AddWait(
                 new PacketFilterInfo( 0x73, new[] { new PacketFilterCondition( 1, new[] { value }, 1 ) } ),
-                WaitEntries.PacketDirection.Incoming );
+                PacketDirection.Incoming, true );
 
             Engine.SendPacketToServer( new PingPacket( value ) );
 

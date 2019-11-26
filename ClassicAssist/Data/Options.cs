@@ -15,6 +15,7 @@ namespace ClassicAssist.Data
         private int _lightLevel;
         private bool _actionDelay;
         private int _actionDelayMs;
+        private bool _useDeathScreenWhilstHidden;
         private const string SETTINGS_FILENAME = "settings.json";
 
         public bool AlwaysOnTop
@@ -42,6 +43,12 @@ namespace ClassicAssist.Data
         }
 
         public static Options CurrentOptions { get; set; } = new Options();
+
+        public bool UseDeathScreenWhilstHidden
+        {
+            get => _useDeathScreenWhilstHidden;
+            set => SetProperty(ref _useDeathScreenWhilstHidden, value);
+        }
 
         public static void Save( string startupPath )
         {

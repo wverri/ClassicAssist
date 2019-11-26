@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using ClassicAssist.Data;
 using ClassicAssist.UO;
 
@@ -13,12 +14,20 @@ namespace ClassicAssist.UI.ViewModels
     public class BaseViewModel : INotifyPropertyChanged
     {
         private static readonly List<BaseViewModel> _viewModels = new List<BaseViewModel>();
+        protected Dispatcher _dispatcher;
 
         public BaseViewModel()
         {
+            _dispatcher = Dispatcher.CurrentDispatcher;
+
             _viewModels.Add(this);
 
             Options.CurrentOptions.PropertyChanged += OnOptionChanged;
+        }
+
+        ~BaseViewModel()
+        {
+            _viewModels.Remove( this );
         }
 
         protected void OnOptionChanged(object sender, PropertyChangedEventArgs e)

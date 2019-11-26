@@ -4,8 +4,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Windows.Threading;
+using System.Windows.Input;
 using ClassicAssist.Data;
+using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Misc;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO.Data;
@@ -48,6 +49,7 @@ namespace Assistant
         private static OnClientClose _onClientClosing;
         private static readonly PacketFilter _incomingPacketFilter = new PacketFilter();
         private static readonly PacketFilter _outgoingPacketFilter = new PacketFilter();
+        private static OnHotkey _onHotkeyPressed;
 
         //private static readonly object _actionDelayLock = new object();
         public static string ClientPath { get; set; }
@@ -61,6 +63,8 @@ namespace Assistant
         public static PlayerMobile Player { get; set; }
         public static string StartupPath { get; set; }
         public static WaitEntries WaitEntries { get; set; }
+        public static TargetType TargetType { get; set; }
+        public static int TargetSerial { get; set; }
 
         public static event dSendRecvPacket PacketReceivedEvent;
         public static event dSendRecvPacket PacketSentEvent;
@@ -79,8 +83,7 @@ namespace Assistant
             _mainThread = new Thread( () =>
             {
                 _window = new MainWindow();
-                _window.Show();
-                Dispatcher.Run();
+                _window.ShowDialog();
             } ) { IsBackground = true };
 
             _mainThread.SetApartmentState( ApartmentState.STA );
@@ -95,6 +98,7 @@ namespace Assistant
             _onSend = OnPacketSend;
             _onPlayerPositionChanged = OnPlayerPositionChanged;
             _onClientClosing = OnClientClosing;
+            _onHotkeyPressed = OnHotkeyPressed;
 
             plugin->OnConnected = Marshal.GetFunctionPointerForDelegate( _onConnected );
             plugin->OnDisconnected = Marshal.GetFunctionPointerForDelegate( _onDisconnected );
@@ -102,6 +106,7 @@ namespace Assistant
             plugin->OnSend = Marshal.GetFunctionPointerForDelegate( _onSend );
             plugin->OnPlayerPositionChanged = Marshal.GetFunctionPointerForDelegate( _onPlayerPositionChanged );
             plugin->OnClientClosing = Marshal.GetFunctionPointerForDelegate( _onClientClosing );
+            plugin->OnHotkeyPressed = Marshal.GetFunctionPointerForDelegate( _onHotkeyPressed );
 
             _getPacketLength = Marshal.GetDelegateForFunctionPointer<OnGetPacketLength>( plugin->GetPacketLength );
             _getUOFilePath = Marshal.GetDelegateForFunctionPointer<OnGetUOFilePath>( plugin->GetUOFilePath );
@@ -121,27 +126,15 @@ namespace Assistant
             TileData.Initialize( ClientPath );
         }
 
-        //public static void CheckActionDelay()
-        //{
-        //    lock ( _actionDelayLock )
-        //    {
-        //        while ( NextActionTime > DateTime.Now )
-        //        {
-        //            Thread.Sleep( 100 );
-        //        }
-        //    }
-        //}
+        private static bool OnHotkeyPressed( int key, int mod, bool pressed )
+        {
+            Key keys = SDLKeys.SDLKeyToKeys( key );
+            Key mods = SDLKeys.SDLKeyToKeys( mod );
 
-        //public static void SetActionDelay()
-        //{
-        //    lock ( _actionDelayLock )
-        //    {
-        //        if ( Options.CurrentOptions.ActionDelay )
-        //        {
-        //            NextActionTime = DateTime.Now + TimeSpan.FromMilliseconds( Options.CurrentOptions.ActionDelayMS );
-        //        }
-        //    }
-        //}
+            bool pass = HotkeyManager.GetInstance().OnHotkeyPressed( keys, mods, pressed );
+
+            return !pass;
+        }
 
         private static void OnClientClosing()
         {
@@ -247,6 +240,19 @@ namespace Assistant
             Player = mobile;
 
             PlayerInitializedEvent?.Invoke( mobile );
+
+            mobile.MobileStatusUpdated += ( status, newStatus ) =>
+            {
+                if ( !Options.CurrentOptions.UseDeathScreenWhilstHidden )
+                {
+                    return;
+                }
+
+                if ( newStatus.HasFlag( MobileStatus.Hidden ) )
+                {
+                    SendPacketToClient( new MobileDeadIncoming( mobile ) );
+                }
+            };
         }
 
         public static void SendPacketToServer( byte[] packet, int length )
@@ -260,6 +266,13 @@ namespace Assistant
         }
 
         public static void SendPacketToClient( PacketWriter packet )
+        {
+            byte[] data = packet.ToArray();
+
+            SendPacketToClient( data, data.Length );
+        }
+
+        public static void SendPacketToClient( Packets packet )
         {
             byte[] data = packet.ToArray();
 
@@ -298,7 +311,7 @@ namespace Assistant
 
             _outgoingQueue.Enqueue( new Packet( data, length ) );
 
-            WaitEntries.CheckWait( data, WaitEntries.PacketDirection.Outgoing );
+            WaitEntries.CheckWait( data, PacketDirection.Outgoing );
 
             return true;
         }
@@ -319,7 +332,7 @@ namespace Assistant
 
             _incomingQueue.Enqueue( new Packet( data, length ) );
 
-            WaitEntries.CheckWait( data, WaitEntries.PacketDirection.Incoming );
+            WaitEntries.CheckWait( data, PacketDirection.Incoming );
 
             return true;
         }

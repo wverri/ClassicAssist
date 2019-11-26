@@ -67,6 +67,12 @@ namespace ClassicAssist.UI.ViewModels
             }
         }
 
+        public bool UseDeathScreenWhilstHidden
+        {
+            get => Options.CurrentOptions.UseDeathScreenWhilstHidden;
+            set => Options.CurrentOptions.UseDeathScreenWhilstHidden = value;
+        }
+
         public void Serialize( JObject json )
         {
             JObject obj = new JObject
@@ -74,7 +80,8 @@ namespace ClassicAssist.UI.ViewModels
                 ["AlwaysOnTop"] = Options.CurrentOptions.AlwaysOnTop,
                 ["LightLevel"] = Options.CurrentOptions.LightLevel,
                 ["ActionDelay"] = Options.CurrentOptions.ActionDelay,
-                ["ActionDelayMS"] = Options.CurrentOptions.ActionDelayMS
+                ["ActionDelayMS"] = Options.CurrentOptions.ActionDelayMS,
+                ["UseDeathScreenWhilstHidden"] = Options.CurrentOptions.UseDeathScreenWhilstHidden
             };
 
             json.Add( "General", obj );
@@ -89,10 +96,17 @@ namespace ClassicAssist.UI.ViewModels
 
             JToken general = json["General"];
 
-            SetOptionsNotify( nameof( AlwaysOnTop ), general["AlwaysOnTop"]?.ToObject<bool>(), false );
             SetOptionsNotify( nameof( LightLevel ), general["LightLevel"]?.ToObject<int>(), 100 );
             SetOptionsNotify( nameof( ActionDelay ), general["ActionDelay"]?.ToObject<bool>(), false );
             SetOptionsNotify( nameof( ActionDelayMS ), general["ActionDelayMS"]?.ToObject<int>(), 900 );
+            SetOptionsNotify( nameof( UseDeathScreenWhilstHidden ),
+                general["UseDeathScreenWhilstHidden"]?.ToObject<bool>(), false );
+            bool topmost = general["AlwaysOnTop"]?.ToObject<bool>() ?? false;
+            SetOptionsNotify( nameof( AlwaysOnTop ), topmost, false );
+
+            AlwaysOnTop = topmost;
+            
+            NotifyPropertyChanged( nameof(AlwaysOnTop) );
         }
     }
 }

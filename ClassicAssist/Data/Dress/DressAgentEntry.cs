@@ -8,25 +8,12 @@ namespace ClassicAssist.Data.Dress
     public class DressAgentEntry : HotkeySettable
     {
         private IEnumerable<DressAgentItem> _items;
-        private string _name;
         private int _undressContainer;
 
         public IEnumerable<DressAgentItem> Items
         {
             get => _items;
             set => SetProperty(ref _items, value);
-        }
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    SetProperty(ref _name, value);
-                }
-            }
         }
 
         public int UndressContainer
@@ -37,7 +24,7 @@ namespace ClassicAssist.Data.Dress
 
         public override string ToString()
         {
-            return _name;
+            return Name;
         }
 
         public void AddOrReplaceDressItem(int itemSerial, Layer itemLayer)

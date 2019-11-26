@@ -8,27 +8,48 @@ namespace ClassicAssist.UO.Objects
 {
     public class Mobile : Entity
     {
-        internal int[] _layerArray = new int[(int)Layer.LastValid + 1];
-        public ItemCollection Equipment { get; set; }
+        public delegate void dMobileStatusUpdated( MobileStatus oldStatus, MobileStatus newStatus );
+
+        public event dMobileStatusUpdated MobileStatusUpdated;
+
+        internal int[] _layerArray = new int[(int) Layer.LastValid + 1];
+        private MobileStatus _status;
 
         public Mobile( int serial ) : base( serial )
         {
             Equipment = new ItemCollection( serial );
         }
 
+        public Item Backpack => Engine.Items.GetItem( GetLayer( Layer.Backpack ) );
+        public ItemCollection Equipment { get; set; }
+
         public int Hits { get; set; }
         public int HitsMax { get; set; }
+        public int Mana { get; set; }
+        public int ManaMax { get; set; }
         public Notoriety Notoriety { get; set; }
-        public MobileStatus Status { get; set; }
+        public int Stamina { get; set; }
+        public int StaminaMax { get; set; }
 
-        internal void SetLayer(Layer layer, int serial)
+        public MobileStatus Status
         {
-            if ((int)layer >= _layerArray.Length)
+            get => _status;
+            set
+            {
+                MobileStatusUpdated?.Invoke( _status, value );
+
+                _status = value;
+            }
+        }
+
+        internal void SetLayer( Layer layer, int serial )
+        {
+            if ( (int) layer >= _layerArray.Length )
             {
                 return;
             }
 
-            Interlocked.Exchange(ref _layerArray[(int)layer], serial);
+            Interlocked.Exchange( ref _layerArray[(int) layer], serial );
         }
 
         internal int[] GetAllLayers()
@@ -36,9 +57,9 @@ namespace ClassicAssist.UO.Objects
             return _layerArray;
         }
 
-        internal int GetLayer(Layer layer)
+        internal int GetLayer( Layer layer )
         {
-            return (int)layer >= _layerArray.Length ? 0 : Thread.VolatileRead(ref _layerArray[(int)layer]);
+            return (int) layer >= _layerArray.Length ? 0 : Thread.VolatileRead( ref _layerArray[(int) layer] );
         }
 
         public Item[] GetEquippedItems()
@@ -47,13 +68,13 @@ namespace ClassicAssist.UO.Objects
 
             int[] layerArray = GetAllLayers();
 
-            IEnumerable<int> layers = layerArray.Where(layer => layer != 0);
+            IEnumerable<int> layers = layerArray.Where( layer => layer != 0 );
 
-            foreach (int layer in layers)
+            foreach ( int layer in layers )
             {
-                if (Engine.Items.GetItem(layer, out Item i) && i.Layer != Layer.Invalid)
+                if ( Engine.Items.GetItem( layer, out Item i ) && i.Layer != Layer.Invalid )
                 {
-                    itemList.Add(i);
+                    itemList.Add( i );
                 }
             }
 

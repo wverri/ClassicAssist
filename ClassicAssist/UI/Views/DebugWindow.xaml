@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ClassicAssist.UI.Views"
         xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
         xmlns:misc="clr-namespace:ClassicAssist.Misc"
+        xmlns:resources="clr-namespace:ClassicAssist.Resources"
         mc:Ignorable="d"
         Title="Debug Window" Height="450" Width="600" Topmost="{Binding Topmost}">
     <Window.DataContext>
@@ -20,7 +21,9 @@
 
         </ListBox>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="10,0,10,10">
-            <CheckBox Content="Topmost" VerticalAlignment="Center" Margin="0,0,10,0" IsChecked="{Binding Topmost}"/>
+            <CheckBox Content="{x:Static resources:Strings.Capture_Packets}" VerticalAlignment="Center" Margin="0,0,10,0" IsChecked="{Binding Running}"/>
+            <CheckBox Content="{x:Static resources:Strings.Topmost}" VerticalAlignment="Center" Margin="0,0,10,0" IsChecked="{Binding Topmost}"/>
+            <CheckBox Content="{x:Static resources:Strings.Ignore_ping_packets}" VerticalAlignment="Center" Margin="0,0,10,0" IsChecked="{Binding IgnorePingPackets}"/>
             <Button Content="View Player Equipment" Command="{Binding ViewPlayerEquipmentCommand}" Padding="5"/>
         </StackPanel>
     </Grid>

@@ -11,11 +11,17 @@ namespace ClassicAssist.Data.Hotkeys
 {
     public class HotkeySettable : INotifyPropertyChanged
     {
-        public delegate void HotkeyChangedEventHandler(object sender, HotkeyChangedEventArgs e);
+        public delegate void HotkeyChangedEventHandler( object sender, HotkeyChangedEventArgs e );
 
         private ShortcutKeys _hotkey = new ShortcutKeys { Modifier = Key.None, Key = Key.None };
-
         private bool _passToUo = true;
+        private string _name;
+
+        public HotkeySettable()
+        {
+            HotkeyChanged += OnHotkeyChanged;
+        }
+
         public Action<HotkeySettable> Action { get; set; }
 
         public ShortcutKeys Hotkey
@@ -23,40 +29,33 @@ namespace ClassicAssist.Data.Hotkeys
             get => _hotkey;
             set
             {
-                SetProperty(ref _hotkey, value);
-                HotkeyChanged?.Invoke(this, new HotkeyChangedEventArgs(_hotkey, value));
+                SetProperty( ref _hotkey, value );
+                HotkeyChanged?.Invoke( this, new HotkeyChangedEventArgs( _hotkey, value ) );
             }
         }
 
         [XmlIgnore]
-        public ImageSource Image => Equals(Hotkey, ShortcutKeys.Default) ? Properties.Resources.red_circle.ToImageSource() : Properties.Resources.green_circle.ToImageSource();
+        public ImageSource Image =>
+            Equals( Hotkey, ShortcutKeys.Default )
+                ? Properties.Resources.red_circle.ToImageSource()
+                : Properties.Resources.green_circle.ToImageSource();
 
         public bool PassToUO
         {
             get => _passToUo;
-            set
-            {
-                _passToUo = value;
-
-                //if (value == false)
-                //    Macro.AddKeyboardFilter(Client, Hotkey.ToArray());
-                //else
-                //    Macro.RemoveKeyboardFilter(Client, Hotkey.ToArray());
-            }
+            set => SetProperty( ref _passToUo, value );
         }
 
-        public HotkeySettable()
+        public string Name
         {
-            HotkeyChanged += OnHotkeyChanged;
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
 
         public event HotkeyChangedEventHandler HotkeyChanged;
 
-        protected virtual void OnHotkeyChanged(object sender, HotkeyChangedEventArgs e)
+        protected virtual void OnHotkeyChanged( object sender, HotkeyChangedEventArgs e )
         {
-            //if (e.OldValue.Key != Key.None) Commands.RemoveKeyboardMacro(e.OldValue.ToArray(), !PassToUO);
-
-            //if (e.NewValue.Key != Key.None) Commands.AddKeyboardMacro(e.NewValue.ToArray(), index => { Action?.Invoke(this); }, !PassToUO);
         }
 
         #region INotifyPropertyChanged
@@ -64,16 +63,16 @@ namespace ClassicAssist.Data.Hotkeys
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged( [CallerMemberName] string propertyName = null )
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
         }
 
         // ReSharper disable once RedundantAssignment
-        public void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        public void SetProperty<T>( ref T field, T value, [CallerMemberName] string propertyName = null )
         {
             field = value;
-            OnPropertyChanged(propertyName);
+            OnPropertyChanged( propertyName );
         }
 
         #endregion

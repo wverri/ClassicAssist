@@ -78,19 +78,18 @@
                     </StackPanel>
                 </DockPanel>
                 <Button Content="{x:Static r:Strings.Show_World_Items}" IsEnabled="{Binding Connected}" Command="{Binding ShowItemsCommand}"/>
-                <Button Content="{x:Static r:Strings.Object_Inspector}" Command="{Binding InspectObjectCommand}"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="{x:Static r:Strings.Player}" Grid.Row="1" Grid.Column="1">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Left">
-                    <Label Content="{x:Static r:Strings.Serial_}"/>
                     <Label Content="{x:Static r:Strings.Name_}"/>
+                    <Label Content="{x:Static r:Strings.Serial_}"/>
                     <Label Content="{x:Static r:Strings.Last_Target_}"/>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Right">
-                    <Label Content="{Binding PlayerSerial, Converter={StaticResource IntToHexStringValueConverter}}"/>
                     <Label Content="{Binding PlayerName}"/>
+                    <Label Content="{Binding PlayerSerial, Converter={StaticResource IntToHexStringValueConverter}}"/>
                     <Label Content="{Binding LastTargetSerial, Converter={StaticResource IntToHexStringValueConverter}}"/>
                 </StackPanel>
             </DockPanel>

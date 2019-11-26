@@ -10,6 +10,7 @@
              xmlns:local="clr-namespace:ClassicAssist.Data.Macros"
              xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
              xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
+             xmlns:resources="clr-namespace:ClassicAssist.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500" Background="White" Padding="5">
     <UserControl.DataContext>
@@ -47,7 +48,7 @@
                             <Setter Property="Margin" Value="0"/>
                         </Style>
                     </Grid.Resources>
-                    <Button Content="Remove" Grid.Column="0" Margin="0,0,2.5,0" Command="{Binding RemoveMacroCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem, ElementName=ListBox}">
+                    <Button Content="{x:Static resources:Strings.Remove}" Grid.Column="0" Margin="0,0,2.5,0" Command="{Binding RemoveMacroCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem, ElementName=ListBox}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Style.Triggers>
@@ -58,7 +59,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Button Content="New" Grid.Column="1" Margin="2.5,0" Command="{Binding NewMacroCommand, Mode=OneWay}"/>
+                    <Button Content="{x:Static resources:Strings.New}" Grid.Column="1" Margin="2.5,0" Command="{Binding NewMacroCommand, Mode=OneWay}"/>
                 </Grid>
                 <Grid Grid.Row="2" Margin="0,15,0,0">
                     <Grid.Resources>
@@ -68,16 +69,16 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Play" Grid.Column="0" Margin="0,0,2.5,0" Command="{Binding ExecuteCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem, ElementName=ListBox}" IsEnabled="{Binding IsPlaying, Converter={StaticResource InverseBooleanConverter}}"/>
-                    <Button Content="Stop" Grid.Column="1" Margin="2.5,0,0,0" IsEnabled="{Binding IsPlaying}" Command="{Binding StopCommand, Mode=OneWay}"/>
+                    <Button Content="{x:Static resources:Strings.Play}" Grid.Column="0" Margin="0,0,2.5,0" Command="{Binding ExecuteCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem, ElementName=ListBox}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <Button Content="{x:Static resources:Strings.Stop}" Grid.Column="1" Margin="2.5,0,0,0" IsEnabled="{Binding IsRunning}" Command="{Binding StopCommand, Mode=OneWay}"/>
                 </Grid>
                 <Grid Grid.Row="3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <CheckBox Content="Loop" Grid.Row="0" Margin="0,5,0,0" IsChecked="{Binding SelectedItem.Loop, ElementName=ListBox}"/>
-                    <CheckBox Content="Do not auto interrupt" Grid.Row="1" Margin="0,5,0,0" IsEnabled="False"/>
+                    <CheckBox Content="{x:Static resources:Strings.Loop}" Grid.Row="0" Margin="0,5,0,0" IsChecked="{Binding SelectedItem.Loop, ElementName=ListBox}"/>
+                    <CheckBox Content="{x:Static resources:Strings.Do_not_auto_interupt}" Grid.Row="1" Margin="0,5,0,0" IsEnabled="False"/>
                 </Grid>
                 <GroupBox Header="Hotkey" Grid.Row="4" Padding="5">
                     <Grid>
@@ -86,9 +87,9 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <controls:TextBoxKey Shortcut="{Binding Path=SelectedItem.(local:MacroEntry.Hotkey), ElementName=ListBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0"/>
-                        <CheckBox Content="Pass to UO" Grid.Row="1" Padding="4,-1,0,0" Margin="0,5,0,0" IsChecked="{Binding Path=SelectedItem.(local:MacroEntry.PassToUO), ElementName=ListBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button Content="Clear" Grid.Row="2" Padding="1,0,1,1" Margin="0,5,0,0" Command="{Binding ClearHotkeyCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem, ElementName=ListBox}"/>
+                        <controls:TextBoxKey Shortcut="{Binding SelectedItem.Hotkey}" Grid.Row="0"/>
+                        <CheckBox Content="{x:Static resources:Strings.Pass_to_UO}" Grid.Row="1" Padding="4,-1,0,0" Margin="0,5,0,0" IsChecked="{Binding SelectedItem.PassToUO}"/>
+                        <Button Content="{x:Static resources:Strings.Clear}" Grid.Row="2" Padding="1,0,1,1" Margin="0,5,0,0" Command="{Binding ClearHotkeyCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem, ElementName=ListBox}"/>
                     </Grid>
                 </GroupBox>
             </Grid>
@@ -110,7 +111,7 @@
                     </Style>
                 </avalon:TextEditor.Style>
                 <i:Interaction.Behaviors>
-                    <misc:AvalonEditBehaviour TextBinding="{Binding SelectedItem.Macro, ElementName=ListBox, Mode=TwoWay}"/>
+                    <misc:AvalonEditBehaviour TextBinding="{Binding SelectedItem.Macro, ElementName=ListBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </i:Interaction.Behaviors>
             </avalon:TextEditor>
             <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
@@ -119,12 +120,11 @@
                         <Setter Property="Margin" Value="2"/>
                         <Setter Property="Width" Value="95"/>
                         <Setter Property="Height" Value="25"/>
-                        <Setter Property="FontSize" Value="10"/>
                     </Style>
                 </StackPanel.Resources>
-                <Button Content="Object Inspector" Command="{Binding InspectObjectCommand, Mode=OneWay}"/>
-                <Button Content="Commands" Command="{Binding ShowCommandsCommand}"/>
-                <Button Content="Active Objects"/>
+                <Button Content="{x:Static resources:Strings.Object_Inspector}" Command="{Binding InspectObjectCommand, Mode=OneWay}"/>
+                <Button Content="{x:Static resources:Strings.Commands}" Command="{Binding ShowCommandsCommand}"/>
+                <Button Content="{x:Static resources:Strings.Active_Objects}"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -123,6 +123,9 @@
   <data name="Action Delay:" xml:space="preserve">
     <value>Action Delay:</value>
   </data>
+  <data name="Active Objects" xml:space="preserve">
+    <value>Active Objects</value>
+  </data>
   <data name="Address:" xml:space="preserve">
     <value>Address:</value>
   </data>
@@ -132,14 +135,35 @@
   <data name="Always On Top" xml:space="preserve">
     <value>Always On Top</value>
   </data>
+  <data name="Bandage Self" xml:space="preserve">
+    <value>Bandage Self</value>
+  </data>
   <data name="Build Date:" xml:space="preserve">
     <value>Build Date:</value>
+  </data>
+  <data name="Cannot find item..." xml:space="preserve">
+    <value>Cannot find item...</value>
+  </data>
+  <data name="Capture Packets" xml:space="preserve">
+    <value>Capture Packets</value>
   </data>
   <data name="Character" xml:space="preserve">
     <value>Character</value>
   </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Clear All" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="Commands" xml:space="preserve">
+    <value>Commands</value>
+  </data>
   <data name="Connected:" xml:space="preserve">
     <value>Connected:</value>
+  </data>
+  <data name="Do not auto interupt" xml:space="preserve">
+    <value>Do not auto interupt</value>
   </data>
   <data name="Dress" xml:space="preserve">
     <value>Dress</value>
@@ -150,6 +174,18 @@
   <data name="Entity Viewer" xml:space="preserve">
     <value>Entity Viewer</value>
   </data>
+  <data name="Error: Cannot find player backpack" xml:space="preserve">
+    <value>Error: Cannot find player backpack</value>
+  </data>
+  <data name="Error: Cannot find type" xml:space="preserve">
+    <value>Error: Cannot find type</value>
+  </data>
+  <data name="Error: No Player" xml:space="preserve">
+    <value>Error: No Player</value>
+  </data>
+  <data name="Execute" xml:space="preserve">
+    <value>Execute</value>
+  </data>
   <data name="Filters" xml:space="preserve">
     <value>Filters</value>
   </data>
@@ -158,6 +194,21 @@
   </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Hotkeys</value>
+  </data>
+  <data name="Ignore ping packets" xml:space="preserve">
+    <value>Ignore ping packets</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Invalid container..." xml:space="preserve">
+    <value>Invalid container...</value>
+  </data>
+  <data name="Invalid or unknown object id" xml:space="preserve">
+    <value>Invalid or unknown object id</value>
+  </data>
+  <data name="Invalid skill name &quot;{0}&quot;" xml:space="preserve">
+    <value>Invalid skill name "{0}"</value>
   </data>
   <data name="Items:" xml:space="preserve">
     <value>Items:</value>
@@ -180,6 +231,9 @@
   <data name="Location:" xml:space="preserve">
     <value>Location:</value>
   </data>
+  <data name="Loop" xml:space="preserve">
+    <value>Loop</value>
+  </data>
   <data name="Macros" xml:space="preserve">
     <value>Macros</value>
   </data>
@@ -189,11 +243,26 @@
   <data name="Mobiles:" xml:space="preserve">
     <value>Mobiles:</value>
   </data>
+  <data name="Move conflicting items" xml:space="preserve">
+    <value>Move conflicting items</value>
+  </data>
   <data name="Name:" xml:space="preserve">
     <value>Name:</value>
   </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="New Item" xml:space="preserve">
+    <value>New Item</value>
+  </data>
   <data name="Object Inspector" xml:space="preserve">
     <value>Object Inspector</value>
+  </data>
+  <data name="Pass to UO" xml:space="preserve">
+    <value>Pass to UO</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Play</value>
   </data>
   <data name="Player" xml:space="preserve">
     <value>Player</value>
@@ -213,14 +282,26 @@
   <data name="Ready..." xml:space="preserve">
     <value>Ready...</value>
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Resync" xml:space="preserve">
+    <value>Resync</value>
+  </data>
   <data name="Seasons" xml:space="preserve">
     <value>Seasons</value>
+  </data>
+  <data name="Select undress container..." xml:space="preserve">
+    <value>Select undress container...</value>
   </data>
   <data name="Serial:" xml:space="preserve">
     <value>Serial:</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>Server</value>
+  </data>
+  <data name="Set Undress Container" xml:space="preserve">
+    <value>Set Undress Container</value>
   </data>
   <data name="Show World Items" xml:space="preserve">
     <value>Show World Items</value>
@@ -234,11 +315,35 @@
   <data name="Status:" xml:space="preserve">
     <value>Status:</value>
   </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Target clothing item..." xml:space="preserve">
+    <value>Target clothing item...</value>
+  </data>
   <data name="Target object..." xml:space="preserve">
     <value>Target object...</value>
   </data>
+  <data name="Target timeout..." xml:space="preserve">
+    <value>Target timeout...</value>
+  </data>
+  <data name="The item needs to be equipped..." xml:space="preserve">
+    <value>The item needs to be equipped...</value>
+  </data>
   <data name="Timeout..." xml:space="preserve">
     <value>Timeout...</value>
+  </data>
+  <data name="Topmost" xml:space="preserve">
+    <value>Topmost</value>
+  </data>
+  <data name="Undress" xml:space="preserve">
+    <value>Undress</value>
+  </data>
+  <data name="Unknown alias &quot;{0}&quot;." xml:space="preserve">
+    <value>Unknown alias "{0}".</value>
+  </data>
+  <data name="Use death screen whilst hidden" xml:space="preserve">
+    <value>Use death screen whilst hidden (Chuckles Mode)</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>

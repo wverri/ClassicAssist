@@ -7,7 +7,7 @@ using ClassicAssist.Data;
 using ClassicAssist.Data.Dress;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Misc;
-using ClassicAssist.UI.Misc;
+using ClassicAssist.Resources;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ClassicAssist.UI.ViewModels
 {
-    public class DressTabViewModel : BaseViewModel, ISettingProvider
+    public class DressTabViewModel : HotkeySettableViewModel<DressAgentEntry>, ISettingProvider
     {
         private readonly Layer[] _validLayers =
         {
@@ -24,28 +24,31 @@ namespace ClassicAssist.UI.ViewModels
             Layer.Pants, Layer.Ring, Layer.Shirt, Layer.Shoes, Layer.Talisman, Layer.TwoHanded, Layer.Waist
         };
 
+        private ICommand _addDressItemCommand;
+        private ICommand _clearDressItemsCommand;
         private ICommand _dressAllItemsCommand;
         private ICommand _importItemsCommand;
         private bool _isDressingOrUndressing;
-        private ObservableCollectionEx<DressAgentEntry> _items = new ObservableCollectionEx<DressAgentEntry>();
         private bool _moveConflictingItems;
         private ICommand _newDressEntryCommand;
         private RelayCommand _removeDressEntryCommand;
+        private ICommand _removeDressItemCommand;
+        private DressAgentItem _selectedDressItem;
         private DressAgentEntry _selectedItem;
+        private ICommand _setUndressContainerCommand;
         private ICommand _undressAllItemsCommand;
         private bool _useUo3DPackets;
-        private readonly HotkeyManager _hotkeys;
 
-        public DressTabViewModel()
+        public DressTabViewModel() : base( Strings.Dress )
         {
-            DressAgentEntry i = new DressAgentEntry { Name = "Dress-1", Items = new List<DressAgentItem>() };
-
-            Items.Add( i );
-
-            _hotkeys = HotkeyManager.GetInstance();
-
-            SetHotkeyEntries();
         }
+
+        public ICommand AddDressItemCommand =>
+            _addDressItemCommand ?? ( _addDressItemCommand = new RelayCommandAsync( AddDressItem, o => true ) );
+
+        public ICommand ClearDressItemsCommand =>
+            _clearDressItemsCommand ?? ( _clearDressItemsCommand = new RelayCommand( ClearDressItems,
+                o => SelectedItem != null && SelectedItem.Items.Any() ) );
 
         public ICommand DressAllItemsCommand =>
             _dressAllItemsCommand ??
@@ -54,12 +57,6 @@ namespace ClassicAssist.UI.ViewModels
 
         public ICommand ImportItemsCommand =>
             _importItemsCommand ?? ( _importItemsCommand = new RelayCommand( ImportItems, o => SelectedItem != null ) );
-
-        public ObservableCollectionEx<DressAgentEntry> Items
-        {
-            get => _items;
-            set => SetProperty( ref _items, value );
-        }
 
         public bool MoveConflictingItems
         {
@@ -74,11 +71,25 @@ namespace ClassicAssist.UI.ViewModels
             _removeDressEntryCommand ??
             ( _removeDressEntryCommand = new RelayCommand( RemoveDressEntry, o => SelectedItem != null ) );
 
+        public ICommand RemoveDressItemCommand =>
+            _removeDressItemCommand ?? ( _removeDressItemCommand =
+                new RelayCommand( RemoveDressItem, o => _selectedDressItem != null ) );
+
+        public DressAgentItem SelectedDressItem
+        {
+            get => _selectedDressItem;
+            set => SetProperty( ref _selectedDressItem, value );
+        }
+
         public DressAgentEntry SelectedItem
         {
             get => _selectedItem;
             set => SetProperty( ref _selectedItem, value );
         }
+
+        public ICommand SetUndressContainerCommand =>
+            _setUndressContainerCommand ?? ( _setUndressContainerCommand =
+                new RelayCommandAsync( SetUndressContainer, o => _selectedItem != null ) );
 
         public ICommand UndressAllItemsCommand =>
             _undressAllItemsCommand ??
@@ -104,7 +115,12 @@ namespace ClassicAssist.UI.ViewModels
 
             foreach ( DressAgentEntry dae in Items )
             {
-                JObject djson = new JObject { ["Name"] = dae.Name, ["UndressContainer"] = dae.UndressContainer };
+                JObject djson = new JObject();
+
+                SetJsonValue( djson, "Name", dae.Name );
+                SetJsonValue( djson, "UndressContainer", dae.UndressContainer );
+                SetJsonValue( djson, "PassToUO", dae.PassToUO );
+                SetJsonValue( djson, "Keys", dae.Hotkey.ToJObject() );
 
                 JArray items = new JArray();
 
@@ -136,8 +152,8 @@ namespace ClassicAssist.UI.ViewModels
 
             JToken dress = json["Dress"];
 
-            MoveConflictingItems = dress["Options"]["MoveConflictingItems"]?.ToObject<bool>() ?? false;
-            UseUO3DPackets = dress["Options"]["UseUO3DPackets"]?.ToObject<bool>() ?? false;
+            MoveConflictingItems = GetJsonValue( dress["Options"], "MoveConflictingItems", false );
+            UseUO3DPackets = GetJsonValue( dress["Options"], "UseUO3DPackets", false );
 
             Items.Clear();
 
@@ -145,28 +161,101 @@ namespace ClassicAssist.UI.ViewModels
             {
                 DressAgentEntry dae = new DressAgentEntry
                 {
-                    Name = entry["Name"].ToObject<string>(),
-                    UndressContainer = entry["UndressContainer"].ToObject<int>()
+                    Name = GetJsonValue( entry, "Name", string.Empty ),
+                    UndressContainer = GetJsonValue( entry, "UndressContainer", 0 ),
+                    PassToUO = GetJsonValue( entry, "PassToUO", true ),
+                    Hotkey = new ShortcutKeys( GetJsonValue( entry["Keys"], "Modifier", Key.None ),
+                        GetJsonValue( entry["Keys"], "Keys", Key.None ) )
                 };
+
+                dae.Action = async hks => await DressAllItems( dae );
+
+                List<DressAgentItem> items = new List<DressAgentItem>();
 
                 if ( entry["Items"] != null )
                 {
-                    List<DressAgentItem> items = new List<DressAgentItem>();
-
-                    foreach ( JToken itemEntry in entry["Items"] )
+                    items.AddRange( entry["Items"].Select( itemEntry => new DressAgentItem
                     {
-                        items.Add( new DressAgentItem
-                        {
-                            Layer = itemEntry["Layer"].ToObject<Layer>(),
-                            Serial = itemEntry["Serial"].ToObject<int>()
-                        } );
-
-                        dae.Items = items.ToArray();
-                    }
+                        Layer = GetJsonValue( itemEntry, "Layer", Layer.Invalid ),
+                        Serial = GetJsonValue( itemEntry, "Serial", 0 )
+                    } ) );
                 }
+
+                dae.Items = items.ToArray();
 
                 Items.Add( dae );
             }
+        }
+
+        private static async Task SetUndressContainer( object obj )
+        {
+            if ( !( obj is DressAgentEntry entry ) )
+            {
+                return;
+            }
+
+            int serial = await Commands.GetTargeSerialAsync( Strings.Select_undress_container___ );
+
+            if ( serial <= 0 )
+            {
+                Commands.SystemMessage( Strings.Invalid_container___ );
+                return;
+            }
+
+            entry.UndressContainer = serial;
+        }
+
+        private static void ClearDressItems( object obj )
+        {
+            if ( !( obj is DressAgentEntry dae ) )
+            {
+                return;
+            }
+
+            dae.Items = new List<DressAgentItem>();
+        }
+
+        private void RemoveDressItem( object obj )
+        {
+            if ( !( obj is DressAgentItem removeItem ) )
+            {
+                return;
+            }
+
+            if ( !SelectedItem.Items.Contains( removeItem ) )
+            {
+                return;
+            }
+
+            List<DressAgentItem> list = SelectedItem.Items.ToList();
+            list.Remove( removeItem );
+            SelectedItem.Items = list;
+        }
+
+        private static async Task AddDressItem( object arg )
+        {
+            if ( !( arg is DressAgentEntry dae ) )
+            {
+                return;
+            }
+
+            int serial = await Commands.GetTargeSerialAsync( Strings.Target_clothing_item___, 30000 );
+
+            Item item = Engine.Items.GetItem( serial );
+
+            if ( item == null )
+            {
+                Commands.SystemMessage( Strings.Cannot_find_item___ );
+                return;
+            }
+
+            if ( item.Layer == Layer.Invalid )
+            {
+                Commands.SystemMessage( Strings.The_item_needs_to_be_equipped___ );
+                return;
+            }
+
+            dae.AddOrReplaceDressItem( serial, item.Layer );
         }
 
         private async Task UndressAllItems( object obj )
@@ -178,7 +267,7 @@ namespace ClassicAssist.UI.ViewModels
                 return;
             }
 
-            int backpack = player.Backpack;
+            int backpack = player.Backpack.Serial;
 
             if ( backpack <= 0 )
             {
@@ -194,33 +283,16 @@ namespace ClassicAssist.UI.ViewModels
             }
         }
 
-        private void SetHotkeyEntries()
-        {
-            HotkeyEntry category = new HotkeyEntry { Name = "Dress", IsCategory = true };
-
-            _hotkeys.Items.Add(category);
-
-            Items.CollectionChanged += ( sender, args ) => { SetHotkeyChildren( category ); };
-            SetHotkeyChildren( category );
-        }
-
-        private void SetHotkeyChildren( HotkeyEntry category )
-        {
-            ObservableCollectionEx<HotkeySettable> list = new ObservableCollectionEx<HotkeySettable>();
-
-            foreach ( DressAgentEntry item in Items )
-            {
-                list.Add( item );
-            }
-
-            category.Children = list;
-        }
-
         private void NewDressEntry( object obj )
         {
             int count = Items.Count;
 
-            Items.Add( new DressAgentEntry { Name = $"Dress-{count + 1}", Items = new List<DressAgentItem>() } );
+            DressAgentEntry dae =
+                new DressAgentEntry { Name = $"Dress-{count + 1}", Items = new List<DressAgentItem>() };
+
+            dae.Action = async hks => await DressAllItems( dae );
+
+            Items.Add( dae );
         }
 
         private void RemoveDressEntry( object obj )

@@ -30,7 +30,7 @@ namespace ClassicAssist.Tests
             Engine.Player.SetLayer( Layer.Backpack, backpack.Serial );
             Engine.Items.Add( backpack );
 
-            Assert.IsTrue( Engine.Player.Backpack > 0 );
+            Assert.IsTrue( Engine.Player.Backpack.Serial > 0 );
 
             ContainerContentsPacket cc =
                 new ContainerContentsPacket( new ItemCollection( backpackSerial ) { new Item( itemSerial ) } );

@@ -8,6 +8,7 @@
              xmlns:controls="clr-namespace:ClassicAssist.UI.Controls"
              xmlns:local="clr-namespace:ClassicAssist.Data.Hotkeys"
              xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
+             xmlns:resources="clr-namespace:ClassicAssist.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500" Background="White">
     <UserControl.DataContext>
@@ -31,14 +32,14 @@
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <ContentControl>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding Image}" Stretch="Uniform"/>
+                            <Image Source="{Binding Image}" Stretch="Uniform" Margin="0,0,5,0"/>
                             <TextBlock Text="{Binding}" />
                         </StackPanel>
                     </ContentControl>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <GroupBox Grid.Column="1" Header="Hotkey">
+        <GroupBox Grid.Column="1" Header="{x:Static resources:Strings.Hotkeys}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -61,19 +62,19 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Clear" Margin="10,0,10,5" Command="{Binding ClearHotkeyCommand}" CommandParameter="{Binding SelectedItem}" Grid.Column="0" />
+                    <Button Content="{x:Static resources:Strings.Clear}" Margin="10,0,10,5" Command="{Binding ClearHotkeyCommand}" CommandParameter="{Binding SelectedItem}" Grid.Column="0" />
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox Content="Pass to UO" Margin="10,0,10,5" IsChecked="{Binding Path=SelectedItem.(local:HotkeySettable.PassToUO), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" />
+                    <CheckBox Content="{x:Static resources:Strings.Pass_to_UO}" Margin="10,0,10,5" IsChecked="{Binding Path=SelectedItem.(local:HotkeySettable.PassToUO), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" />
                 </Grid>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Execute" Margin="10,0,10,5" Command="{Binding ExecuteCommand}" CommandParameter="{Binding SelectedItem}" Grid.Column="0" />
+                    <Button Content="{x:Static resources:Strings.Execute}" Margin="10,0,10,5" Command="{Binding ExecuteCommand}" CommandParameter="{Binding SelectedItem}" Grid.Column="0" />
                 </Grid>
             </Grid>
         </GroupBox>

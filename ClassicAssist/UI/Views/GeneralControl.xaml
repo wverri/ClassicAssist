@@ -66,6 +66,7 @@
                     </CheckBox.ContentTemplate>
                 </CheckBox>
             </StackPanel>
+            <CheckBox Content="{x:Static r:Strings.Use_death_screen_whilst_hidden}" IsChecked="{Binding UseDeathScreenWhilstHidden}"/>
         </StackPanel>
     </Grid>
 </UserControl>
