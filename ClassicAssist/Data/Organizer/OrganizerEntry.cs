@@ -7,14 +7,9 @@ namespace ClassicAssist.Data.Organizer
     public class OrganizerEntry : HotkeySettable
     {
         private ObservableCollectionEx<OrganizerItem> _items = new ObservableCollectionEx<OrganizerItem>();
-        private bool _stack;
+        private bool _stack = true;
         public int SourceContainer { get; set; }
         public int DestinationContainer { get; set; }
-
-        public OrganizerEntry()
-        {
-            
-        }
 
         public ObservableCollectionEx<OrganizerItem> Items
         {

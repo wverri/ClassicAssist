@@ -309,6 +309,9 @@
   <data name="Organizer" xml:space="preserve">
     <value>Organizer</value>
   </data>
+  <data name="Organizer containers set..." xml:space="preserve">
+    <value>Organizer containers set...</value>
+  </data>
   <data name="Organizer {0} finished..." xml:space="preserve">
     <value>Organizer "{0}" finished...</value>
   </data>

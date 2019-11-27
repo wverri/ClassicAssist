@@ -10,6 +10,11 @@
              xmlns:ValueConverters="clr-namespace:ClassicAssist.UI.ValueConverters" x:Name="userControl" x:Class="ClassicAssist.UI.Views.Agents.OrganizerTabControl"
              mc:Ignorable="d" 
              d:DesignHeight="250" d:DesignWidth="500">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </d:DesignerProperties.DesignStyle>
     <UserControl.Resources>
         <ValueConverters:CellWidthValueConverter x:Key="CellWidthValueConverter"/>
         <ValueConverters:IntToHexStringValueConverter x:Key="IntToHexStringValueConverter"/>
@@ -38,7 +43,7 @@
             <DockPanel Grid.Row="0">
                 <Button DockPanel.Dock="Left" Content="{Binding PlayStopButtonText}" Command="{Binding OrganizeCommand}" CommandParameter="{Binding SelectedItem}"/>
                 <StackPanel DockPanel.Dock="Right" Margin="5">
-                    <CheckBox Content="{x:Static resources:Strings.Stack}"/>
+                    <CheckBox Content="{x:Static resources:Strings.Stack}" IsChecked="{Binding SelectedItem.Stack}"/>
                 </StackPanel>
             </DockPanel>
             <Grid Grid.Row="1">

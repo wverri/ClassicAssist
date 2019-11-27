@@ -298,6 +298,8 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
             entry.SourceContainer = sourceContainer;
             entry.DestinationContainer = desintationContainer;
+
+            Commands.SystemMessage( Strings.Organizer_containers_set___ );
         }
     }
 }

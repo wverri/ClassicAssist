@@ -655,6 +655,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Organizer containers set....
+        /// </summary>
+        public static string Organizer_containers_set___ {
+            get {
+                return ResourceManager.GetString("Organizer containers set...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pass to UO.
         /// </summary>
         public static string Pass_to_UO {
