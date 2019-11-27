@@ -65,7 +65,7 @@ namespace ClassicAssist.Data.Hotkeys
             OnPropertyChanged( propertyName );
         }
 
-        public bool OnHotkeyPressed( Key keys, Key mod, bool pressed )
+        public bool OnHotkeyPressed( Key keys )
         {
             bool filter = false;
 

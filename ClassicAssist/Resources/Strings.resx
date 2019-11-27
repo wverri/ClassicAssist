@@ -132,6 +132,9 @@
   <data name="Agents" xml:space="preserve">
     <value>Agents</value>
   </data>
+  <data name="Aliases" xml:space="preserve">
+    <value>Aliases</value>
+  </data>
   <data name="Always On Top" xml:space="preserve">
     <value>Always On Top</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="Build Date:" xml:space="preserve">
     <value>Build Date:</value>
+  </data>
+  <data name="Cannot find container..." xml:space="preserve">
+    <value>Cannot find container...</value>
   </data>
   <data name="Cannot find item..." xml:space="preserve">
     <value>Cannot find item...</value>
@@ -156,6 +162,12 @@
   <data name="Clear All" xml:space="preserve">
     <value>Clear All</value>
   </data>
+  <data name="Clear All Objects" xml:space="preserve">
+    <value>Clear All Objects</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
   <data name="Commands" xml:space="preserve">
     <value>Commands</value>
   </data>
@@ -170,6 +182,9 @@
   </data>
   <data name="Entity Collection Viewer" xml:space="preserve">
     <value>Entity Collection Viewer</value>
+  </data>
+  <data name="Entity not found..." xml:space="preserve">
+    <value>Entity not found...</value>
   </data>
   <data name="Entity Viewer" xml:space="preserve">
     <value>Entity Viewer</value>
@@ -228,6 +243,9 @@
   <data name="Light Level" xml:space="preserve">
     <value>Light Level</value>
   </data>
+  <data name="Lists" xml:space="preserve">
+    <value>Lists</value>
+  </data>
   <data name="Location:" xml:space="preserve">
     <value>Location:</value>
   </data>
@@ -240,11 +258,17 @@
   <data name="Map:" xml:space="preserve">
     <value>Map:</value>
   </data>
+  <data name="Mobile not found..." xml:space="preserve">
+    <value>Mobile not found...</value>
+  </data>
   <data name="Mobiles:" xml:space="preserve">
     <value>Mobiles:</value>
   </data>
   <data name="Move conflicting items" xml:space="preserve">
     <value>Move conflicting items</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="Name:" xml:space="preserve">
     <value>Name:</value>
@@ -282,6 +306,9 @@
   <data name="Ready..." xml:space="preserve">
     <value>Ready...</value>
   </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
@@ -293,6 +320,9 @@
   </data>
   <data name="Select undress container..." xml:space="preserve">
     <value>Select undress container...</value>
+  </data>
+  <data name="Serial" xml:space="preserve">
+    <value>Serial</value>
   </data>
   <data name="Serial:" xml:space="preserve">
     <value>Serial:</value>
@@ -332,6 +362,9 @@
   </data>
   <data name="Timeout..." xml:space="preserve">
     <value>Timeout...</value>
+  </data>
+  <data name="Timers" xml:space="preserve">
+    <value>Timers</value>
   </data>
   <data name="Topmost" xml:space="preserve">
     <value>Topmost</value>

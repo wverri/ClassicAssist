@@ -20,6 +20,9 @@
     <Compile Update="UI\Views\AboutControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\Views\ActiveObjectsWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\Views\DressTabControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -67,6 +70,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\AboutControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Views\ActiveObjectsWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\DressTabControl.xaml">

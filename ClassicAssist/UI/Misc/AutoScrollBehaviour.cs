@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ClassicAssist.Misc
+namespace ClassicAssist.UI.Misc
 {
     internal class ListBoxBehavior
     {

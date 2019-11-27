@@ -21,8 +21,17 @@ namespace ClassicAssist.UO.Network
             _handlers = new PacketHandler[0x100];
             _extendedHandlers = new PacketHandler[0x100];
 
+            Register(0x6C, 19, OnTargetSent);
+            Register(0xB1, 0, OnGumpButtonPressed);
             Register( 0xEF, 31, OnNewClientVersion );
-            Register( 0x6C, 19, OnTargetSent );
+        }
+
+        private static void OnGumpButtonPressed( PacketReader reader )
+        {
+            int senderSerial = reader.ReadInt32();
+            int gumpId = reader.ReadInt32();
+
+            Engine.GumpList.TryRemove( gumpId, out _ );
         }
 
         private static void OnTargetSent( PacketReader reader )
@@ -43,19 +52,6 @@ namespace ClassicAssist.UO.Network
             int y = reader.ReadInt16();
             int z = reader.ReadInt16();
             int id = reader.ReadInt16();
-
-            //if ( flags == 0x03 )
-            //{
-            //    // Cancel wait entries waiting...
-
-            //    IEnumerable<WaitEntry> targetEntries = Engine.WaitEntries.GetEntries().Where( ( we ) => we.PFI.PacketID == 0x6C );
-
-            //    foreach ( WaitEntry targetEntry in targetEntries )
-            //    {
-            //        targetEntry.Packet = null;
-            //        targetEntry.Lock.Set();
-            //    }
-            //}
 
             if ( targetType == TargetType.Object && flags != 0x03 )
             {

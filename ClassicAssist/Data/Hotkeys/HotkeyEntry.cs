@@ -64,12 +64,7 @@ namespace ClassicAssist.Data.Hotkeys
                 return 0;
             }
 
-            if ( ReferenceEquals( null, other ) )
-            {
-                return 1;
-            }
-
-            return string.Compare( _name, other._name, StringComparison.Ordinal );
+            return other is null ? 1 : string.Compare( _name, other._name, StringComparison.Ordinal );
         }
     }
 }

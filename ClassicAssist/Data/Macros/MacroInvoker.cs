@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using ClassicAssist.Data.Macros.Commands;
 using IronPython.Hosting;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
@@ -12,7 +13,6 @@ namespace ClassicAssist.Data.Macros
     {
         private readonly MacroEntry _macro;
         private readonly ScriptEngine _engine;
-        private ScriptScope _scope;
 
         public delegate void dMacroStartStop();
 
@@ -26,7 +26,6 @@ namespace ClassicAssist.Data.Macros
         {
             _macro = macro;
             _engine = Python.CreateEngine();
-            _scope = _engine.CreateScope();
 
             ScriptRuntime runtime = _engine.Runtime;
             runtime.LoadAssembly(Assembly.GetExecutingAssembly());
@@ -56,6 +55,9 @@ namespace ClassicAssist.Data.Macros
                 try
                 {
                     StartedEvent?.Invoke();
+
+                    AliasCommands.SetDefaultAliases();
+
                     source.Execute();
                 }
                 catch ( ThreadAbortException )
@@ -71,6 +73,7 @@ namespace ClassicAssist.Data.Macros
                 finally
                 {
                     StoppedEvent?.Invoke();
+                    AliasCommands.UnsetDefaultAliases();
                 }
             } ) { IsBackground = true };
 

@@ -117,14 +117,14 @@
             <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
                 <StackPanel.Resources>
                     <Style TargetType="Button">
-                        <Setter Property="Margin" Value="2"/>
-                        <Setter Property="Width" Value="95"/>
+                        <Setter Property="Margin" Value="10"/>
+                        <Setter Property="Padding" Value="10,0,10,0"/>
                         <Setter Property="Height" Value="25"/>
                     </Style>
                 </StackPanel.Resources>
                 <Button Content="{x:Static resources:Strings.Object_Inspector}" Command="{Binding InspectObjectCommand, Mode=OneWay}"/>
                 <Button Content="{x:Static resources:Strings.Commands}" Command="{Binding ShowCommandsCommand}"/>
-                <Button Content="{x:Static resources:Strings.Active_Objects}"/>
+                <Button Content="{x:Static resources:Strings.Active_Objects}" Command="{Binding ShowActiveObjectsWindowCommand}"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -23,10 +23,12 @@ namespace ClassicAssist.UI.ViewModels
         private ICommand _newMacroCommand;
         private RelayCommand _removeMacroCommand;
         private MacroEntry _selectedItem;
+        private ICommand _showActiveObjectsWindowCommand;
         private ICommand _stopCommand;
 
         public MacrosTabViewModel() : base( Strings.Macros )
         {
+            Engine.DisconnectedEvent += OnDisconnectedEvent;
         }
 
         public ICommand ExecuteCommand =>
@@ -54,6 +56,10 @@ namespace ClassicAssist.UI.ViewModels
             get => _selectedItem;
             set => SetProperty( ref _selectedItem, value );
         }
+
+        public ICommand ShowActiveObjectsWindowCommand =>
+            _showActiveObjectsWindowCommand ?? ( _showActiveObjectsWindowCommand =
+                new RelayCommand( ShowActiveObjectsWindow, o => true ) );
 
         public ICommand StopCommand => _stopCommand ?? ( _stopCommand = new RelayCommand( Stop, o => IsRunning ) );
 
@@ -100,13 +106,24 @@ namespace ClassicAssist.UI.ViewModels
                     Macro = GetJsonValue( token, "Macro", string.Empty ),
                     PassToUO = GetJsonValue( token, "PassToUO", true ),
                     Hotkey = new ShortcutKeys( GetJsonValue( token["Keys"], "Modifier", Key.None ),
-                        GetJsonValue( token["Keys"], "Keys", Key.None ) ),
+                        GetJsonValue( token["Keys"], "Keys", Key.None ) )
                 };
 
                 entry.Action = hks => Execute( entry );
 
                 Items.Add( entry );
             }
+        }
+
+        private static void ShowActiveObjectsWindow( object obj )
+        {
+            ActiveObjectsWindow window = new ActiveObjectsWindow();
+            window.Show();
+        }
+
+        private void OnDisconnectedEvent()
+        {
+            _macroInvoker?.Stop();
         }
 
         private static async Task InspectObject( object arg )

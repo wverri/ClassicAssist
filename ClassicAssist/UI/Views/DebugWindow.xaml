@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassicAssist.UI.Views"
         xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
-        xmlns:misc="clr-namespace:ClassicAssist.Misc"
         xmlns:resources="clr-namespace:ClassicAssist.Resources"
+        xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
         mc:Ignorable="d"
         Title="Debug Window" Height="450" Width="600" Topmost="{Binding Topmost}">
     <Window.DataContext>

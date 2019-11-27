@@ -2,6 +2,9 @@
 using Assistant;
 using ClassicAssist.Resources;
 using ClassicAssist.UO;
+using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
+using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Macros.Commands
@@ -10,9 +13,45 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         public static Dictionary<string, int> _aliases = new Dictionary<string, int>();
 
+        internal static void SetDefaultAliases()
+        {
+            OutgoingPacketHandlers.TargetSentEvent += OnTargetSentEvent;
+
+            PlayerMobile player = Engine.Player;
+
+            if ( player == null )
+            {
+                return;
+            }
+
+            SetAlias( "bank", player.GetLayer( Layer.Bank ) );
+            SetAlias( "backpack", player.GetLayer( Layer.Backpack ) );
+            SetAlias( "last", player.LastTargetSerial );
+            SetAlias( "self", player.Serial );
+        }
+
+        internal static void UnsetDefaultAliases()
+        {
+            OutgoingPacketHandlers.TargetSentEvent -= OnTargetSentEvent;
+
+            UnsetAlias( "bank" );
+            UnsetAlias( "backpack" );
+            UnsetAlias( "last" );
+            UnsetAlias( "self" );
+        }
+
+        private static void OnTargetSentEvent( TargetType targettype, int senderserial, int flags, int serial, int x,
+            int y, int z, int id )
+        {
+            if ( targettype == TargetType.Object )
+            {
+                SetAlias( "last", serial );
+            }
+        }
+
         internal static int ResolveSerial( object obj )
         {
-            int serial = 0;
+            int serial;
 
             switch ( obj )
             {
@@ -27,6 +66,10 @@ namespace ClassicAssist.Data.Macros.Commands
                     break;
                 case int i:
                     serial = i;
+                    break;
+                case null:
+                    serial = Engine.Player == null ? 0 : Engine.Player.Serial;
+
                     break;
                 default:
                     UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
@@ -66,9 +109,15 @@ namespace ClassicAssist.Data.Macros.Commands
             return -1;
         }
 
+        public static Dictionary<string, int> GetAllAliases()
+        {
+            return _aliases;
+        }
+
         public static void PromptAlias( string aliasName )
         {
             int serial = UOC.GetTargeSerialAsync( Strings.Target_object___, 30000 ).Result;
+            SetAlias( aliasName, serial );
         }
 
         public static bool FindAlias( string aliasName )

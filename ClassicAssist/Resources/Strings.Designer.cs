@@ -106,6 +106,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aliases.
+        /// </summary>
+        public static string Aliases {
+            get {
+                return ResourceManager.GetString("Aliases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Always On Top.
         /// </summary>
         public static string Always_On_Top {
@@ -129,6 +138,15 @@ namespace ClassicAssist.Resources {
         public static string Build_Date_ {
             get {
                 return ResourceManager.GetString("Build Date:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot find container....
+        /// </summary>
+        public static string Cannot_find_container___ {
+            get {
+                return ResourceManager.GetString("Cannot find container...", resourceCulture);
             }
         }
         
@@ -178,6 +196,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear All Objects.
+        /// </summary>
+        public static string Clear_All_Objects {
+            get {
+                return ResourceManager.GetString("Clear All Objects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Commands.
         /// </summary>
         public static string Commands {
@@ -219,6 +255,15 @@ namespace ClassicAssist.Resources {
         public static string Entity_Collection_Viewer {
             get {
                 return ResourceManager.GetString("Entity Collection Viewer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entity not found....
+        /// </summary>
+        public static string Entity_not_found___ {
+            get {
+                return ResourceManager.GetString("Entity not found...", resourceCulture);
             }
         }
         
@@ -394,6 +439,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lists.
+        /// </summary>
+        public static string Lists {
+            get {
+                return ResourceManager.GetString("Lists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Location:.
         /// </summary>
         public static string Location_ {
@@ -430,6 +484,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mobile not found....
+        /// </summary>
+        public static string Mobile_not_found___ {
+            get {
+                return ResourceManager.GetString("Mobile not found...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mobiles:.
         /// </summary>
         public static string Mobiles_ {
@@ -444,6 +507,15 @@ namespace ClassicAssist.Resources {
         public static string Move_conflicting_items {
             get {
                 return ResourceManager.GetString("Move conflicting items", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
             }
         }
         
@@ -556,6 +628,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         public static string Remove {
@@ -588,6 +669,15 @@ namespace ClassicAssist.Resources {
         public static string Select_undress_container___ {
             get {
                 return ResourceManager.GetString("Select undress container...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Serial.
+        /// </summary>
+        public static string Serial {
+            get {
+                return ResourceManager.GetString("Serial", resourceCulture);
             }
         }
         
@@ -705,6 +795,15 @@ namespace ClassicAssist.Resources {
         public static string Timeout___ {
             get {
                 return ResourceManager.GetString("Timeout...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timers.
+        /// </summary>
+        public static string Timers {
+            get {
+                return ResourceManager.GetString("Timers", resourceCulture);
             }
         }
         

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -30,6 +32,7 @@ namespace Assistant
         public delegate void dPlayerInitialized( PlayerMobile player );
 
         public delegate void dSendRecvPacket( byte[] data, int length );
+        internal static ConcurrentDictionary<int, int> GumpList { get; set; } = new ConcurrentDictionary<int, int>();
 
         private const int MAX_DISTANCE = 32;
 
@@ -129,9 +132,8 @@ namespace Assistant
         private static bool OnHotkeyPressed( int key, int mod, bool pressed )
         {
             Key keys = SDLKeys.SDLKeyToKeys( key );
-            Key mods = SDLKeys.SDLKeyToKeys( mod );
 
-            bool pass = HotkeyManager.GetInstance().OnHotkeyPressed( keys, mods, pressed );
+            bool pass = HotkeyManager.GetInstance().OnHotkeyPressed( keys );
 
             return !pass;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using ClassicAssist.UI.Views;
 
@@ -11,6 +12,7 @@ namespace ClassicAssist.UITest
         [STAThread]
         private static void Main(string[] args)
         {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("th-TH");
             _window = new MainWindow();
             _window.ShowDialog();
         }

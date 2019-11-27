@@ -9,7 +9,7 @@ using static ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Macros.Commands
 {
-    public static class Consume
+    public static class ConsumeCommands
     {
         private static readonly int[] _bandageTypes = { 0xe21 };
         private const int TIMEOUT = 5000;

@@ -3,7 +3,7 @@ using UOC = ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Macros.Commands
 {
-    public static class Main
+    public static class MainCommands
     {
         public static void Resync()
         {

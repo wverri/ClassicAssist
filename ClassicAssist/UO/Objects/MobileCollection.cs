@@ -25,12 +25,7 @@ namespace ClassicAssist.UO.Objects
 
         public Mobile GetMobile( int serial )
         {
-            if ( serial == Engine.Player?.Serial )
-            {
-                return Engine.Player;
-            }
-
-            return GetEntity( serial );
+            return serial == Engine.Player?.Serial ? Engine.Player : GetEntity( serial );
         }
 
         public bool GetMobile( int serial, out Mobile mobile )

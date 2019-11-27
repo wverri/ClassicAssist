@@ -49,9 +49,18 @@ namespace ClassicAssist.UO.Network
             Register( 0xB9, 5, OnSupportedFeatures );
             Register( 0xBF, 0, OnExtendedCommand );
             Register( 0xD6, 0, OnProperties );
+            Register( 0xDD, 0, OnCompressedGump );
             Register( 0xF3, 26, OnSAWorldItem );
 
             RegisterExtended( 0x08, 0, OnMapChange );
+        }
+
+        private static void OnCompressedGump( PacketReader reader )
+        {
+            int senderSerial = reader.ReadInt32();
+            int gumpId = reader.ReadInt32();
+
+            Engine.GumpList.AddOrUpdate( gumpId, senderSerial, ( k, v ) => senderSerial );
         }
 
         private static void OnMobileName( PacketReader reader )
