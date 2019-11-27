@@ -23,7 +23,10 @@
     <Compile Update="UI\Views\ActiveObjectsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\Views\DressTabControl.xaml.cs">
+    <Compile Update="UI\Views\AgentsTabControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Views\Agents\OrganizerTabControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\Views\EntityCollectionViewer.xaml.cs">
@@ -75,7 +78,10 @@
     <Page Update="UI\Views\ActiveObjectsWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UI\Views\DressTabControl.xaml">
+    <Page Update="UI\Views\AgentsTabControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Views\Agents\OrganizerTabControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\EntityCollectionViewer.xaml">

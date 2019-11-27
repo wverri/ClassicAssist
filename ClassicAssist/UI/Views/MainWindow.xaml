@@ -10,7 +10,7 @@
         xmlns:misc="clr-namespace:ClassicAssist.Misc"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Height="500" Width="625" Style="{DynamicResource WindowStyle}" Topmost="{Binding AlwaysOnTop}" Title="{Binding Title}" ResizeMode="CanMinimize">
+        Height="500" Width="625" Style="{DynamicResource WindowStyle}" Topmost="{Binding AlwaysOnTop}" Title="{Binding Title}">
     <i:Interaction.Behaviors>
         <misc:LoadOptionsOnWindowLoaded/>
     </i:Interaction.Behaviors>
@@ -40,11 +40,11 @@
                 <TabItem Header="{x:Static r:Strings.Macros}">
                     <local:MacrosTabControl/>
                 </TabItem>
-                <TabItem Header="{x:Static r:Strings.Dress}">
-                    <local:DressTabControl/>
-                </TabItem>
                 <TabItem Header="{x:Static r:Strings.Skills}">
                     <local:SkillsTabControl/>
+                </TabItem>
+                <TabItem Header="{x:Static r:Strings.Agents}">
+                    <local:AgentsTabControl/>
                 </TabItem>
                 <TabItem Header="{x:Static r:Strings.About}">
                     <local:AboutControl/>

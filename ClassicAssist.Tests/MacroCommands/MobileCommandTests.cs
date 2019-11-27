@@ -1,14 +1,13 @@
 ﻿using Assistant;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.UO.Data;
-using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ClassicAssist.Tests
+namespace ClassicAssist.Tests.MacroCommands
 {
     [TestClass]
-    public class MacroCommandTests
+    public class MobileCommandTests
     {
         private PlayerMobile _player;
 
@@ -38,7 +37,7 @@ namespace ClassicAssist.Tests
 
             Engine.Mobiles.Add( mobile );
 
-            int val = MobileCommands.Hits(mobile.Serial);
+            int val = MobileCommands.Hits( mobile.Serial );
 
             Assert.AreEqual( 200, val );
 
@@ -48,17 +47,17 @@ namespace ClassicAssist.Tests
         [TestMethod]
         public void WillGetHitsStringParam()
         {
-            Mobile mobile = new Mobile(2) { Hits = 250 };
+            Mobile mobile = new Mobile( 2 ) { Hits = 250 };
 
-            Engine.Mobiles.Add(mobile);
+            Engine.Mobiles.Add( mobile );
 
             AliasCommands.SetAlias( "mobile", mobile.Serial );
 
-            int val = MobileCommands.Hits("mobile");
+            int val = MobileCommands.Hits( "mobile" );
 
-            Assert.AreEqual(250, val);
+            Assert.AreEqual( 250, val );
 
-            Engine.Mobiles.Remove(mobile);
+            Engine.Mobiles.Remove( mobile );
         }
 
         [TestMethod]
@@ -73,36 +72,31 @@ namespace ClassicAssist.Tests
         }
 
         [TestMethod]
-        public void WillSetDefaultAliases()
+        public void WillGetDead()
         {
-            AliasCommands.SetDefaultAliases();
+            Assert.IsFalse( MobileCommands.Dead() );
 
-            Assert.AreEqual( _player.Serial, (int)AliasCommands.GetAlias( "self" ) );
+            _player.ID = 0x192;
 
-            AliasCommands.UnsetDefaultAliases();
+            Assert.IsTrue( MobileCommands.Dead() );
+
+            _player.ID = 0x190;
         }
 
         [TestMethod]
-        public void WillChangeLastAliasOnTargetSent()
+        public void WillGetDeadParam()
         {
-            _player.LastTargetSerial = 0x02;
+            Mobile m = new Mobile( 2 );
 
-            AliasCommands.SetDefaultAliases();
+            Engine.Mobiles.Add( m );
 
-            Assert.AreEqual(0x02, (int)AliasCommands.GetAlias("last"));
+            Assert.IsFalse( MobileCommands.Dead( 2 ) );
 
-            OutgoingPacketHandlers.Initialize();
-            PacketHandler handler = OutgoingPacketHandlers.GetHandler( 0x6C );
+            m.ID = 0x192;
 
-            byte[] packet = {
-                0x6C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xAA, 0xBB, 0xCC, 0xDD, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-            };
+            Assert.IsTrue( MobileCommands.Dead( 2 ) );
 
-            handler?.OnReceive(new PacketReader( packet, packet.Length, true ));
-
-            Assert.AreEqual((uint)0xAABBCCDD, (uint)AliasCommands.GetAlias("last"));
-
-            AliasCommands.UnsetDefaultAliases();
+            Engine.Mobiles.Remove( m );
         }
     }
 }

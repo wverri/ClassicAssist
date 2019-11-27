@@ -100,7 +100,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <avalon:TextEditor ShowLineNumbers="True" x:Name="CodeTextEditor" Grid.Row="0">
+            <avalon:TextEditor ShowLineNumbers="True" x:Name="CodeTextEditor" Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <avalon:TextEditor.Style>
                     <Style TargetType="avalon:TextEditor">
                         <Style.Triggers>
@@ -117,7 +117,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
                 <StackPanel.Resources>
                     <Style TargetType="Button">
-                        <Setter Property="Margin" Value="10"/>
+                        <Setter Property="Margin" Value="10,10,10,0"/>
                         <Setter Property="Padding" Value="10,0,10,0"/>
                         <Setter Property="Height" Value="25"/>
                     </Style>

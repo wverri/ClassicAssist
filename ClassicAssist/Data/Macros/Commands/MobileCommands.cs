@@ -8,6 +8,27 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class MobileCommands
     {
+        public static bool Dead(object obj = null)
+        {
+            int serial = AliasCommands.ResolveSerial(obj);
+
+            if (serial <= 0)
+            {
+                UOC.SystemMessage(Strings.Invalid_or_unknown_object_id);
+                return false;
+            }
+
+            Mobile mobile = Engine.Mobiles.GetMobile(serial);
+
+            if (mobile != null)
+            {
+                return mobile.IsDead;
+            }
+
+            UOC.SystemMessage(Strings.Mobile_not_found___);
+            return false;
+        }
+
         public static bool Hidden( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial(obj);

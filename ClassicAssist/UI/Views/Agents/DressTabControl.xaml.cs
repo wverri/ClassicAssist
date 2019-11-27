@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace ClassicAssist.UI.Views
+namespace ClassicAssist.UI.Views.Agents
 {
     /// <summary>
     /// Interaction logic for DressTabControl.xaml

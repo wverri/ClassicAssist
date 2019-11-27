@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -32,7 +31,6 @@ namespace Assistant
         public delegate void dPlayerInitialized( PlayerMobile player );
 
         public delegate void dSendRecvPacket( byte[] data, int length );
-        internal static ConcurrentDictionary<int, int> GumpList { get; set; } = new ConcurrentDictionary<int, int>();
 
         private const int MAX_DISTANCE = 32;
 
@@ -65,9 +63,13 @@ namespace Assistant
         //public static DateTime NextActionTime { get; set; }
         public static PlayerMobile Player { get; set; }
         public static string StartupPath { get; set; }
-        public static WaitEntries WaitEntries { get; set; }
-        public static TargetType TargetType { get; set; }
         public static int TargetSerial { get; set; }
+        public static TargetType TargetType { get; set; }
+        public static WaitEntries WaitEntries { get; set; }
+        internal static ConcurrentDictionary<int, int> GumpList { get; set; } = new ConcurrentDictionary<int, int>();
+
+        internal static event dSendRecvPacket InternalPacketSentEvent;
+        internal static event dSendRecvPacket InternalPacketReceivedEvent;
 
         public static event dSendRecvPacket PacketReceivedEvent;
         public static event dSendRecvPacket PacketSentEvent;
@@ -259,11 +261,15 @@ namespace Assistant
 
         public static void SendPacketToServer( byte[] packet, int length )
         {
+            InternalPacketSentEvent?.Invoke( packet, length );
+
             _sendToServer?.Invoke( ref packet, ref length );
         }
 
         public static void SendPacketToClient( byte[] packet, int length )
         {
+            InternalPacketReceivedEvent?.Invoke( packet, length );
+
             _sendToClient?.Invoke( ref packet, ref length );
         }
 

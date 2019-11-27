@@ -124,6 +124,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amount.
+        /// </summary>
+        public static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bandage Self.
         /// </summary>
         public static string Bandage_Self {
@@ -331,6 +340,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Graphic.
+        /// </summary>
+        public static string Graphic {
+            get {
+                return ResourceManager.GetString("Graphic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hotkeys.
         /// </summary>
         public static string Hotkeys {
@@ -358,11 +376,38 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Insert.
+        /// </summary>
+        public static string Insert {
+            get {
+                return ResourceManager.GetString("Insert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid container....
         /// </summary>
         public static string Invalid_container___ {
             get {
                 return ResourceManager.GetString("Invalid container...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid destination container....
+        /// </summary>
+        public static string Invalid_destination_container___ {
+            get {
+                return ResourceManager.GetString("Invalid destination container...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid mount....
+        /// </summary>
+        public static string Invalid_mount___ {
+            get {
+                return ResourceManager.GetString("Invalid mount...", resourceCulture);
             }
         }
         
@@ -381,6 +426,24 @@ namespace ClassicAssist.Resources {
         public static string Invalid_skill_name___0__ {
             get {
                 return ResourceManager.GetString("Invalid skill name \"{0}\"", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid source container....
+        /// </summary>
+        public static string Invalid_source_container___ {
+            get {
+                return ResourceManager.GetString("Invalid source container...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item.
+        /// </summary>
+        public static string Item {
+            get {
+                return ResourceManager.GetString("Item", resourceCulture);
             }
         }
         
@@ -547,11 +610,47 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string O {
+            get {
+                return ResourceManager.GetString("O", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Object Inspector.
         /// </summary>
         public static string Object_Inspector {
             get {
                 return ResourceManager.GetString("Object Inspector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Organizer.
+        /// </summary>
+        public static string Organizer {
+            get {
+                return ResourceManager.GetString("Organizer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Organizer &quot;{0}&quot; finished....
+        /// </summary>
+        public static string Organizer__0__finished___ {
+            get {
+                return ResourceManager.GetString("Organizer {0} finished...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Organizer &quot;{0}&quot; running....
+        /// </summary>
+        public static string Organizer__0__running___ {
+            get {
+                return ResourceManager.GetString("Organizer {0} running...", resourceCulture);
             }
         }
         
@@ -664,6 +763,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select destination container....
+        /// </summary>
+        public static string Select_destination_container___ {
+            get {
+                return ResourceManager.GetString("Select destination container...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select source container....
+        /// </summary>
+        public static string Select_source_container___ {
+            get {
+                return ResourceManager.GetString("Select source container...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select undress container....
         /// </summary>
         public static string Select_undress_container___ {
@@ -696,6 +813,15 @@ namespace ClassicAssist.Resources {
         public static string Server {
             get {
                 return ResourceManager.GetString("Server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Containers.
+        /// </summary>
+        public static string Set_Containers {
+            get {
+                return ResourceManager.GetString("Set Containers", resourceCulture);
             }
         }
         
@@ -736,6 +862,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stack.
+        /// </summary>
+        public static string Stack {
+            get {
+                return ResourceManager.GetString("Stack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Status:.
         /// </summary>
         public static string Status_ {
@@ -759,6 +894,24 @@ namespace ClassicAssist.Resources {
         public static string Target_clothing_item___ {
             get {
                 return ResourceManager.GetString("Target clothing item...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target new item....
+        /// </summary>
+        public static string Target_new_item___ {
+            get {
+                return ResourceManager.GetString("Target new item...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target new mount....
+        /// </summary>
+        public static string Target_new_mount___ {
+            get {
+                return ResourceManager.GetString("Target new mount...", resourceCulture);
             }
         }
         

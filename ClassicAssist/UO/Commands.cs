@@ -476,5 +476,18 @@ namespace ClassicAssist.UO
 
             Engine.SendPacketToServer( packet, packet.Length );
         }
+
+        public static void ToggleGargoyleFlying()
+        {
+            PacketWriter pw = new PacketWriter( 11 );
+
+            pw.Write( (byte) 0xBF );
+            pw.Write( (short) 11 );
+            pw.Write( (short) 0x32 );
+            pw.Write( (short) 1 );
+            pw.Write( 0 );
+
+            Engine.SendPacketToServer( pw );
+        }
     }
 }

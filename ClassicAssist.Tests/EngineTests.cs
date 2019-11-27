@@ -366,12 +366,12 @@ namespace ClassicAssist.Tests
 
         private static bool ReceivePacket( ref byte[] data, ref int length )
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         private static bool SendPacket( ref byte[] data, ref int length )
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         #endregion

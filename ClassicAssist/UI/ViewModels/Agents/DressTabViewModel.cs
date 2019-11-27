@@ -13,7 +13,7 @@ using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
 using Newtonsoft.Json.Linq;
 
-namespace ClassicAssist.UI.ViewModels
+namespace ClassicAssist.UI.ViewModels.Agents
 {
     public class DressTabViewModel : HotkeySettableViewModel<DressAgentEntry>, ISettingProvider
     {

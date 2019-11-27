@@ -10,7 +10,7 @@ namespace ClassicAssist.UO.Objects
     {
         public delegate void dMobileStatusUpdated( MobileStatus oldStatus, MobileStatus newStatus );
 
-        public event dMobileStatusUpdated MobileStatusUpdated;
+        private bool _isDead;
 
         internal int[] _layerArray = new int[(int) Layer.LastValid + 1];
         private MobileStatus _status;
@@ -20,11 +20,24 @@ namespace ClassicAssist.UO.Objects
             Equipment = new ItemCollection( serial );
         }
 
+        public bool IsMounted => Mount != null;
+        public Item Mount => Engine.Items.GetItem( GetLayer( Layer.Mount ) );
         public Item Backpack => Engine.Items.GetItem( GetLayer( Layer.Backpack ) );
         public ItemCollection Equipment { get; set; }
 
         public int Hits { get; set; }
         public int HitsMax { get; set; }
+
+        public bool IsDead
+        {
+            get =>
+                ID == 0x0192 ||
+                ID == 0x0193 ||
+                ID >= 0x025F && ID <= 0x0260 ||
+                ID == 0x2B6 || ID == 0x02B7 || _isDead;
+            set => _isDead = value;
+        }
+
         public int Mana { get; set; }
         public int ManaMax { get; set; }
         public Notoriety Notoriety { get; set; }
@@ -41,6 +54,8 @@ namespace ClassicAssist.UO.Objects
                 _status = value;
             }
         }
+
+        public event dMobileStatusUpdated MobileStatusUpdated;
 
         internal void SetLayer( Layer layer, int serial )
         {
