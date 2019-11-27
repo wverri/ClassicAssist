@@ -142,6 +142,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buffs / Penalties.
+        /// </summary>
+        public static string Buffs___Penalties {
+            get {
+                return ResourceManager.GetString("Buffs / Penalties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Build Date:.
         /// </summary>
         public static string Build_Date_ {
@@ -223,6 +232,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Color.
+        /// </summary>
+        public static string Color {
+            get {
+                return ResourceManager.GetString("Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combat.
+        /// </summary>
+        public static string Combat {
+            get {
+                return ResourceManager.GetString("Combat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Commands.
         /// </summary>
         public static string Commands {
@@ -255,6 +282,15 @@ namespace ClassicAssist.Resources {
         public static string Dress {
             get {
                 return ResourceManager.GetString("Dress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entity.
+        /// </summary>
+        public static string Entity {
+            get {
+                return ResourceManager.GetString("Entity", resourceCulture);
             }
         }
         
@@ -538,11 +574,38 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Magical.
+        /// </summary>
+        public static string Magical {
+            get {
+                return ResourceManager.GetString("Magical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Map:.
         /// </summary>
         public static string Map_ {
             get {
                 return ResourceManager.GetString("Map:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Misc.
+        /// </summary>
+        public static string Misc {
+            get {
+                return ResourceManager.GetString("Misc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mobile.
+        /// </summary>
+        public static string Mobile {
+            get {
+                return ResourceManager.GetString("Mobile", resourceCulture);
             }
         }
         
@@ -718,6 +781,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Public Properties.
+        /// </summary>
+        public static string Public_Properties {
+            get {
+                return ResourceManager.GetString("Public Properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ready....
         /// </summary>
         public static string Ready___ {
@@ -736,11 +808,29 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Regeneration.
+        /// </summary>
+        public static string Regeneration {
+            get {
+                return ResourceManager.GetString("Regeneration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         public static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resistances.
+        /// </summary>
+        public static string Resistances {
+            get {
+                return ResourceManager.GetString("Resistances", resourceCulture);
             }
         }
         
@@ -867,6 +957,15 @@ namespace ClassicAssist.Resources {
         public static string Stack {
             get {
                 return ResourceManager.GetString("Stack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stats.
+        /// </summary>
+        public static string Stats {
+            get {
+                return ResourceManager.GetString("Stats", resourceCulture);
             }
         }
         

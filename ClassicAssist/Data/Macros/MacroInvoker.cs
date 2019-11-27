@@ -78,11 +78,6 @@ namespace ClassicAssist.Data.Macros
             } ) { IsBackground = true };
 
             Thread.Start();
-
-            while ( !Thread.IsAlive )
-            {
-                Thread.Sleep( 10 );
-            }
         }
 
         public void Stop()

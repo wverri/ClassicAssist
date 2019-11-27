@@ -12,7 +12,7 @@ namespace ClassicAssist.UITest
         [STAThread]
         private static void Main(string[] args)
         {
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("th-TH");
+            //Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-AU");
             _window = new MainWindow();
             _window.ShowDialog();
         }

@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
         xmlns:r="clr-namespace:ClassicAssist.Resources"
+        xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="{x:Static r:Strings.Object_Inspector}" Height="396.8" Width="450" Topmost="True">
     <Window.InputBindings>
@@ -22,6 +24,9 @@
     </Window.Resources>
     <Grid>
         <ListView ItemsSource="{Binding Source={StaticResource src}}" SelectedValue="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Behaviors>
+                <misc:ListViewDoubleClickBehaviour/>
+            </i:Interaction.Behaviors>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="150" Header="{x:Static r:Strings.Property}" DisplayMemberBinding="{Binding Name}" />

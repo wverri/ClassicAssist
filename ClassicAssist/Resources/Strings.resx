@@ -144,6 +144,9 @@
   <data name="Bandage Self" xml:space="preserve">
     <value>Bandage Self</value>
   </data>
+  <data name="Buffs / Penalties" xml:space="preserve">
+    <value>Buffs / Penalties</value>
+  </data>
   <data name="Build Date:" xml:space="preserve">
     <value>Build Date:</value>
   </data>
@@ -171,6 +174,12 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Combat" xml:space="preserve">
+    <value>Combat</value>
+  </data>
   <data name="Commands" xml:space="preserve">
     <value>Commands</value>
   </data>
@@ -182,6 +191,9 @@
   </data>
   <data name="Dress" xml:space="preserve">
     <value>Dress</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>Entity</value>
   </data>
   <data name="Entity Collection Viewer" xml:space="preserve">
     <value>Entity Collection Viewer</value>
@@ -276,8 +288,17 @@
   <data name="Macros" xml:space="preserve">
     <value>Macros</value>
   </data>
+  <data name="Magical" xml:space="preserve">
+    <value>Magical</value>
+  </data>
   <data name="Map:" xml:space="preserve">
     <value>Map:</value>
+  </data>
+  <data name="Misc" xml:space="preserve">
+    <value>Misc</value>
+  </data>
+  <data name="Mobile" xml:space="preserve">
+    <value>Mobile</value>
   </data>
   <data name="Mobile not found..." xml:space="preserve">
     <value>Mobile not found...</value>
@@ -336,14 +357,23 @@
   <data name="Property" xml:space="preserve">
     <value>Property</value>
   </data>
+  <data name="Public Properties" xml:space="preserve">
+    <value>Public Properties</value>
+  </data>
   <data name="Ready..." xml:space="preserve">
     <value>Ready...</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
+  <data name="Regeneration" xml:space="preserve">
+    <value>Regeneration</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
+  </data>
+  <data name="Resistances" xml:space="preserve">
+    <value>Resistances</value>
   </data>
   <data name="Resync" xml:space="preserve">
     <value>Resync</value>
@@ -386,6 +416,9 @@
   </data>
   <data name="Stack" xml:space="preserve">
     <value>Stack</value>
+  </data>
+  <data name="Stats" xml:space="preserve">
+    <value>Stats</value>
   </data>
   <data name="Status:" xml:space="preserve">
     <value>Status:</value>
