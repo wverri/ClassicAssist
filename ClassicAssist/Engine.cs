@@ -126,6 +126,7 @@ namespace Assistant
             }
 
             Art.Initialize( ClientPath );
+            Hues.Initialize( ClientPath );
             Cliloc.Initialize( ClientPath );
             Skills.Initialize( ClientPath );
             TileData.Initialize( ClientPath );

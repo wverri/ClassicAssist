@@ -68,7 +68,7 @@ namespace ClassicAssist.UI.ViewModels
 
     public class EntityCollectionData
     {
-        public BitmapSource Bitmap => Art.GetStatic( Entity.ID ).ToBitmapSource();
+        public BitmapSource Bitmap => Art.GetStatic( Entity.ID, Entity.Hue ).ToBitmapSource();
         public Entity Entity { get; set; }
         public string Name => Entity.Name;
     }

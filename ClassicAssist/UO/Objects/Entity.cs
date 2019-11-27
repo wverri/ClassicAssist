@@ -14,7 +14,10 @@ namespace ClassicAssist.UO.Objects
 
         public Direction Direction { get; set; }
         public int Hue { get; set; }
+
+        [DisplayFormat( typeof( HexFormatProvider ) )]
         public int ID { get; set; }
+
         public virtual string Name { get; set; }
 
         [DisplayFormat( typeof( PropertyArrayFormatProvider ) )]

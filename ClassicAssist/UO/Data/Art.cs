@@ -108,6 +108,20 @@ namespace ClassicAssist.UO.Data
             return indexes;
         }
 
+        public static Bitmap GetStatic(int itemID, int hue)
+        {
+            Bitmap bmp = GetStatic( itemID );
+
+            if ( hue == 0 || bmp == null )
+                return bmp;
+
+            StaticTile tileData = TileData.GetStaticTile( itemID );
+
+            Hues.ApplyHue( hue, bmp, tileData.Flags.HasFlag( TileFlags.PartialHue ) );
+
+            return bmp;
+        }
+
         public static unsafe Bitmap GetStatic(int itemId)
         {
             itemId += 0x4000;
