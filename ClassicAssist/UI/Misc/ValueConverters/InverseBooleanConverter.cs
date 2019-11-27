@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace ClassicAssist.UI.ValueConverters
+namespace ClassicAssist.UI.Misc.ValueConverters
 {
     public class InverseBooleanConverter : IValueConverter
     {

@@ -300,9 +300,6 @@
   <data name="New Item" xml:space="preserve">
     <value>New Item</value>
   </data>
-  <data name="O" xml:space="preserve">
-    <value />
-  </data>
   <data name="Object Inspector" xml:space="preserve">
     <value>Object Inspector</value>
   </data>
@@ -428,6 +425,9 @@
   </data>
   <data name="Unknown alias &quot;{0}&quot;." xml:space="preserve">
     <value>Unknown alias "{0}".</value>
+  </data>
+  <data name="UO_LOCALE" xml:space="preserve">
+    <value>ENU</value>
   </data>
   <data name="Use death screen whilst hidden" xml:space="preserve">
     <value>Use death screen whilst hidden (Chuckles Mode)</value>

@@ -4,7 +4,7 @@ using System.Windows.Data;
 using ClassicAssist.Misc;
 using ClassicAssist.UO.Data;
 
-namespace ClassicAssist.UI.ValueConverters
+namespace ClassicAssist.UI.Misc.ValueConverters
 {
     public class LockStatusValueConverter : IValueConverter
     {

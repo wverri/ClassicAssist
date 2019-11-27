@@ -610,15 +610,6 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string O {
-            get {
-                return ResourceManager.GetString("O", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Object Inspector.
         /// </summary>
         public static string Object_Inspector {
@@ -993,6 +984,15 @@ namespace ClassicAssist.Resources {
         public static string Unknown_alias___0___ {
             get {
                 return ResourceManager.GetString("Unknown alias \"{0}\".", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ENU.
+        /// </summary>
+        public static string UO_LOCALE {
+            get {
+                return ResourceManager.GetString("UO_LOCALE", resourceCulture);
             }
         }
         

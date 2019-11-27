@@ -8,7 +8,7 @@ using ClassicAssist.Data.Skills;
 using ClassicAssist.Misc;
 using ClassicAssist.UO.Data;
 
-namespace UOMAssist.Skills
+namespace ClassicAssist.UI.Misc.ValueConverters
 {
     public class SetSkillLockData
     {

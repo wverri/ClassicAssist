@@ -6,13 +6,16 @@
              xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:controls="clr-namespace:ClassicAssist.UI.Controls"
-             xmlns:valueConverters="clr-namespace:ClassicAssist.UI.ValueConverters"
              xmlns:local="clr-namespace:ClassicAssist.Data.Macros"
              xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
              xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
              xmlns:resources="clr-namespace:ClassicAssist.Resources"
+             xmlns:valueConverters1="clr-namespace:ClassicAssist.UI.Misc.ValueConverters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500" Background="White" Padding="5">
+    <UserControl.Resources>
+        <valueConverters1:CellWidthValueConverter x:Key="CellWidthValueConverter"/>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:MacrosTabViewModel/>
     </UserControl.DataContext>
@@ -34,7 +37,7 @@
                 <ListBox Grid.Row="0" ItemsSource="{Binding Items}" x:Name="ListBox" SelectedItem="{Binding SelectedItem}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <controls:EditTextBlock Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" MinWidth="40"/>
+                            <controls:EditTextBlock Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" MinWidth="40" Width="{Binding ActualWidth, ConverterParameter=20, Converter={StaticResource CellWidthValueConverter}, ElementName=ListBox, Mode=OneWay}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -63,7 +66,7 @@
                 </Grid>
                 <Grid Grid.Row="2" Margin="0,15,0,0">
                     <Grid.Resources>
-                        <valueConverters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+                        <valueConverters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>

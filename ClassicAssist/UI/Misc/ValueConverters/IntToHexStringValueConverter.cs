@@ -2,13 +2,18 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace ClassicAssist.UI.ValueConverters
+namespace ClassicAssist.UI.Misc.ValueConverters
 {
-    public class DateTimeToTimeSpanValueConverter : IValueConverter
+    public class IntToHexStringValueConverter : IValueConverter
     {
         public object Convert( object value, Type targetType, object parameter, CultureInfo culture )
         {
-            return !( value is DateTime dt ) ? (object) null : (DateTime.Now - dt).ToString();
+            if ( value is int val )
+            {
+                return $"0x{val:x8}";
+            }
+
+            return value;
         }
 
         public object ConvertBack( object value, Type targetType, object parameter, CultureInfo culture )

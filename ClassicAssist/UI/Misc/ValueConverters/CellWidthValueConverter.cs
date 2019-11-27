@@ -2,13 +2,19 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace ClassicAssist.UI.ValueConverters
+namespace ClassicAssist.UI.Misc.ValueConverters
 {
     public class CellWidthValueConverter : IValueConverter
     {
-        private const int substractValue = 15;
+        private double substractValue = 15;
+
         public object Convert( object value, Type targetType, object parameter, CultureInfo culture )
         {
+            if ( parameter != null )
+            {
+                substractValue = (double) parameter;
+            }
+
             double? val = (double?) value - substractValue;
             return val;
         }
