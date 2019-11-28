@@ -8,6 +8,7 @@ using ClassicAssist.Data.Macros;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Views;
+using ClassicAssist.UI.Views.Macros;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Objects;
 using Newtonsoft.Json.Linq;
@@ -24,6 +25,7 @@ namespace ClassicAssist.UI.ViewModels
         private RelayCommand _removeMacroCommand;
         private MacroEntry _selectedItem;
         private ICommand _showActiveObjectsWindowCommand;
+        private ICommand _showCommandsCommand;
         private ICommand _stopCommand;
 
         public MacrosTabViewModel() : base( Strings.Macros )
@@ -60,6 +62,9 @@ namespace ClassicAssist.UI.ViewModels
         public ICommand ShowActiveObjectsWindowCommand =>
             _showActiveObjectsWindowCommand ?? ( _showActiveObjectsWindowCommand =
                 new RelayCommand( ShowActiveObjectsWindow, o => true ) );
+
+        public ICommand ShowCommandsCommand =>
+            _showCommandsCommand ?? ( _showCommandsCommand = new RelayCommand( ShowCommands, o => true ) );
 
         public ICommand StopCommand => _stopCommand ?? ( _stopCommand = new RelayCommand( Stop, o => IsRunning ) );
 
@@ -197,6 +202,12 @@ namespace ClassicAssist.UI.ViewModels
             };
 
             _macroInvoker.Execute();
+        }
+
+        private static void ShowCommands( object obj )
+        {
+            MacrosCommandWindow window = new MacrosCommandWindow();
+            window.ShowDialog();
         }
     }
 }

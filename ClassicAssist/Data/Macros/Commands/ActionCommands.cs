@@ -13,6 +13,7 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class ActionCommands
     {
+        [CommandsDisplay(Category = "Actions", Description = "Attack mobile (parameter can be serial or alias).")]
         public static void Attack( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -26,6 +27,7 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new AttackRequest( serial ) );
         }
 
+        [CommandsDisplay(Category = "Actions", Description = "Clear hands, \"left\", \"right\", or \"both\"")]
         public static void ClearHands( string hand )
         {
             hand = hand.ToLower();
@@ -58,6 +60,7 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
+        [CommandsDisplay(Category = "Actions", Description = "Single click object (parameter can be serial or alias).")]
         public static void ClickObject( object obj )
         {
             int serial = AliasCommands.ResolveSerial(obj);
@@ -71,6 +74,7 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new LookRequest( serial ) );
         }
 
+        [CommandsDisplay(Category = "Actions", Description = "Move item to container (parameters can be serials or aliases).")]
         public static void MoveItem( object item, object destination, int amount = -1 )
         {
             int itemSerial = AliasCommands.ResolveSerial( item );
@@ -104,6 +108,7 @@ namespace ClassicAssist.Data.Macros.Commands
             UOC.DragDropAsync( itemSerial, amount, containerSerial ).Wait();
         }
 
+        [CommandsDisplay(Category = "Actions", Description = "Unmounts if mounted, or mounts if unmounted, will prompt for mount if no \"mount\" alias.")]
         public static void ToggleMounted()
         {
             PlayerMobile player = Engine.Player;

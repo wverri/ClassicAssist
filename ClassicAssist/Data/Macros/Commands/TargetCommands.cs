@@ -7,11 +7,13 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class TargetCommands
     {   
+        [CommandsDisplay(Category = "Main", Description = "Wait for target packet from server, optional timeout parameter (default 5000 milliseconds).")]
         public static bool WaitForTarget( int timeout = 5000 )
         {
             return UOC.WaitForTarget( timeout );
         }
 
+        [CommandsDisplay(Category = "Main", Description = "Targets the given object (parameter can be serial or alias).")]
         public static void Target( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );

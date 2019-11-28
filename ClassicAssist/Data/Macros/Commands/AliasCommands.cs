@@ -82,6 +82,7 @@ namespace ClassicAssist.Data.Macros.Commands
             return serial;
         }
 
+        [CommandsDisplay(Category = "Aliases", Description = "Sets the value of the given alias name.")]
         public static void SetAlias( string aliasName, int value )
         {
             if ( _aliases.ContainsKey( aliasName ) )
@@ -94,6 +95,7 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
+        [CommandsDisplay(Category = "Aliases", Description = "Removes the alias name given.")]
         public static void UnsetAlias( string aliasName )
         {
             if ( _aliases.ContainsKey( aliasName ) )
@@ -102,6 +104,7 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
+        [CommandsDisplay(Category = "Aliases", Description = "Gets the value of the given alias name.")]
         public static int GetAlias( string aliasName )
         {
             if ( _aliases.ContainsKey( aliasName ) )
@@ -112,17 +115,19 @@ namespace ClassicAssist.Data.Macros.Commands
             return -1;
         }
 
-        public static Dictionary<string, int> GetAllAliases()
+        internal static Dictionary<string, int> GetAllAliases()
         {
             return _aliases;
         }
 
+        [CommandsDisplay(Category = "Aliases", Description = "Prompt with an in-game target cursor to supply value for given alias name.")]
         public static void PromptAlias( string aliasName )
         {
             int serial = UOC.GetTargeSerialAsync( Strings.Target_object___, 30000 ).Result;
             SetAlias( aliasName, serial );
         }
 
+        [CommandsDisplay(Category = "Aliases", Description = "Returns true if alias serial can be found on screen, false if not.")]
         public static bool FindAlias( string aliasName )
         {
             int serial;

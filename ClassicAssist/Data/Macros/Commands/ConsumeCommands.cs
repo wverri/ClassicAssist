@@ -13,6 +13,8 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         private static readonly int[] _bandageTypes = { 0xe21 };
         private const int TIMEOUT = 5000;
+
+        [CommandsDisplay(Category = "Actions", Description = "Applies a bandage to the player.")]
         public static bool BandageSelf()
         {
             PlayerMobile player = Engine.Player;

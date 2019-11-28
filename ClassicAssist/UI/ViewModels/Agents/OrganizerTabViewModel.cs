@@ -27,6 +27,9 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
         public OrganizerTabViewModel() : base( Strings.Organizer )
         {
+            OrganizerManager manager = OrganizerManager.GetInstance();
+
+            manager.Items = Items;
         }
 
         public ICommand InsertItemCommand =>

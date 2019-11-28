@@ -61,6 +61,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abilities.
+        /// </summary>
+        public static string Abilities {
+            get {
+                return ResourceManager.GetString("Abilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         public static string About {
@@ -75,6 +84,15 @@ namespace ClassicAssist.Resources {
         public static string Action_Delay_ {
             get {
                 return ResourceManager.GetString("Action Delay:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string Actions {
+            get {
+                return ResourceManager.GetString("Actions", resourceCulture);
             }
         }
         
@@ -385,6 +403,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gumps.
+        /// </summary>
+        public static string Gumps {
+            get {
+                return ResourceManager.GetString("Gumps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hotkeys.
         /// </summary>
         public static string Hotkeys {
@@ -583,6 +610,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Main.
+        /// </summary>
+        public static string Main {
+            get {
+                return ResourceManager.GetString("Main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Map:.
         /// </summary>
         public static string Map_ {
@@ -682,11 +718,29 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Objects.
+        /// </summary>
+        public static string Objects {
+            get {
+                return ResourceManager.GetString("Objects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Organizer.
         /// </summary>
         public static string Organizer {
             get {
                 return ResourceManager.GetString("Organizer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Organizer &quot;{0}&quot; not found....
+        /// </summary>
+        public static string Organizer___0___not_found___ {
+            get {
+                return ResourceManager.GetString("Organizer \"{0}\" not found...", resourceCulture);
             }
         }
         

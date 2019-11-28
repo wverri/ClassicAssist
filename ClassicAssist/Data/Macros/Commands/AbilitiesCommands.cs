@@ -14,6 +14,7 @@ namespace ClassicAssist.Data.Macros.Commands
             throw new NotImplementedException();
         }
 
+        [CommandsDisplay(Category = "Abilities", Description = "(Garoyle) Start flying if not already flying.")]
         public static void Fly()
         {
             PlayerMobile player = Engine.Player;
@@ -29,6 +30,7 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
+        [CommandsDisplay(Category = "Abilities", Description = "(Garoyle) Stop flying if currently flying.")]
         public static void Land()
         {
             PlayerMobile player = Engine.Player;

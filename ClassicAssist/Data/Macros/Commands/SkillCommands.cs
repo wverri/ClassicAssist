@@ -8,6 +8,7 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class SkillCommands
     {
+        [CommandsDisplay(Category = "Skills", Description = "Invokes the given skill name.")]
         public static void UseSkill( string skill )
         {
             try

@@ -8,6 +8,7 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class ObjectCommands
     {
+        [CommandsDisplay(Category = "Actions", Description = "Sends use (doubleclick) request for given object (parameter can be serial or alias).")]
         public static void UseObject( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -21,6 +22,7 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new UseObject( serial ) );
         }
 
+        [CommandsDisplay(Category = "Actions", Description = "Sends use (doubleclick) request for given type, optional parameters of hue and container object (defaults to player backpack) (parameters can be serial or alias).")]
         public static void UseType( object type, int hue = -1, object container = null )
         {
             int serial = AliasCommands.ResolveSerial( type );

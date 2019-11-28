@@ -8,6 +8,7 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class EntityCommands
     {
+        [CommandsDisplay(Category = "Entity", Description = "Returns Hue of given object (parameter can be serial or alias).")]
         public static int Hue( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial(obj);
@@ -31,6 +32,7 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
+        [CommandsDisplay(Category = "Entity", Description = "Returns Item ID of given object (parameter can be serial or alias).")]
         public static int Graphic(object obj = null)
         {
             int serial = AliasCommands.ResolveSerial(obj);

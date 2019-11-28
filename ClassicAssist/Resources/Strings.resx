@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Abilities" xml:space="preserve">
+    <value>Abilities</value>
+  </data>
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
   <data name="Action Delay:" xml:space="preserve">
     <value>Action Delay:</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
   </data>
   <data name="Active Objects" xml:space="preserve">
     <value>Active Objects</value>
@@ -225,6 +231,9 @@
   <data name="Graphic" xml:space="preserve">
     <value>Graphic</value>
   </data>
+  <data name="Gumps" xml:space="preserve">
+    <value>Gumps</value>
+  </data>
   <data name="Hotkeys" xml:space="preserve">
     <value>Hotkeys</value>
   </data>
@@ -291,6 +300,9 @@
   <data name="Magical" xml:space="preserve">
     <value>Magical</value>
   </data>
+  <data name="Main" xml:space="preserve">
+    <value>Main</value>
+  </data>
   <data name="Map:" xml:space="preserve">
     <value>Map:</value>
   </data>
@@ -324,8 +336,14 @@
   <data name="Object Inspector" xml:space="preserve">
     <value>Object Inspector</value>
   </data>
+  <data name="Objects" xml:space="preserve">
+    <value>Objects</value>
+  </data>
   <data name="Organizer" xml:space="preserve">
     <value>Organizer</value>
+  </data>
+  <data name="Organizer &quot;{0}&quot; not found..." xml:space="preserve">
+    <value>Organizer "{0}" not found...</value>
   </data>
   <data name="Organizer containers set..." xml:space="preserve">
     <value>Organizer containers set...</value>

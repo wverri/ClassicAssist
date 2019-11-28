@@ -41,6 +41,9 @@
     <Compile Update="UI\Views\MacrosTabControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\Views\Macros\MacrosCommandWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\Views\MainWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,6 +97,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\MacrosTabControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Views\Macros\MacrosCommandWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\MainWindow.xaml">
