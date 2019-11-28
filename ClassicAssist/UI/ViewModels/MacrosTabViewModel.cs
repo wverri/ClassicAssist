@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Assistant;
 using ClassicAssist.Annotations;
@@ -17,11 +18,11 @@ namespace ClassicAssist.UI.ViewModels
 {
     public class MacrosTabViewModel : HotkeySettableViewModel<MacroEntry>, ISettingProvider
     {
-        private ICommand _executeCommand;
+        private RelayCommand _executeCommand;
         private ICommand _inspectObjectCommand;
         private bool _isRunning;
         private MacroInvoker _macroInvoker;
-        private ICommand _newMacroCommand;
+        private RelayCommand _newMacroCommand;
         private RelayCommand _removeMacroCommand;
         private MacroEntry _selectedItem;
         private ICommand _showActiveObjectsWindowCommand;
@@ -33,8 +34,8 @@ namespace ClassicAssist.UI.ViewModels
             Engine.DisconnectedEvent += OnDisconnectedEvent;
         }
 
-        public ICommand ExecuteCommand =>
-            _executeCommand ?? ( _executeCommand = new RelayCommand( Execute, o => !IsRunning ) );
+        public RelayCommand ExecuteCommand =>
+            _executeCommand ?? ( _executeCommand = new RelayCommand( Execute, o => !IsRunning && SelectedItem != null) );
 
         public ICommand InspectObjectCommand =>
             _inspectObjectCommand ??
@@ -46,10 +47,10 @@ namespace ClassicAssist.UI.ViewModels
             set => SetProperty( ref _isRunning, value );
         }
 
-        public ICommand NewMacroCommand =>
+        public RelayCommand NewMacroCommand =>
             _newMacroCommand ?? ( _newMacroCommand = new RelayCommand( NewMacro, o => !IsRunning ) );
 
-        public ICommand RemoveMacroCommand =>
+        public RelayCommand RemoveMacroCommand =>
             _removeMacroCommand ?? ( _removeMacroCommand =
                 new RelayCommand( RemoveMacro, o => !IsRunning && SelectedItem != null ) );
 
@@ -187,7 +188,7 @@ namespace ClassicAssist.UI.ViewModels
                 return;
             }
 
-            IsRunning = true;
+            _dispatcher.Invoke( () => IsRunning = true );
 
             _macroInvoker = new MacroInvoker( entry );
             _macroInvoker.StoppedEvent += () =>

@@ -48,25 +48,48 @@
                 </Grid>
             </Grid>
         </GroupBox>
-        <StackPanel Grid.Column="1" Margin="5,15,0,0">
-            <CheckBox Content="{x:Static r:Strings.Always_On_Top}" IsChecked="{Binding AlwaysOnTop}"/>
-            <StackPanel Orientation="Horizontal">
-                <StackPanel.Resources>
-                    <misc:BindingProxy x:Key="proxy" Data="{Binding}"/>
-                </StackPanel.Resources>
-                <CheckBox IsChecked="{Binding ActionDelay}" DataContext="{Binding}">
-                    <CheckBox.ContentTemplate>
-                        <ItemContainerTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="{x:Static r:Strings.Action_Delay_}" Margin="0" Padding="5,0,0,0"/>
-                                <TextBox Width="40" Margin="10,0,10,0" Text="{Binding Path=Data.ActionDelayMS, Source={StaticResource proxy}}"/>
-                                <Label Content="ms" Margin="0" Padding="0"/>
-                            </StackPanel>
-                        </ItemContainerTemplate>
-                    </CheckBox.ContentTemplate>
-                </CheckBox>
+        <Grid Grid.Column="1" Margin="5,15,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <CheckBox Content="{x:Static r:Strings.Always_On_Top}" IsChecked="{Binding AlwaysOnTop}"/>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <misc:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                    </StackPanel.Resources>
+                    <CheckBox IsChecked="{Binding ActionDelay}" DataContext="{Binding}">
+                        <CheckBox.ContentTemplate>
+                            <ItemContainerTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="{x:Static r:Strings.Action_Delay_}" Margin="0" Padding="5,0,0,0"/>
+                                    <TextBox Width="40" Margin="10,0,10,0" Text="{Binding Path=Data.ActionDelayMS, Source={StaticResource proxy}}"/>
+                                    <Label Content="ms" Margin="0" Padding="0"/>
+                                </StackPanel>
+                            </ItemContainerTemplate>
+                        </CheckBox.ContentTemplate>
+                    </CheckBox>
+                </StackPanel>
+                <CheckBox Content="{x:Static r:Strings.Use_death_screen_whilst_hidden}" IsChecked="{Binding UseDeathScreenWhilstHidden}"/>
             </StackPanel>
-            <CheckBox Content="{x:Static r:Strings.Use_death_screen_whilst_hidden}" IsChecked="{Binding UseDeathScreenWhilstHidden}"/>
-        </StackPanel>
+            <Grid Grid.Row="1">
+                <GroupBox Header="{x:Static r:Strings.Profiles}" Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Margin="5">
+                            <ComboBox ItemsSource="{Binding Profiles}" SelectedIndex="0"/>
+                        </Grid>
+                        <DockPanel Grid.Column="1" Margin="5">
+                            <Button Content="{x:Static r:Strings.New}" Margin="0,0,10,0" Padding="10,0,10,0" IsEnabled="False"/>
+                            <Button Content="{x:Static r:Strings.Save}" Margin="0,0,10,0" Padding="10,0,10,0" IsEnabled="False"/>
+                        </DockPanel>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

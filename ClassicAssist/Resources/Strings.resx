@@ -372,6 +372,9 @@
   <data name="ProductName" xml:space="preserve">
     <value>ClassicAssist</value>
   </data>
+  <data name="Profiles" xml:space="preserve">
+    <value>Profiles</value>
+  </data>
   <data name="Property" xml:space="preserve">
     <value>Property</value>
   </data>
@@ -395,6 +398,9 @@
   </data>
   <data name="Resync" xml:space="preserve">
     <value>Resync</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="Seasons" xml:space="preserve">
     <value>Seasons</value>

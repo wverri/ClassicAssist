@@ -9,6 +9,8 @@ using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network.PacketFilter;
+using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using Newtonsoft.Json.Linq;
 
@@ -231,7 +233,23 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
             Item sourceContainer = Engine.Items.GetItem( entry.SourceContainer );
 
-            if ( sourceContainer?.Container == null )
+            if ( sourceContainer == null )
+            {
+                //TODO
+                Commands.SystemMessage( Strings.Cannot_find_container___ );
+                return;
+            }
+
+            PacketFilterInfo pfi = new PacketFilterInfo( 0x3C,
+                new[] { PacketFilterConditions.IntAtPositionCondition( sourceContainer.Serial, 19 ) } );
+
+            if ( Commands.WaitForIncomingPacket( pfi, 1000,
+                () => Engine.SendPacketToServer( new UseObject( sourceContainer.Serial ) ) ) )
+            {
+                await Task.Delay(Options.CurrentOptions.ActionDelayMS);
+            }
+
+            if ( sourceContainer.Container == null )
             {
                 //TODO
                 Commands.SystemMessage( Strings.Cannot_find_container___ );
@@ -258,9 +276,22 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
                 Item[] moveItems = sourceContainer.Container.SelectEntities( i => matchItems.Contains( i.ID ) );
 
+                if ( moveItems == null )
+                {
+                    return;
+                }
+
                 foreach ( Item moveItem in moveItems )
                 {
-                    await Commands.DragDropAsync( moveItem.Serial, moveItem.Count, desinationContainer.Serial );
+                    if ( entry.Stack )
+                    {
+                        await Commands.DragDropAsync( moveItem.Serial, moveItem.Count, desinationContainer.Serial );
+                    }
+                    else
+                    {
+                        await Commands.DragDropAsync( moveItem.Serial, moveItem.Count, desinationContainer.Serial, 0,
+                            0 );
+                    }
 
                     if ( _cancellationTokenSource.IsCancellationRequested )
                     {

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using Assistant;
 using ClassicAssist.Data;
@@ -11,6 +14,8 @@ namespace ClassicAssist.UI.ViewModels
 {
     public class GeneralControlViewModel : BaseViewModel, ISettingProvider
     {
+        private ObservableCollection<string> _profiles = new ObservableCollection<string>();
+
         public GeneralControlViewModel()
         {
             Type[] filterTypes = { typeof( WeatherFilter ), typeof( SeasonFilter ), typeof( LightLevelFilter ) };
@@ -41,6 +46,12 @@ namespace ClassicAssist.UI.ViewModels
         }
 
         public ObservableCollectionEx<FilterEntry> Filters { get; set; } = new ObservableCollectionEx<FilterEntry>();
+
+        public ObservableCollection<string> Profiles
+        {
+            get => _profiles;
+            set => SetProperty(ref _profiles, value);
+        }
 
         public int LightLevel
         {
@@ -104,9 +115,15 @@ namespace ClassicAssist.UI.ViewModels
             bool topmost = general["AlwaysOnTop"]?.ToObject<bool>() ?? false;
             SetOptionsNotify( nameof( AlwaysOnTop ), topmost, false );
 
-            AlwaysOnTop = topmost;
-            
-            NotifyPropertyChanged( nameof(AlwaysOnTop) );
+            string[] profiles = Options.GetProfiles();
+
+            if (profiles == null)
+                return;
+
+            foreach (string profile in profiles)
+            {
+                Profiles.Add(Path.GetFileName(profile));
+            }
         }
     }
 }

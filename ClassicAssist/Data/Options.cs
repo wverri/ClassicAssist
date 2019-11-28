@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ClassicAssist.Annotations;
 using ClassicAssist.Misc;
@@ -16,7 +17,15 @@ namespace ClassicAssist.Data
         private bool _actionDelay;
         private int _actionDelayMs;
         private bool _useDeathScreenWhilstHidden;
-        private const string SETTINGS_FILENAME = "settings.json";
+        private string _name;
+        private static string _profilePath;
+        private const string DEFAULT_SETTINGS_FILENAME = "settings.json";
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value);
+        }
 
         public bool AlwaysOnTop
         {
@@ -54,7 +63,8 @@ namespace ClassicAssist.Data
         {
             BaseViewModel[] instances = BaseViewModel.Instances;
 
-            JObject obj = new JObject();
+            JObject obj = new JObject { { "Name", DEFAULT_SETTINGS_FILENAME } };
+
 
             foreach ( BaseViewModel instance in instances )
             {
@@ -64,19 +74,28 @@ namespace ClassicAssist.Data
                 }
             }
 
-            File.WriteAllText( IOPath.Combine( startupPath, SETTINGS_FILENAME ), obj.ToString() );
+            File.WriteAllText( IOPath.Combine( _profilePath, DEFAULT_SETTINGS_FILENAME ), obj.ToString() );
         }
 
         public static void Load( string startupPath, Options options )
         {
             BaseViewModel[] instances = BaseViewModel.Instances;
 
+            _profilePath = IOPath.Combine( startupPath, "Profiles" );
+
+            if ( !Directory.Exists( _profilePath ) )
+            {
+                Directory.CreateDirectory( _profilePath );
+            }
+
             JObject json = new JObject();
 
-            if ( File.Exists( IOPath.Combine( startupPath, SETTINGS_FILENAME ) ) )
+            if ( File.Exists( IOPath.Combine( _profilePath, DEFAULT_SETTINGS_FILENAME ) ) )
             {
-                json = JObject.Parse(File.ReadAllText(IOPath.Combine(startupPath, SETTINGS_FILENAME)));
+                json = JObject.Parse(File.ReadAllText(IOPath.Combine(_profilePath, DEFAULT_SETTINGS_FILENAME)));
             }
+
+            CurrentOptions.Name = json["Name"]?.ToObject<string>() ?? DEFAULT_SETTINGS_FILENAME;
 
             foreach ( BaseViewModel instance in instances )
             {
@@ -99,6 +118,11 @@ namespace ClassicAssist.Data
         {
             obj = value;
             OnPropertyChanged(propertyName);
+        }
+
+        public static string[] GetProfiles()
+        {
+            return Directory.EnumerateFiles( _profilePath, "*.json" ).ToArray();
         }
     }
 }

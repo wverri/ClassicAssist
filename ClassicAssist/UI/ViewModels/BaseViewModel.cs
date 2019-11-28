@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using ClassicAssist.Data;
-using ClassicAssist.UO;
 
 namespace ClassicAssist.UI.ViewModels
 {
@@ -20,71 +19,74 @@ namespace ClassicAssist.UI.ViewModels
         {
             _dispatcher = Dispatcher.CurrentDispatcher;
 
-            _viewModels.Add(this);
+            _viewModels.Add( this );
 
             Options.CurrentOptions.PropertyChanged += OnOptionChanged;
-        }
-
-        ~BaseViewModel()
-        {
-            _viewModels.Remove( this );
-        }
-
-        protected void OnOptionChanged(object sender, PropertyChangedEventArgs e)
-        {
-            PropertyInfo[] properties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            foreach (PropertyInfo property in properties)
-            {
-                OptionsBindingAttribute attr = property.GetCustomAttribute<OptionsBindingAttribute>();
-
-                if (attr == null || attr.Property != e.PropertyName)
-                {
-                    continue;
-                }
-
-                if (!(sender is Options options))
-                {
-                    continue;
-                }
-
-                PropertyInfo optionsProperty = options.GetType().GetProperty(e.PropertyName);
-
-                if (optionsProperty == null)
-                {
-                    continue;
-                }
-
-                object propertyValue = optionsProperty.GetValue(Options.CurrentOptions);
-
-                property.SetValue(this, propertyValue);
-            }
-        }
-
-        protected void SetOptionsNotify<T>(string propertyName, T value, T defaultValue)
-        {
-            PropertyInfo property = Options.CurrentOptions.GetType().GetProperty(propertyName);
-
-            if (property == null)
-                return;
-
-            property.SetValue(Options.CurrentOptions, value == null ? defaultValue : value);
-            NotifyPropertyChanged(propertyName);
         }
 
         public static BaseViewModel[] Instances => _viewModels.ToArray();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void SetProperty<T>(ref T obj, T value, [CallerMemberName] string propertyName = "")
+        ~BaseViewModel()
         {
-            obj = value;
-            NotifyPropertyChanged(propertyName);
+            _viewModels.Remove( this );
         }
 
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        protected void OnOptionChanged( object sender, PropertyChangedEventArgs e )
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyInfo[] properties = GetType().GetProperties( BindingFlags.Public | BindingFlags.Instance );
+
+            foreach ( PropertyInfo property in properties )
+            {
+                OptionsBindingAttribute attr = property.GetCustomAttribute<OptionsBindingAttribute>();
+
+                if ( attr == null || attr.Property != e.PropertyName )
+                {
+                    continue;
+                }
+
+                if ( !( sender is Options options ) )
+                {
+                    continue;
+                }
+
+                PropertyInfo optionsProperty = options.GetType().GetProperty( e.PropertyName );
+
+                if ( optionsProperty == null )
+                {
+                    continue;
+                }
+
+                object propertyValue = optionsProperty.GetValue( Options.CurrentOptions );
+
+                property.SetValue( this, propertyValue );
+            }
+        }
+
+        protected void SetOptionsNotify<T>( string propertyName, T value, T defaultValue )
+        {
+            PropertyInfo property = Options.CurrentOptions.GetType().GetProperty( propertyName );
+
+            if ( property == null )
+            {
+                return;
+            }
+
+            property.SetValue( Options.CurrentOptions, value == null ? defaultValue : value );
+            NotifyPropertyChanged( propertyName );
+        }
+
+        public virtual void SetProperty<T>( ref T obj, T value, [CallerMemberName] string propertyName = "" )
+        {
+            obj = value;
+            NotifyPropertyChanged( propertyName );
+            CommandManager.InvalidateRequerySuggested();
+        }
+
+        protected void NotifyPropertyChanged( [CallerMemberName] string propertyName = "" )
+        {
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
         }
     }
 
@@ -93,7 +95,7 @@ namespace ClassicAssist.UI.ViewModels
         private readonly Func<object, bool> _canExecute;
         private readonly Action<object> _execute;
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public RelayCommand( Action<object> execute, Func<object, bool> canExecute = null )
         {
             _execute = execute;
             _canExecute = canExecute;
@@ -101,25 +103,46 @@ namespace ClassicAssist.UI.ViewModels
 
         public event EventHandler CanExecuteChanged
         {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
+            add
+            {
+                CommandManager.RequerySuggested += value;
+                CanExecuteChangedInternal += value;
+            }
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+                CanExecuteChangedInternal -= value;
+            }
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute( object parameter )
         {
-            return _canExecute == null || _canExecute(parameter);
+            return _canExecute == null || _canExecute( parameter );
         }
 
-        public void Execute(object parameter)
+        public void Execute( object parameter )
         {
-            _execute(parameter);
+            _execute( parameter );
+        }
+
+        private event EventHandler CanExecuteChangedInternal;
+
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChangedInternal?.Invoke( this, EventArgs.Empty );
         }
     }
 
     public class RelayCommandAsync : ICommand
     {
-        private readonly Func<object, Task> executedMethod;
         private readonly Func<object, bool> canExecuteMethod;
+        private readonly Func<object, Task> executedMethod;
+
+        public RelayCommandAsync( Func<object, Task> execute, Func<object, bool> canExecute )
+        {
+            executedMethod = execute ?? throw new ArgumentNullException( nameof( execute ) );
+            canExecuteMethod = canExecute;
+        }
 
         public event EventHandler CanExecuteChanged
         {
@@ -127,20 +150,14 @@ namespace ClassicAssist.UI.ViewModels
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public RelayCommandAsync(Func<object, Task> execute, Func<object, bool> canExecute)
+        public bool CanExecute( object parameter )
         {
-            executedMethod = execute ?? throw new ArgumentNullException(nameof(execute));
-            canExecuteMethod = canExecute;
+            return canExecuteMethod == null || canExecuteMethod( parameter );
         }
 
-        public bool CanExecute(object parameter)
+        public async void Execute( object parameter )
         {
-            return canExecuteMethod == null || canExecuteMethod(parameter);
-        }
-
-        public async void Execute(object parameter)
-        {
-            await executedMethod(parameter);
+            await executedMethod( parameter );
         }
     }
 }

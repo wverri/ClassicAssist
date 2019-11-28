@@ -31,21 +31,21 @@ namespace ClassicAssist.UO
             Engine.SendPacketToServer( pw );
         }
 
-        public static void DropItem( int serial, int containerSerial )
+        public static void DropItem( int serial, int containerSerial, int x = -1, int y = -1, int z = 0 )
         {
             PacketWriter pw = new PacketWriter( 15 );
             pw.Write( (byte) 0x08 );
             pw.Write( serial );
-            pw.Write( (short) -1 );
-            pw.Write( (short) -1 );
-            pw.Write( (sbyte) -1 );
+            pw.Write( (short) x );
+            pw.Write( (short) y );
+            pw.Write( (sbyte) z );
             pw.Write( (byte) 0 );
             pw.Write( containerSerial );
 
             Engine.SendPacketToServer( pw );
         }
 
-        public static async Task DragDropAsync( int serial, int amount, int containerSerial )
+        public static async Task DragDropAsync( int serial, int amount, int containerSerial, int x = -1, int y = -1, int z = 0 )
         {
             await Task.Run( async () =>
             {
@@ -53,7 +53,7 @@ namespace ClassicAssist.UO
 
                 await Task.Delay( Options.CurrentOptions.ActionDelayMS );
 
-                DropItem( serial, containerSerial );
+                DropItem( serial, containerSerial, x, y, z );
             } );
         }
 
@@ -488,6 +488,26 @@ namespace ClassicAssist.UO
             pw.Write( 0 );
 
             Engine.SendPacketToServer( pw );
+        }
+
+        public static bool WaitForIncomingPacket( PacketFilterInfo pfi, int timeout, Action beforeWait )
+        {
+            WaitEntry we = Engine.WaitEntries.AddWait( pfi, PacketDirection.Incoming, true );
+
+            bool result;
+
+            beforeWait?.Invoke();
+
+            try
+            {
+                result = we.Lock.WaitOne( timeout );
+            }
+            finally
+            {
+                Engine.WaitEntries.RemoveWait( we );
+            }
+
+            return result;
         }
     }
 }
