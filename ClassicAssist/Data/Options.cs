@@ -6,7 +6,6 @@ using ClassicAssist.Annotations;
 using ClassicAssist.Misc;
 using ClassicAssist.UI.ViewModels;
 using Newtonsoft.Json.Linq;
-using IOPath = System.IO.Path;
 
 namespace ClassicAssist.Data
 {
@@ -77,7 +76,7 @@ namespace ClassicAssist.Data
                 }
             }
 
-            File.WriteAllText( IOPath.Combine( _profilePath, DEFAULT_SETTINGS_FILENAME ), obj.ToString() );
+            File.WriteAllText( Path.Combine( _profilePath, DEFAULT_SETTINGS_FILENAME ), obj.ToString() );
         }
 
         private static void EnsureProfilePath( string startupPath )
@@ -94,13 +93,13 @@ namespace ClassicAssist.Data
         {
             BaseViewModel[] instances = BaseViewModel.Instances;
 
-            EnsureProfilePath(startupPath);
+            EnsureProfilePath( startupPath );
 
             JObject json = new JObject();
 
-            if ( File.Exists( IOPath.Combine( _profilePath, DEFAULT_SETTINGS_FILENAME ) ) )
+            if ( File.Exists( Path.Combine( _profilePath, DEFAULT_SETTINGS_FILENAME ) ) )
             {
-                json = JObject.Parse( File.ReadAllText( IOPath.Combine( _profilePath, DEFAULT_SETTINGS_FILENAME ) ) );
+                json = JObject.Parse( File.ReadAllText( Path.Combine( _profilePath, DEFAULT_SETTINGS_FILENAME ) ) );
             }
 
             CurrentOptions.Name = json["Name"]?.ToObject<string>() ?? DEFAULT_SETTINGS_FILENAME;
