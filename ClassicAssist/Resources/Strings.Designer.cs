@@ -466,6 +466,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid layer value....
+        /// </summary>
+        public static string Invalid_layer_value___ {
+            get {
+                return ResourceManager.GetString("Invalid layer value...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid mount....
         /// </summary>
         public static string Invalid_mount___ {
@@ -1155,6 +1164,15 @@ namespace ClassicAssist.Resources {
         public static string Unknown_alias___0___ {
             get {
                 return ResourceManager.GetString("Unknown alias \"{0}\".", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown dress agent &quot;{0}&quot;..
+        /// </summary>
+        public static string Unknown_dress_agent___0___ {
+            get {
+                return ResourceManager.GetString("Unknown dress agent \"{0}\".", resourceCulture);
             }
         }
         

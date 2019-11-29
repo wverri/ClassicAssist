@@ -2,6 +2,12 @@
 
 namespace ClassicAssist.UO.Data
 {
+    public enum MobileQueryType : byte
+    {
+        StatsRequest = 4,
+        SkillsRequest = 5
+    }
+
     public enum TargetType : byte
     {
         Object,

@@ -252,6 +252,9 @@
   <data name="Invalid destination container..." xml:space="preserve">
     <value>Invalid destination container...</value>
   </data>
+  <data name="Invalid layer value..." xml:space="preserve">
+    <value>Invalid layer value...</value>
+  </data>
   <data name="Invalid mount..." xml:space="preserve">
     <value>Invalid mount...</value>
   </data>
@@ -482,6 +485,9 @@
   </data>
   <data name="Unknown alias &quot;{0}&quot;." xml:space="preserve">
     <value>Unknown alias "{0}".</value>
+  </data>
+  <data name="Unknown dress agent &quot;{0}&quot;." xml:space="preserve">
+    <value>Unknown dress agent "{0}".</value>
   </data>
   <data name="UO_LOCALE" xml:space="preserve">
     <value>ENU</value>

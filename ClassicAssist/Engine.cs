@@ -51,6 +51,9 @@ namespace Assistant
         private static readonly PacketFilter _incomingPacketFilter = new PacketFilter();
         private static readonly PacketFilter _outgoingPacketFilter = new PacketFilter();
         private static OnHotkey _onHotkeyPressed;
+        private static RequestMove _requestMove;
+
+        private static readonly int[] _sequenceList = new int[256];
 
         //private static readonly object _actionDelayLock = new object();
         public static string ClientPath { get; set; }
@@ -117,6 +120,7 @@ namespace Assistant
             _getUOFilePath = Marshal.GetDelegateForFunctionPointer<OnGetUOFilePath>( plugin->GetUOFilePath );
             _sendToClient = Marshal.GetDelegateForFunctionPointer<OnPacketSendRecv>( plugin->Recv );
             _sendToServer = Marshal.GetDelegateForFunctionPointer<OnPacketSendRecv>( plugin->Send );
+            _requestMove = Marshal.GetDelegateForFunctionPointer<RequestMove>( plugin->RequestMove );
 
             ClientPath = _getUOFilePath();
 
@@ -302,6 +306,11 @@ namespace Assistant
             SendPacketToServer( data, data.Length );
         }
 
+        public static bool Move( Direction direction, bool run )
+        {
+            return _requestMove?.Invoke( (int) direction, run ) ?? false;
+        }
+
         #region ClassicUO Events
 
         private static bool OnPacketSend( ref byte[] data, ref int length )
@@ -344,6 +353,16 @@ namespace Assistant
             WaitEntries.CheckWait( data, PacketDirection.Incoming );
 
             return true;
+        }
+
+        public static Direction GetSequence( int sequence )
+        {
+            return (Direction) Thread.VolatileRead( ref _sequenceList[sequence] );
+        }
+
+        public static void SetSequence( int sequence, Direction direction )
+        {
+            _sequenceList[sequence] = (int) direction;
         }
 
         private static void OnConnected()

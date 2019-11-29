@@ -11,6 +11,8 @@ namespace ClassicAssist.UO.Network
 {
     public static class IncomingPacketHandlers
     {
+        public delegate void dMobileUpdated( Mobile mobile );
+
         public delegate void dSkillList( SkillInfo[] skills );
 
         public delegate void dSkillUpdated( int id, float value, float baseValue, LockStatus lockStatus,
@@ -21,10 +23,7 @@ namespace ClassicAssist.UO.Network
         public static event dSkillUpdated SkillUpdatedEvent;
         public static event dSkillList SkillsListEvent;
 
-        public delegate void dMobileUpdated( Mobile mobile );
-
         public static event dMobileUpdated MobileUpdatedEvent;
-
 
         public static void Initialize()
         {
@@ -35,6 +34,8 @@ namespace ClassicAssist.UO.Network
             Register( 0x1B, 37, OnInitializePlayer );
             Register( 0x1D, 5, OnItemDeleted );
             Register( 0x20, 19, OnMobileUpdated );
+            Register( 0x21, 8, OnMoveRejected );
+            Register( 0x22, 3, OnMoveAccepted );
             Register( 0x25, 21, OnItemAddedToContainer );
             Register( 0x2E, 15, OnItemEquipped );
             Register( 0x3A, 0, OnSkillsList );
@@ -53,6 +54,30 @@ namespace ClassicAssist.UO.Network
             Register( 0xF3, 26, OnSAWorldItem );
 
             RegisterExtended( 0x08, 0, OnMapChange );
+        }
+
+        private static void OnMoveAccepted( PacketReader reader )
+        {
+            Direction direction = Engine.GetSequence( reader.ReadByte() );
+
+            if ( Engine.Player != null )
+            {
+                Engine.Player.Direction = direction;
+            }
+        }
+
+        private static void OnMoveRejected( PacketReader reader )
+        {
+            int sequence = reader.ReadByte();
+            int x = reader.ReadInt16();
+            int y = reader.ReadInt16();
+            Direction direction = (Direction) reader.ReadByte();
+            int z = reader.ReadSByte();
+
+            if ( Engine.Player != null )
+            {
+                Engine.Player.Direction = direction;
+            }
         }
 
         private static void OnCompressedGump( PacketReader reader )
