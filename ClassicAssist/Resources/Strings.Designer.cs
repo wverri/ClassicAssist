@@ -160,6 +160,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bought.
+        /// </summary>
+        public static string Bought {
+            get {
+                return ResourceManager.GetString("Bought", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Buffs / Penalties.
         /// </summary>
         public static string Buffs___Penalties {
@@ -331,6 +340,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string Enabled {
+            get {
+                return ResourceManager.GetString("Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Entity.
         /// </summary>
         public static string Entity {
@@ -462,6 +480,24 @@ namespace ClassicAssist.Resources {
         public static string Import {
             get {
                 return ResourceManager.GetString("Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Backpack Amount.
+        /// </summary>
+        public static string Include_Backpack_Amount {
+            get {
+                return ResourceManager.GetString("Include Backpack Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Purchased Amount.
+        /// </summary>
+        public static string Include_Purchased_Amount {
+            get {
+                return ResourceManager.GetString("Include Purchased Amount", resourceCulture);
             }
         }
         
@@ -678,6 +714,15 @@ namespace ClassicAssist.Resources {
         public static string Map_ {
             get {
                 return ResourceManager.GetString("Map:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Price.
+        /// </summary>
+        public static string Max_Price {
+            get {
+                return ResourceManager.GetString("Max Price", resourceCulture);
             }
         }
         
@@ -1254,6 +1299,15 @@ namespace ClassicAssist.Resources {
         public static string Value {
             get {
                 return ResourceManager.GetString("Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vendor Buy.
+        /// </summary>
+        public static string Vendor_Buy {
+            get {
+                return ResourceManager.GetString("Vendor Buy", resourceCulture);
             }
         }
         

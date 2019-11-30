@@ -18,5 +18,8 @@
         <TabItem Header="{x:Static resources:Strings.Counters}">
             <agents:CountersTabControl/>
         </TabItem>
+        <TabItem Header="{x:Static resources:Strings.Vendor_Buy}">
+            <agents:VendorBuyTabControl/>
+        </TabItem>   
     </TabControl>
 </UserControl>

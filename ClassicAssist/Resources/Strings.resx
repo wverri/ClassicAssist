@@ -150,6 +150,9 @@
   <data name="Bandage Self" xml:space="preserve">
     <value>Bandage Self</value>
   </data>
+  <data name="Bought" xml:space="preserve">
+    <value>Bought</value>
+  </data>
   <data name="Buffs / Penalties" xml:space="preserve">
     <value>Buffs / Penalties</value>
   </data>
@@ -207,6 +210,9 @@
   <data name="Dress" xml:space="preserve">
     <value>Dress</value>
   </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
   <data name="Entity" xml:space="preserve">
     <value>Entity</value>
   </data>
@@ -251,6 +257,12 @@
   </data>
   <data name="Import" xml:space="preserve">
     <value>Import</value>
+  </data>
+  <data name="Include Backpack Amount" xml:space="preserve">
+    <value>Include Backpack Amount</value>
+  </data>
+  <data name="Include Purchased Amount" xml:space="preserve">
+    <value>Include Purchased Amount</value>
   </data>
   <data name="Insert" xml:space="preserve">
     <value>Insert</value>
@@ -323,6 +335,9 @@
   </data>
   <data name="Map:" xml:space="preserve">
     <value>Map:</value>
+  </data>
+  <data name="Max Price" xml:space="preserve">
+    <value>Max Price</value>
   </data>
   <data name="Misc" xml:space="preserve">
     <value>Misc</value>
@@ -515,6 +530,9 @@
   </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>
+  </data>
+  <data name="Vendor Buy" xml:space="preserve">
+    <value>Vendor Buy</value>
   </data>
   <data name="Version:" xml:space="preserve">
     <value>Version:</value>

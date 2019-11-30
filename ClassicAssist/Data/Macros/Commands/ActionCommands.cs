@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Assistant;
@@ -7,6 +8,7 @@ using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
@@ -281,6 +283,35 @@ namespace ClassicAssist.Data.Macros.Commands
             }
 
             UOC.EquipItem( item, layerValue );
+        }
+
+        [CommandsDisplay( Category = "Actions",
+            Description = "Retrieve an approximated ping with server. -1 on failure." )]
+        public static long Ping()
+        {
+            Random random = new Random();
+
+            byte value = (byte) random.Next( 1, byte.MaxValue );
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            WaitEntry we = Engine.WaitEntries.AddWait(
+                new PacketFilterInfo( 0x73, new[] { new PacketFilterCondition( 1, new[] { value }, 1 ) } ),
+                PacketDirection.Incoming, true );
+
+            Engine.SendPacketToServer( new PingPacket( value ) );
+
+            bool result = we.Lock.WaitOne( 5000 );
+
+            sw.Stop();
+
+            if ( result )
+            {
+                return sw.ElapsedMilliseconds;
+            }
+
+            return -1;
         }
 
         private enum ShowNamesType

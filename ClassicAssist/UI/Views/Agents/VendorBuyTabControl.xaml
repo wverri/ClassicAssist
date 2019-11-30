@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="ClassicAssist.UI.Views.Agents.VendorBuyTabControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:resources="clr-namespace:ClassicAssist.Resources"
+             xmlns:agents="clr-namespace:ClassicAssist.UI.ViewModels.Agents"
+             mc:Ignorable="d" 
+             d:DesignWidth="493" d:DesignHeight="400">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </d:DesignerProperties.DesignStyle>
+
+    <UserControl.DataContext>
+        <agents:VendorBuyTabViewModel/>
+    </UserControl.DataContext>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Margin="0,0,0,10">
+            <DockPanel.Resources>
+                <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                    <Setter Property="Margin" Value="0,0,20,0"/>
+                </Style>
+            </DockPanel.Resources>
+            <CheckBox Content="{x:Static resources:Strings.Enabled}"/>
+            <CheckBox IsChecked="{Binding IncludeBackpackAmount}" Content="{x:Static resources:Strings.Include_Backpack_Amount}"/>
+            <CheckBox IsChecked="{Binding IncludePurchasedAmount}" Content="{x:Static resources:Strings.Include_Purchased_Amount}"/>
+        </DockPanel>
+        <ListView x:Name="ListView" Grid.Row="1" ItemsSource="{Binding Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="✓">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Enabled}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{x:Static resources:Strings.Graphic}" DisplayMemberBinding="{Binding Graphic, StringFormat={}0x{0:x}}" Width="50"/>
+                    <GridViewColumn Header="{x:Static resources:Strings.Name}" DisplayMemberBinding="{Binding Name}" Width="100"/>
+                    <GridViewColumn Header="{x:Static resources:Strings.Color}" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Hue}" TabIndex="0"  Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=GridViewColumn, AncestorLevel=1},Path=ActualWidth}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{x:Static resources:Strings.Amount}" x:Name="AmountColumn" Width="60">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Amount}" TabIndex="1" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor , AncestorType=GridViewColumn, AncestorLevel=1},Path=ActualWidth}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{x:Static resources:Strings.Max_Price}" Width="70">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding MaxPrice}" TabIndex="2" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor , AncestorType=GridViewColumn, AncestorLevel=1},Path=ActualWidth}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{x:Static resources:Strings.Bought}" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Purchased}" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <Button Content="{x:Static resources:Strings.Insert}" Width="80" Command="{Binding InsertCommand, Mode=OneWay}"/>
+            <Button Content="{x:Static resources:Strings.Remove}" Width="80" Command="{Binding RemoveCommand, Mode=OneWay}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
