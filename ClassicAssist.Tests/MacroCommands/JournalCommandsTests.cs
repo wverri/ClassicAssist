@@ -83,8 +83,6 @@ namespace ClassicAssist.Tests.MacroCommands
         [TestMethod]
         public void WaitForJournalWillMatch()
         {
-            Task<bool> t = Task.Run( () => JournalCommands.WaitForJournal( "town guards", 20000, "system" ) );
-
             const string text = "You are now under the protection of town guards.";
 
             byte[] textBytes = Encoding.Unicode.GetBytes( text );
@@ -102,6 +100,8 @@ namespace ClassicAssist.Tests.MacroCommands
             IncomingPacketHandlers.Initialize();
 
             PacketHandler handler = IncomingPacketHandlers.GetHandler( 0xAE );
+
+            Task<bool> t = Task.Run(() => JournalCommands.WaitForJournal("town guards", 20000, "system"));
 
             handler?.OnReceive(new PacketReader( pw.ToArray(), pw.ToArray().Length, false ));
 
