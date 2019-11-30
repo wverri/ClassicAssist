@@ -286,6 +286,33 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string Count {
+            get {
+                return ResourceManager.GetString("Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter &quot;{0}&quot; amount is now {1}....
+        /// </summary>
+        public static string Counter___0___amount_is_now__1____ {
+            get {
+                return ResourceManager.GetString("Counter \"{0}\" amount is now {1}...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counters.
+        /// </summary>
+        public static string Counters {
+            get {
+                return ResourceManager.GetString("Counters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do not auto interupt.
         /// </summary>
         public static string Do_not_auto_interupt {
@@ -453,6 +480,15 @@ namespace ClassicAssist.Resources {
         public static string Invalid_container___ {
             get {
                 return ResourceManager.GetString("Invalid container...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid counter agent name....
+        /// </summary>
+        public static string Invalid_counter_agent_name___ {
+            get {
+                return ResourceManager.GetString("Invalid counter agent name...", resourceCulture);
             }
         }
         
@@ -871,6 +907,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recount.
+        /// </summary>
+        public static string Recount {
+            get {
+                return ResourceManager.GetString("Recount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh.
         /// </summary>
         public static string Refresh {
@@ -1209,6 +1254,15 @@ namespace ClassicAssist.Resources {
         public static string Version_ {
             get {
                 return ResourceManager.GetString("Version:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warn when counter amount below:.
+        /// </summary>
+        public static string Warn_when_counter_amount_below_ {
+            get {
+                return ResourceManager.GetString("Warn when counter amount below:", resourceCulture);
             }
         }
         

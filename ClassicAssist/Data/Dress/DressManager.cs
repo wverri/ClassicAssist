@@ -18,7 +18,7 @@ namespace ClassicAssist.Data.Dress
             set => SetProperty( ref _items, value );
         }
 
-        public DressManager()
+        private DressManager()
         {
             Items.CollectionChanged += OnCollectionChanged;
         }

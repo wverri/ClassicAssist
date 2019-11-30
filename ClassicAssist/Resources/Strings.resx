@@ -192,6 +192,15 @@
   <data name="Connected:" xml:space="preserve">
     <value>Connected:</value>
   </data>
+  <data name="Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="Counter &quot;{0}&quot; amount is now {1}..." xml:space="preserve">
+    <value>Counter "{0}" amount is now {1}...</value>
+  </data>
+  <data name="Counters" xml:space="preserve">
+    <value>Counters</value>
+  </data>
   <data name="Do not auto interupt" xml:space="preserve">
     <value>Do not auto interupt</value>
   </data>
@@ -248,6 +257,9 @@
   </data>
   <data name="Invalid container..." xml:space="preserve">
     <value>Invalid container...</value>
+  </data>
+  <data name="Invalid counter agent name..." xml:space="preserve">
+    <value>Invalid counter agent name...</value>
   </data>
   <data name="Invalid destination container..." xml:space="preserve">
     <value>Invalid destination container...</value>
@@ -387,6 +399,9 @@
   <data name="Ready..." xml:space="preserve">
     <value>Ready...</value>
   </data>
+  <data name="Recount" xml:space="preserve">
+    <value>Recount</value>
+  </data>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
@@ -500,6 +515,9 @@
   </data>
   <data name="Version:" xml:space="preserve">
     <value>Version:</value>
+  </data>
+  <data name="Warn when counter amount below:" xml:space="preserve">
+    <value>Warn when counter amount below:</value>
   </data>
   <data name="Weather" xml:space="preserve">
     <value>Weather</value>

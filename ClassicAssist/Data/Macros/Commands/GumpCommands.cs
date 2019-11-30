@@ -1,4 +1,6 @@
-﻿using ClassicAssist.Resources;
+﻿using System;
+using Assistant;
+using ClassicAssist.Resources;
 using UOC = ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Macros.Commands
@@ -22,6 +24,19 @@ namespace ClassicAssist.Data.Macros.Commands
         public static void ReplyGump( int gumpId, int buttonId )
         {
             UOC.GumpButtonClick( gumpId, buttonId );
+        }
+
+        [CommandsDisplay(Category = "Gumps", Description = "Checks if a gump id exists or not.")]
+        public static bool GumpExists( int gumpId )
+        {
+            return Engine.GumpList.ContainsKey( gumpId );
+        }
+
+        [CommandsDisplay(Category = "Gumps", Description = "Check for a text in gump.")]
+        public static bool InGump( int gumpId, string text )
+        {
+            //TODO gump parser
+            throw new NotImplementedException();
         }
     }
 }

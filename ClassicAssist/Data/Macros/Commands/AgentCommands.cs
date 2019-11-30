@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ClassicAssist.Data.Counters;
 using ClassicAssist.Data.Dress;
 using ClassicAssist.Resources;
 using UOC = ClassicAssist.UO.Commands;
@@ -37,6 +38,22 @@ namespace ClassicAssist.Data.Macros.Commands
             }
 
             dressAgentEntry.Undress();
+        }
+
+        [CommandsDisplay(Category = "Agents", Description = "Returns the count of the given counter agent.")]
+        public static int Counter( string name )
+        {
+            CountersManager manager = CountersManager.GetInstance();
+
+            CountersAgentEntry entry = manager.Items.FirstOrDefault( ( cae ) => cae.Name.ToLower() == name.ToLower() );
+
+            if ( entry == null )
+            {
+                UOC.SystemMessage( Strings.Invalid_counter_agent_name___ );
+                return 0;
+            }
+
+            return entry.Count;
         }
     }
 }

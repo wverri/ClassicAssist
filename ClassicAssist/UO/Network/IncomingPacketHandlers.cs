@@ -11,6 +11,8 @@ namespace ClassicAssist.UO.Network
 {
     public static class IncomingPacketHandlers
     {
+        public delegate void dMobileIncoming( Mobile mobile, ItemCollection equipment );
+
         public delegate void dMobileUpdated( Mobile mobile );
 
         public delegate void dSkillList( SkillInfo[] skills );
@@ -18,12 +20,18 @@ namespace ClassicAssist.UO.Network
         public delegate void dSkillUpdated( int id, float value, float baseValue, LockStatus lockStatus,
             float skillCap );
 
+        public delegate void dContainerContents( int serial, ItemCollection container );
+
         private static PacketHandler[] _handlers;
         private static PacketHandler[] _extendedHandlers;
+
         public static event dSkillUpdated SkillUpdatedEvent;
         public static event dSkillList SkillsListEvent;
 
         public static event dMobileUpdated MobileUpdatedEvent;
+        public static event dMobileIncoming MobileIncomingEvent;
+
+        public static event dContainerContents ContainerContentsEvent;
 
         public static void Initialize()
         {
@@ -437,7 +445,7 @@ namespace ClassicAssist.UO.Network
         private static void OnMobileIncoming( PacketReader reader )
         {
             int serial = reader.ReadInt32();
-            ItemCollection container = new ItemCollection( serial, 125 );
+            ItemCollection container = new ItemCollection( serial );
 
             Mobile mobile = serial == Engine.Player?.Serial ? Engine.Player : Engine.GetOrCreateMobile( serial );
 
@@ -496,6 +504,8 @@ namespace ClassicAssist.UO.Network
             {
                 Engine.Mobiles.Add( mobile );
             }
+
+            MobileIncomingEvent?.Invoke( mobile, container );
         }
 
         private static void OnContainerContents( PacketReader reader )
@@ -536,7 +546,7 @@ namespace ClassicAssist.UO.Network
 
                 if ( container == null )
                 {
-                    container = new ItemCollection( containerSerial, count );
+                    container = new ItemCollection( containerSerial );
                 }
 
                 Item item = Engine.GetOrCreateItem( serial, containerSerial );
@@ -570,6 +580,8 @@ namespace ClassicAssist.UO.Network
             }
 
             Engine.Items.Add( containerItem );
+
+            ContainerContentsEvent?.Invoke( container.Serial, container );
         }
 
         private static void OnSAWorldItem( PacketReader reader )

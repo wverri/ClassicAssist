@@ -8,51 +8,57 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class MobileCommands
     {
-        [CommandsDisplay(Category = "Entity", Description = "Returns true if given mobile is dead, false if not, if parameter is null, then returns the value from the player (parameter can be serial or alias).")]
-        public static bool Dead(object obj = null)
+        [CommandsDisplay( Category = "Entity",
+            Description =
+                "Returns true if given mobile is dead, false if not, if parameter is null, then returns the value from the player (parameter can be serial or alias)." )]
+        public static bool Dead( object obj = null )
         {
-            int serial = AliasCommands.ResolveSerial(obj);
+            int serial = AliasCommands.ResolveSerial( obj );
 
-            if (serial <= 0)
+            if ( serial <= 0 )
             {
-                UOC.SystemMessage(Strings.Invalid_or_unknown_object_id);
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
                 return false;
             }
 
-            Mobile mobile = Engine.Mobiles.GetMobile(serial);
+            Mobile mobile = Engine.Mobiles.GetMobile( serial );
 
-            if (mobile != null)
+            if ( mobile != null )
             {
                 return mobile.IsDead;
             }
 
-            UOC.SystemMessage(Strings.Mobile_not_found___);
+            UOC.SystemMessage( Strings.Mobile_not_found___ );
             return false;
         }
 
-        [CommandsDisplay(Category = "Entity", Description = "Returns true if given mobile is hidden, false if not, if parameter is null, then returns the value from the player (parameter can be serial or alias).")]
+        [CommandsDisplay( Category = "Entity",
+            Description =
+                "Returns true if given mobile is hidden, false if not, if parameter is null, then returns the value from the player (parameter can be serial or alias)." )]
         public static bool Hidden( object obj = null )
         {
-            int serial = AliasCommands.ResolveSerial(obj);
+            int serial = AliasCommands.ResolveSerial( obj );
 
-            if (serial <= 0)
+            if ( serial <= 0 )
             {
-                UOC.SystemMessage(Strings.Invalid_or_unknown_object_id);
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
                 return false;
             }
 
-            Mobile mobile = Engine.Mobiles.GetMobile(serial);
+            Mobile mobile = Engine.Mobiles.GetMobile( serial );
 
-            if (mobile != null)
+            if ( mobile != null )
             {
                 return mobile.Status.HasFlag( MobileStatus.Hidden );
             }
 
-            UOC.SystemMessage(Strings.Mobile_not_found___);
+            UOC.SystemMessage( Strings.Mobile_not_found___ );
             return false;
         }
 
-        [CommandsDisplay(Category = "Entity", Description = "Returns the given mobiles hitpoints, if parameter is null, then returns the value from the player (parameter can be serial or alias).")]
+        [CommandsDisplay( Category = "Entity",
+            Description =
+                "Returns the given mobiles hitpoints, if parameter is null, then returns the value from the player (parameter can be serial or alias)." )]
         public static int Hits( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -74,7 +80,9 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
-        [CommandsDisplay(Category = "Entity", Description = "Returns the given mobiles stamina, if parameter is null, then returns the value from the player (parameter can be serial or alias).")]
+        [CommandsDisplay( Category = "Entity",
+            Description =
+                "Returns the given mobiles stamina, if parameter is null, then returns the value from the player (parameter can be serial or alias)." )]
         public static int Stam( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -96,7 +104,9 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
-        [CommandsDisplay(Category = "Entity", Description = "Returns the given mobiles mana, if parameter is null, then returns the value from the player (parameter can be serial or alias).")]
+        [CommandsDisplay( Category = "Entity",
+            Description =
+                "Returns the given mobiles mana, if parameter is null, then returns the value from the player (parameter can be serial or alias)." )]
         public static int Mana( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -116,6 +126,20 @@ namespace ClassicAssist.Data.Macros.Commands
 
             UOC.SystemMessage( Strings.Mobile_not_found___ );
             return 0;
+        }
+
+        [CommandsDisplay( Category = "Entity", Description = "Checks whether a mobile is in war mode." )]
+        public static bool War( object obj )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial == 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return false;
+            }
+
+            return Engine.Mobiles.GetMobile( serial )?.Status.HasFlag( MobileStatus.WarMode ) ?? false;
         }
     }
 }
