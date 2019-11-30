@@ -105,7 +105,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             handler?.OnReceive(new PacketReader( pw.ToArray(), pw.ToArray().Length, false ));
 
-            bool finished = t.Wait( 5000 );
+            bool finished = t.Wait( 20000 );
 
             Assert.IsTrue( finished );
 
