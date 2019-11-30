@@ -565,6 +565,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Journal.
+        /// </summary>
+        public static string Journal {
+            get {
+                return ResourceManager.GetString("Journal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Target.
         /// </summary>
         public static string Last_Target {

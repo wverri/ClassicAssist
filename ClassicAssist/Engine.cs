@@ -61,6 +61,7 @@ namespace Assistant
         public static bool Connected { get; set; }
         public static FeatureFlags Features { get; set; }
         public static ItemCollection Items { get; set; } = new ItemCollection( 0 );
+        public static CircularBuffer<JournalEntry> Journal { get; set; } = new CircularBuffer<JournalEntry>( 1024 );
         public static MobileCollection Mobiles { get; set; } = new MobileCollection( Items );
 
         //public static DateTime NextActionTime { get; set; }

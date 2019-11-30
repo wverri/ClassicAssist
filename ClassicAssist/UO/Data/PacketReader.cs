@@ -8,6 +8,7 @@ namespace ClassicAssist.UO.Data
     {
         private readonly MemoryStream _stream;
         public long Size => _stream.Length;
+        public long Index => _stream.Position;
 
         public PacketReader(byte[] data, int size, bool fixedSize)
         {
@@ -81,7 +82,7 @@ namespace ClassicAssist.UO.Data
 
             _stream.Read( buffer, 0, fixedLength );
 
-            return Encoding.ASCII.GetString( buffer );
+            return Encoding.ASCII.GetString( buffer ).TrimEnd( '\0' );
         }
 
         public string ReadStringSafe()
@@ -106,7 +107,14 @@ namespace ClassicAssist.UO.Data
 
         public string ReadUnicodeString()
         {
-            throw new NotImplementedException();
+            StringBuilder sb = new StringBuilder();
+
+            int c;
+
+            while (Index + 1 < Size && (c = (ReadByte() << 8) | ReadByte()) != 0)
+                sb.Append((char)c);
+
+            return sb.ToString();
         }
 
         public string ReadUnicodeString(int fixedLength)

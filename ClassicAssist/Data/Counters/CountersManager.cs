@@ -113,6 +113,7 @@ namespace ClassicAssist.Data.Counters
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
         }
 
+        // ReSharper disable once RedundantAssignment
         public void SetProperty<T>( ref T obj, T value, [CallerMemberName] string propertyName = "" )
         {
             obj = value;

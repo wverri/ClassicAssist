@@ -47,13 +47,13 @@ namespace ClassicAssist.Data.Macros.Commands
 
             CountersAgentEntry entry = manager.Items.FirstOrDefault( ( cae ) => cae.Name.ToLower() == name.ToLower() );
 
-            if ( entry == null )
+            if ( entry != null )
             {
-                UOC.SystemMessage( Strings.Invalid_counter_agent_name___ );
-                return 0;
+                return entry.Count;
             }
 
-            return entry.Count;
+            UOC.SystemMessage( Strings.Invalid_counter_agent_name___ );
+            return 0;
         }
     }
 }

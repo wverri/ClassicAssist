@@ -2,6 +2,26 @@
 
 namespace ClassicAssist.UO.Data
 {
+    public enum JournalSpeech : byte
+    {
+        Say,
+        System,
+        Emote,
+        Unknown1,
+        Unknown2,
+        Unknown3,
+        Label,
+        Focus,
+        Whisper,
+        Yell,
+        Spell,
+        Unknown4,
+        Unknown5,
+        Guild,
+        Alliance,
+        GM
+    }
+
     public enum MobileQueryType : byte
     {
         StatsRequest = 4,

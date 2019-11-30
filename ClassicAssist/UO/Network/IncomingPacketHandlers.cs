@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Assistant;
+using ClassicAssist.Data;
 using ClassicAssist.Data.Skills;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
@@ -21,6 +22,10 @@ namespace ClassicAssist.UO.Network
             float skillCap );
 
         public delegate void dContainerContents( int serial, ItemCollection container );
+
+        public delegate void dJournalEntryAdded( JournalEntry je );
+
+        public static event dJournalEntryAdded JournalEntryAddedEvent;
 
         private static PacketHandler[] _handlers;
         private static PacketHandler[] _extendedHandlers;
@@ -55,6 +60,7 @@ namespace ClassicAssist.UO.Network
             Register( 0xA1, 9, OnMobileHits );
             Register( 0xA2, 9, OnMobileMana );
             Register( 0xA3, 9, OnMobileStamina );
+            Register( 0xAE, 0, OnUnicodeText );
             Register( 0xB9, 5, OnSupportedFeatures );
             Register( 0xBF, 0, OnExtendedCommand );
             Register( 0xD6, 0, OnProperties );
@@ -62,6 +68,24 @@ namespace ClassicAssist.UO.Network
             Register( 0xF3, 26, OnSAWorldItem );
 
             RegisterExtended( 0x08, 0, OnMapChange );
+        }
+
+        private static void OnUnicodeText( PacketReader reader )
+        {
+            JournalEntry journalEntry = new JournalEntry
+            {
+                Serial = reader.ReadInt32(),
+                ID = reader.ReadInt16(),
+                SpeechType = (JournalSpeech)reader.ReadByte(),
+                SpeechHue = reader.ReadInt16(),
+                SpeechFont = reader.ReadInt16(),
+                SpeechLanguage = reader.ReadString(4),
+                Name = reader.ReadString(30),
+                Text = reader.ReadUnicodeString()
+            };
+
+            Engine.Journal.Write( journalEntry );
+            JournalEntryAddedEvent?.Invoke( journalEntry );
         }
 
         private static void OnMoveAccepted( PacketReader reader )
