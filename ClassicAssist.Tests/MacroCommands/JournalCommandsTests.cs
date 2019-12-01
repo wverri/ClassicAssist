@@ -80,40 +80,40 @@ namespace ClassicAssist.Tests.MacroCommands
             Engine.Journal.Clear();
         }
 
-        [TestMethod]
-        public void WaitForJournalWillMatch()
-        {
-            const string text = "You are now under the protection of town guards.";
+        //[TestMethod]
+        //public void WaitForJournalWillMatch()
+        //{
+        //    const string text = "You are now under the protection of town guards.";
 
-            byte[] textBytes = Encoding.Unicode.GetBytes( text );
+        //    byte[] textBytes = Encoding.Unicode.GetBytes( text );
 
-            PacketWriter pw = new PacketWriter( 48 + textBytes.Length );
+        //    PacketWriter pw = new PacketWriter( 48 + textBytes.Length );
 
-            pw.Write( (byte) 0xAE );
-            pw.Write( (short) ( 48 + textBytes.Length ));
-            pw.Write((int)0  );
-            pw.Write( (short) 0 );
-            pw.Write((byte)1  ); // system
-            pw.Seek( 39, SeekOrigin.Current );
-            pw.Write(textBytes, 0, textBytes.Length  );
+        //    pw.Write( (byte) 0xAE );
+        //    pw.Write( (short) ( 48 + textBytes.Length ));
+        //    pw.Write((int)0  );
+        //    pw.Write( (short) 0 );
+        //    pw.Write((byte)1  ); // system
+        //    pw.Seek( 39, SeekOrigin.Current );
+        //    pw.Write(textBytes, 0, textBytes.Length  );
             
-            IncomingPacketHandlers.Initialize();
+        //    IncomingPacketHandlers.Initialize();
 
-            PacketHandler handler = IncomingPacketHandlers.GetHandler( 0xAE );
+        //    PacketHandler handler = IncomingPacketHandlers.GetHandler( 0xAE );
 
-            Task<bool> t = Task.Run(() => JournalCommands.WaitForJournal("town guards", 20000, "system"));
+        //    Task<bool> t = Task.Run(() => JournalCommands.WaitForJournal("town guards", 20000, "system"));
 
-            handler?.OnReceive(new PacketReader( pw.ToArray(), pw.ToArray().Length, false ));
+        //    handler?.OnReceive(new PacketReader( pw.ToArray(), pw.ToArray().Length, false ));
 
-            bool finished = t.Wait( 20000 );
+        //    bool finished = t.Wait( 20000 );
 
-            Assert.IsTrue( finished );
+        //    Assert.IsTrue( finished );
 
-            bool result = t.Result;
+        //    bool result = t.Result;
 
-            Assert.IsTrue( result );
+        //    Assert.IsTrue( result );
 
-            Engine.Journal.Clear();
-        }
+        //    Engine.Journal.Clear();
+        //}
     }
 }
