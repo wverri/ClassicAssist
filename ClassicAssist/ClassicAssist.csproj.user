@@ -32,9 +32,6 @@
     <Compile Update="UI\Views\Agents\OrganizerTabControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\Views\Agents\VendorBuyTabControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="UI\Views\EntityCollectionViewer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,9 +91,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\Agents\OrganizerTabControl.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="UI\Views\Agents\VendorBuyTabControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\EntityCollectionViewer.xaml">
