@@ -417,6 +417,9 @@
   <data name="Ready..." xml:space="preserve">
     <value>Ready...</value>
   </data>
+  <data name="Record" xml:space="preserve">
+    <value>Record</value>
+  </data>
   <data name="Recount" xml:space="preserve">
     <value>Recount</value>
   </data>
