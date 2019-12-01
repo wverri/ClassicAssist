@@ -11,35 +11,42 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class MainCommands
     {
-        [CommandsDisplay( Category = "Main", Description = "Sends Resync request to server." )]
+        [CommandsDisplay( Category = "Main", Description = "Sends Resync request to server.", InsertText = "Resync()" )]
         public static void Resync()
         {
             UOC.Resync();
         }
 
-        [CommandsDisplay( Category = "Main", Description = "Pauses execution for the given amount in milliseconds." )]
+        [CommandsDisplay( Category = "Main", Description = "Pauses execution for the given amount in milliseconds.",
+            InsertText = "Pause(1000)" )]
         public static void Pause( int milliseconds )
         {
             Thread.Sleep( milliseconds );
         }
 
-        [CommandsDisplay( Category = "Main", Description = "Send a text message." )]
+        [CommandsDisplay( Category = "Main", Description = "Send a text message.",
+            InsertText = "SysMessage(\"hello\")" )]
         public static void SysMessage( string text )
         {
             UOC.SystemMessage( text );
         }
 
-        [CommandsDisplay(Category = "Main", Description = "Show object inspector for supplied serial / alias, will prompt for target if no parameter given.")]
+        [CommandsDisplay( Category = "Main",
+            Description =
+                "Show object inspector for supplied serial / alias, will prompt for target if no parameter given.",
+            InsertText = "Info(\"self\")" )]
         public static void Info( object obj = null )
         {
             int serial = 0;
 
-            if (obj == null)
+            if ( obj == null )
             {
-                serial = UOC.GetTargeSerialAsync(Strings.Target_object___, 30000).Result;
+                serial = UOC.GetTargeSerialAsync( Strings.Target_object___, 30000 ).Result;
 
                 if ( serial == 0 )
+                {
                     return;
+                }
             }
 
             serial = AliasCommands.ResolveSerial( serial != 0 ? serial : obj );

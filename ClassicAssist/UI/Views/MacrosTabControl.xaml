@@ -115,6 +115,7 @@
                 </avalon:TextEditor.Style>
                 <i:Interaction.Behaviors>
                     <misc:AvalonEditBehaviour TextBinding="{Binding SelectedItem.Macro, ElementName=ListBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <misc:AvalonBindingBehaviour DocumentBinding="{Binding Document}" CaretBinding="{Binding CaretPosition}"/>
                 </i:Interaction.Behaviors>
             </avalon:TextEditor>
             <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">

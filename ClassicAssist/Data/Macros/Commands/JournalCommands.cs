@@ -9,7 +9,8 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class JournalCommands
     {
-        [CommandsDisplay( Category = "Journal", Description = "Check for a text in journal, optional source name." )]
+        [CommandsDisplay( Category = "Journal", Description = "Check for a text in journal, optional source name.",
+            InsertText = "if InJounal(\"town guards\", \"system\"):" )]
         public static bool InJournal( string text, string author = "" )
         {
             bool match;
@@ -30,12 +31,15 @@ namespace ClassicAssist.Data.Macros.Commands
             return match;
         }
 
-        [CommandsDisplay( Category = "Journal", Description = "Clear all journal texts." )]
+        [CommandsDisplay( Category = "Journal", Description = "Clear all journal texts.",
+            InsertText = "ClearJournal()" )]
         public static void ClearJournal()
         {
             Engine.Journal.Clear();
         }
 
+        [CommandsDisplay( Category = "Journal", Description = "Wait the given timeout for the journal text to appear.",
+            InsertText = "if WaitForJounal(\"town guards\", 5000, \"system\"):" )]
         public static bool WaitForJournal( string text, int timeout, string author )
         {
             AutoResetEvent are = new AutoResetEvent( false );

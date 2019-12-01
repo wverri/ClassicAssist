@@ -15,14 +15,16 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         private static List<WeaponData> _weaponData;
 
-        [CommandsDisplay(Category = "Abilities", Description = "Clear weapon ability.")]
+        [CommandsDisplay( Category = "Abilities", Description = "Clear weapon ability.",
+            InsertText = "ClearAbility()" )]
         public static void ClearAbility()
         {
             UOC.ClearWeaponAbility();
         }
 
         [CommandsDisplay( Category = "Abilities",
-            Description = "Set weapon ability, parameter \"primary\" / \"secondary\"." )]
+            Description = "Set weapon ability, parameter \"primary\" / \"secondary\".",
+            InsertText = "SetAbility(\"primary\")" )]
         public static void SetAbility( string ability )
         {
             // TODO stun/disarm old
@@ -84,10 +86,10 @@ namespace ClassicAssist.Data.Macros.Commands
 
             // Fists etc
             UOC.SetWeaponAbility( primary ? 11 : 5 );
-
         }
 
-        [CommandsDisplay( Category = "Abilities", Description = "(Garoyle) Start flying if not already flying." )]
+        [CommandsDisplay( Category = "Abilities", Description = "(Garoyle) Start flying if not already flying.",
+            InsertText = "Fly()" )]
         public static void Fly()
         {
             PlayerMobile player = Engine.Player;
@@ -103,6 +105,8 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
+        [CommandsDisplay( Category = "Abilities", Description = "Returns true if mobile is currently flying.",
+            InsertText = "if Flying(\"self\"):" )]
         public static bool Flying( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -125,7 +129,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return mobile.Status.HasFlag( MobileStatus.Flying );
         }
 
-        [CommandsDisplay( Category = "Abilities", Description = "(Garoyle) Stop flying if currently flying." )]
+        [CommandsDisplay( Category = "Abilities", Description = "(Garoyle) Stop flying if currently flying.",
+            InsertText = "Land()" )]
         public static void Land()
         {
             PlayerMobile player = Engine.Player;

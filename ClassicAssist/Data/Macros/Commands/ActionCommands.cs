@@ -17,7 +17,8 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class ActionCommands
     {
-        [CommandsDisplay( Category = "Actions", Description = "Attack mobile (parameter can be serial or alias)." )]
+        [CommandsDisplay( Category = "Actions", Description = "Attack mobile (parameter can be serial or alias).",
+            InsertText = "Attack(\"last\")" )]
         public static void Attack( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -31,7 +32,8 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new AttackRequest( serial ) );
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Clear hands, \"left\", \"right\", or \"both\"" )]
+        [CommandsDisplay( Category = "Actions", Description = "Clear hands, \"left\", \"right\", or \"both\"",
+            InsertText = "ClearHands(\"both\")" )]
         public static void ClearHands( string hand )
         {
             hand = hand.ToLower();
@@ -66,7 +68,8 @@ namespace ClassicAssist.Data.Macros.Commands
         }
 
         [CommandsDisplay( Category = "Actions",
-            Description = "Single click object (parameter can be serial or alias)." )]
+            Description = "Single click object (parameter can be serial or alias).",
+            InsertText = "ClickObject(\"last\")" )]
         public static void ClickObject( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -81,7 +84,8 @@ namespace ClassicAssist.Data.Macros.Commands
         }
 
         [CommandsDisplay( Category = "Actions",
-            Description = "Move item to container (parameters can be serials or aliases)." )]
+            Description = "Move item to container (parameters can be serials or aliases).",
+            InsertText = "MoveItem(\"source\", \"destination\")" )]
         public static void MoveItem( object item, object destination, int amount = -1 )
         {
             int itemSerial = AliasCommands.ResolveSerial( item );
@@ -118,7 +122,8 @@ namespace ClassicAssist.Data.Macros.Commands
         }
 
         [CommandsDisplay( Category = "Actions",
-            Description = "Unmounts if mounted, or mounts if unmounted, will prompt for mount if no \"mount\" alias." )]
+            Description = "Unmounts if mounted, or mounts if unmounted, will prompt for mount if no \"mount\" alias.",
+            InsertText = "ToggleMounted()" )]
         public static void ToggleMounted()
         {
             PlayerMobile player = Engine.Player;
@@ -152,7 +157,8 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new UseObject( mountSerial ) );
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Feed a given alias or serial with graphic." )]
+        [CommandsDisplay( Category = "Actions", Description = "Feed a given alias or serial with graphic.",
+            InsertText = "Feed(\"mount\", 0xff)" )]
         public static void Feed( object obj, int graphic, int amount = 1, int hue = -1 )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -181,6 +187,8 @@ namespace ClassicAssist.Data.Macros.Commands
             UOC.DragDropAsync( foodItem.Serial, amount, serial ).Wait();
         }
 
+        [CommandsDisplay( Category = "Actions", Description = "Sends rename request.",
+            InsertText = "Rename(\"mount\", \"Snoopy\"" )]
         public static void Rename( object obj, string name )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -195,7 +203,8 @@ namespace ClassicAssist.Data.Macros.Commands
         }
 
         [CommandsDisplay( Category = "Actions",
-            Description = "Display corpses and/or mobiles names (parameter \"mobiles\" or \"corpses\"." )]
+            Description = "Display corpses and/or mobiles names (parameter \"mobiles\" or \"corpses\".",
+            InsertText = "ShowNames(\"corpses\")" )]
         public static void ShowNames( string showType )
         {
             const int MAX_DISTANCE = 32;
@@ -242,7 +251,8 @@ namespace ClassicAssist.Data.Macros.Commands
         }
 
         [CommandsDisplay( Category = "Actions",
-            Description = "Equip a specific item into a given layer. Use object inspector to determine layer value." )]
+            Description = "Equip a specific item into a given layer. Use object inspector to determine layer value.",
+            InsertText = "EquipItem(\"axe\", \"TwoHanded\")" )]
         public static void EquipItem( object obj, object layer )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -286,7 +296,7 @@ namespace ClassicAssist.Data.Macros.Commands
         }
 
         [CommandsDisplay( Category = "Actions",
-            Description = "Retrieve an approximated ping with server. -1 on failure." )]
+            Description = "Retrieve an approximated ping with server. -1 on failure.", InsertText = "Ping()" )]
         public static long Ping()
         {
             Random random = new Random();

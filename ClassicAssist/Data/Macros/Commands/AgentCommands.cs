@@ -8,7 +8,8 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class AgentCommands
     {
-        [CommandsDisplay( Category = "Agents", Description = "Dress all items in the specified dress agent." )]
+        [CommandsDisplay( Category = "Agents", Description = "Dress all items in the specified dress agent.",
+            InsertText = "Dress(\"Dress-1\")" )]
         public static void Dress( string name )
         {
             DressManager manager = DressManager.GetInstance();
@@ -24,7 +25,8 @@ namespace ClassicAssist.Data.Macros.Commands
             dressAgentEntry.Action( dressAgentEntry );
         }
 
-        [CommandsDisplay( Category = "Agents", Description = "Undress all items in the specified dress agent." )]
+        [CommandsDisplay( Category = "Agents", Description = "Undress all items in the specified dress agent.",
+            InsertText = "Undress(\"Dress-1\")" )]
         public static void Undress( string name )
         {
             DressManager manager = DressManager.GetInstance();
@@ -40,12 +42,13 @@ namespace ClassicAssist.Data.Macros.Commands
             dressAgentEntry.Undress();
         }
 
-        [CommandsDisplay(Category = "Agents", Description = "Returns the count of the given counter agent.")]
+        [CommandsDisplay( Category = "Agents", Description = "Returns the count of the given counter agent.",
+            InsertText = "Counter(\"bm\")" )]
         public static int Counter( string name )
         {
             CountersManager manager = CountersManager.GetInstance();
 
-            CountersAgentEntry entry = manager.Items.FirstOrDefault( ( cae ) => cae.Name.ToLower() == name.ToLower() );
+            CountersAgentEntry entry = manager.Items.FirstOrDefault( cae => cae.Name.ToLower() == name.ToLower() );
 
             if ( entry != null )
             {

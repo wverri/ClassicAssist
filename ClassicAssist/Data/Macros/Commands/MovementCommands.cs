@@ -10,13 +10,15 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         private const int MOVEMENT_TIMEOUT = 500;
 
-        [CommandsDisplay(Category = "Actions", Description = "Walk in the given direction.")]
+        [CommandsDisplay( Category = "Actions", Description = "Walk in the given direction.",
+            InsertText = "Walk(\"east\")" )]
         public static bool Walk( string direction )
         {
             return Move( direction, false );
         }
 
-        [CommandsDisplay(Category = "Actions", Description = "Turn in the given direction.")]
+        [CommandsDisplay( Category = "Actions", Description = "Turn in the given direction.",
+            InsertText = "Turn(\"east\")" )]
         public static void Turn( string direction )
         {
             Direction directionEnum = Utility.GetEnumValueByName<Direction>( direction );
@@ -30,7 +32,8 @@ namespace ClassicAssist.Data.Macros.Commands
             UOC.WaitForIncomingPacket( new PacketFilterInfo( 22 ), MOVEMENT_TIMEOUT );
         }
 
-        [CommandsDisplay(Category = "Actions", Description = "Run in the given direction.")]
+        [CommandsDisplay( Category = "Actions", Description = "Run in the given direction.",
+            InsertText = "Run(\"east\")" )]
         public static bool Run( string direction )
         {
             return Move( direction, true );
