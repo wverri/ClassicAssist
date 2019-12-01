@@ -12,6 +12,10 @@ namespace ClassicAssist.UO.Network
 {
     public static class IncomingPacketHandlers
     {
+        public delegate void dContainerContents( int serial, ItemCollection container );
+
+        public delegate void dJournalEntryAdded( JournalEntry je );
+
         public delegate void dMobileIncoming( Mobile mobile, ItemCollection equipment );
 
         public delegate void dMobileUpdated( Mobile mobile );
@@ -21,14 +25,10 @@ namespace ClassicAssist.UO.Network
         public delegate void dSkillUpdated( int id, float value, float baseValue, LockStatus lockStatus,
             float skillCap );
 
-        public delegate void dContainerContents( int serial, ItemCollection container );
-
-        public delegate void dJournalEntryAdded( JournalEntry je );
-
-        public static event dJournalEntryAdded JournalEntryAddedEvent;
-
         private static PacketHandler[] _handlers;
         private static PacketHandler[] _extendedHandlers;
+
+        public static event dJournalEntryAdded JournalEntryAddedEvent;
 
         public static event dSkillUpdated SkillUpdatedEvent;
         public static event dSkillList SkillsListEvent;
@@ -45,6 +45,7 @@ namespace ClassicAssist.UO.Network
 
             Register( 0x11, 0, OnMobileStatus );
             Register( 0x1B, 37, OnInitializePlayer );
+            Register( 0x1C, 0, OnASCIIText );
             Register( 0x1D, 5, OnItemDeleted );
             Register( 0x20, 19, OnMobileUpdated );
             Register( 0x21, 8, OnMoveRejected );
@@ -70,17 +71,34 @@ namespace ClassicAssist.UO.Network
             RegisterExtended( 0x08, 0, OnMapChange );
         }
 
+        private static void OnASCIIText( PacketReader reader )
+        {
+            JournalEntry journalEntry = new JournalEntry
+            {
+                Serial = reader.ReadInt32(),
+                ID = reader.ReadInt16(),
+                SpeechType = (JournalSpeech) reader.ReadByte(),
+                SpeechHue = reader.ReadInt16(),
+                SpeechFont = reader.ReadInt16(),
+                Name = reader.ReadString( 30 ),
+                Text = reader.ReadString()
+            };
+
+            Engine.Journal.Write( journalEntry );
+            JournalEntryAddedEvent?.Invoke( journalEntry );
+        }
+
         private static void OnUnicodeText( PacketReader reader )
         {
             JournalEntry journalEntry = new JournalEntry
             {
                 Serial = reader.ReadInt32(),
                 ID = reader.ReadInt16(),
-                SpeechType = (JournalSpeech)reader.ReadByte(),
+                SpeechType = (JournalSpeech) reader.ReadByte(),
                 SpeechHue = reader.ReadInt16(),
                 SpeechFont = reader.ReadInt16(),
-                SpeechLanguage = reader.ReadString(4),
-                Name = reader.ReadString(30),
+                SpeechLanguage = reader.ReadString( 4 ),
+                Name = reader.ReadString( 30 ),
                 Text = reader.ReadUnicodeString()
             };
 
@@ -457,13 +475,84 @@ namespace ClassicAssist.UO.Network
             string name = reader.ReadString( 30 );
             int hits = reader.ReadInt16();
             int hitsMax = reader.ReadInt16();
-            reader.ReadByte(); // Allow Name Change
+            bool allowNameChange = reader.ReadBoolean(); // Allow Name Change
             byte features = reader.ReadByte();
 
             Mobile mobile = serial == Engine.Player.Serial ? Engine.Player : Engine.GetOrCreateMobile( serial );
             mobile.Name = name;
             mobile.Hits = hits;
             mobile.HitsMax = hitsMax;
+            mobile.IsRenamable = allowNameChange;
+
+            if ( features <= 0 )
+            {
+                return;
+            }
+
+            int sex = reader.ReadByte();
+
+            if ( serial != Engine.Player?.Serial )
+            {
+                return;
+            }
+
+            PlayerMobile player = Engine.Player;
+
+            player.Strength = reader.ReadInt16();
+            player.Dex = reader.ReadInt16();
+            player.Int = reader.ReadInt16();
+            player.Stamina = reader.ReadInt16();
+            player.StaminaMax = reader.ReadInt16();
+            player.Mana = reader.ReadInt16();
+            player.ManaMax = reader.ReadInt16();
+            player.Gold = reader.ReadInt32();
+            player.PhysicalResistance = reader.ReadInt16();
+            player.Weight = reader.ReadInt16();
+
+            if ( features >= 5 )
+            {
+                player.WeightMax = reader.ReadInt16();
+                player.Race = (MobileRace) reader.ReadByte();
+            }
+
+            if ( features >= 3 )
+            {
+                player.StatCap = reader.ReadInt16();
+                player.Followers = reader.ReadByte();
+                player.FollowersMax = reader.ReadByte();
+            }
+
+            if ( features >= 4 )
+            {
+                player.FireResistance = reader.ReadInt16();
+                player.ColdResistance = reader.ReadInt16();
+                player.PoisonResistance = reader.ReadInt16();
+                player.EnergyResistance = reader.ReadInt16();
+                player.Luck = reader.ReadInt16();
+                player.Damage = reader.ReadInt16();
+                player.DamageMax = reader.ReadInt16();
+                player.TithingPoints = reader.ReadInt32();
+            }
+
+            // ReSharper disable once InvertIf
+            if ( features >= 6 )
+            {
+                player.PhysicalResistanceMax = reader.ReadInt16();
+                player.FireResistanceMax = reader.ReadInt16();
+                player.ColdResistanceMax = reader.ReadInt16();
+                player.PoisonResistanceMax = reader.ReadInt16();
+                player.EnergyResistanceMax = reader.ReadInt16();
+                player.DefenseChanceIncrease = reader.ReadInt16();
+                player.DefenseChanceIncreaseMax = reader.ReadInt16();
+                player.HitChanceIncrease = reader.ReadInt16();
+                player.SwingSpeedIncrease = reader.ReadInt16();
+                player.DamageIncrease = reader.ReadInt16();
+                player.LowerReagentCost = reader.ReadInt16();
+                player.SpellDamageIncrease = reader.ReadInt16();
+                player.FasterCastRecovery = reader.ReadInt16();
+                player.FasterCasting = reader.ReadInt16();
+                player.LowerManaCost = reader.ReadInt16();
+            }
         }
 
         private static void OnMobileIncoming( PacketReader reader )

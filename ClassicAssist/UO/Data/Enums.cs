@@ -2,6 +2,14 @@
 
 namespace ClassicAssist.UO.Data
 {
+    public enum MobileRace : byte
+    {
+        Unknown,
+        Human,
+        Elf,
+        Gargoyle
+    }
+    
     public enum JournalSpeech : byte
     {
         Say,

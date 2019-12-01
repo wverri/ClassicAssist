@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Assistant;
+using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
 using Newtonsoft.Json;
@@ -100,6 +101,28 @@ namespace ClassicAssist.Data.Macros.Commands
             {
                 UOC.ToggleGargoyleFlying();
             }
+        }
+
+        public static bool Flying( object obj )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial == 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return false;
+            }
+
+            Mobile mobile = Engine.Mobiles.GetMobile( serial );
+
+            if ( mobile == null )
+            {
+                // TODO better message
+                UOC.SystemMessage( Strings.Cannot_find_item___ );
+                return false;
+            }
+
+            return mobile.Status.HasFlag( MobileStatus.Flying );
         }
 
         [CommandsDisplay( Category = "Abilities", Description = "(Garoyle) Stop flying if currently flying." )]
