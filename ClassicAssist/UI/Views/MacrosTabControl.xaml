@@ -36,7 +36,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <ListBox Grid.Row="0" ItemsSource="{Binding Items}" x:Name="ListBox" SelectedItem="{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MinHeight="40">
+                <ListBox Grid.Row="0" ItemsSource="{Binding Items}" x:Name="ListBox" SelectedItem="{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MinHeight="40" IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBooleanConverter}}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <controls:EditTextBlock Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" MinWidth="40" Width="{Binding ActualWidth, ConverterParameter=20, Converter={StaticResource CellWidthValueConverter}, ElementName=ListBox, Mode=OneWay}"/>

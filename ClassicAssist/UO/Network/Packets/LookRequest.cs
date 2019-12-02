@@ -1,4 +1,5 @@
-﻿using ClassicAssist.UO.Data;
+﻿using ClassicAssist.Data;
+using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network.PacketFilter;
 
 namespace ClassicAssist.UO.Network.Packets
@@ -19,14 +20,15 @@ namespace ClassicAssist.UO.Network.Packets
 
         public string Parse( byte[] packet, int length, PacketDirection direction )
         {
-            if ( packet[0] != 0x09 || direction != PacketDirection.Outgoing )
-            {
-                return null;
-            }
+            //if ( packet[0] != 0x09 || direction != PacketDirection.Outgoing )
+            //{
+            //    return null;
+            //}
 
-            int serial = ( packet[1] << 24 ) | ( packet[2] << 16 ) | ( packet[3] << 8 ) | packet[4];
+            //int serial = ( packet[1] << 24 ) | ( packet[2] << 16 ) | ( packet[3] << 8 ) | packet[4];
 
-            return $"ClickObject(0x{serial:x})\r\n";
+            //return $"ClickObject(0x{serial:x})\r\nPause({Options.CurrentOptions.ActionDelayMS})\r\n";
+            return null;
         }
     }
 }

@@ -27,14 +27,12 @@ namespace ClassicAssist.UI.ViewModels
         private bool _isRunning;
         private MacroInvoker _macroInvoker;
         private RelayCommand _newMacroCommand;
+        private ICommand _recordCommand;
         private RelayCommand _removeMacroCommand;
         private MacroEntry _selectedItem;
         private ICommand _showActiveObjectsWindowCommand;
         private ICommand _showCommandsCommand;
         private ICommand _stopCommand;
-        private ICommand _recordCommand;
-
-        public string RecordLabel => IsRecording ? Strings.Stop : Strings.Record;
 
         public MacrosTabViewModel() : base( Strings.Macros )
         {
@@ -43,7 +41,7 @@ namespace ClassicAssist.UI.ViewModels
             MacroManager manager = MacroManager.GetInstance();
 
             manager.IsRecording = () => _isRecording;
-            manager.InsertDocument = str => _dispatcher.Invoke(() => _document.Insert( _caretPosition, str ));
+            manager.InsertDocument = str => { _dispatcher.Invoke( () => { SelectedItem.Macro += str; } ); };
         }
 
         public int CaretPosition
@@ -80,6 +78,11 @@ namespace ClassicAssist.UI.ViewModels
 
         public RelayCommand NewMacroCommand =>
             _newMacroCommand ?? ( _newMacroCommand = new RelayCommand( NewMacro, o => !IsRunning ) );
+
+        public ICommand RecordCommand =>
+            _recordCommand ?? ( _recordCommand = new RelayCommand( Record, o => SelectedItem != null ) );
+
+        public string RecordLabel => IsRecording ? Strings.Stop : Strings.Record;
 
         public RelayCommand RemoveMacroCommand =>
             _removeMacroCommand ?? ( _removeMacroCommand =
@@ -242,20 +245,17 @@ namespace ClassicAssist.UI.ViewModels
             window.ShowDialog();
         }
 
-        public ICommand RecordCommand =>
-            _recordCommand ?? ( _recordCommand = new RelayCommand( Record, o => SelectedItem != null ) );
-
         private void Record( object obj )
         {
             if ( IsRecording )
             {
                 IsRecording = false;
-                NotifyPropertyChanged( nameof(RecordLabel) );
+                NotifyPropertyChanged( nameof( RecordLabel ) );
                 return;
             }
 
             IsRecording = true;
-            NotifyPropertyChanged(nameof(RecordLabel));
+            NotifyPropertyChanged( nameof( RecordLabel ) );
         }
     }
 }
