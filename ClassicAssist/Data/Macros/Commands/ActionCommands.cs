@@ -17,6 +17,40 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class ActionCommands
     {
+        public static List<int> UseOnceList { get; set; } = new List<int>();
+
+        [CommandsDisplay(Category = "Actions", Description = "Use a specific item type (graphic) from your backpack, only once", InsertText = "UseOnce(0xff)")]
+        public static bool UseOnce( int graphic, int hue = -1 )
+        {
+            //TODO hue?
+            if ( Engine.Player?.Backpack?.Container == null )
+            {
+                return false;
+            }
+
+            Item backpack = Engine.Player.Backpack;
+
+            Item match = backpack.Container.SelectEntity( i =>
+                i.ID == graphic && !UseOnceList.Contains( i.Serial ) && ( hue == -1 || hue == i.Hue ) );
+
+            if ( match == null )
+            {
+                UOC.SystemMessage( Strings.UseOnce__Cannot_find_type___ );
+                return false;
+            }
+
+            Engine.SendPacketToServer( new UseObject( match.Serial ) );
+            UseOnceList.Add( match.Serial );
+            return true;
+        }
+
+        [CommandsDisplay(Category = "Actions", Description = "Clear UseOnce list.", InsertText = "ClearUseOnce()")]
+        public static void ClearUseOnce()
+        {
+            UseOnceList?.Clear();
+            UOC.SystemMessage( Strings.UseOnce_cleared___ );
+        }
+
         [CommandsDisplay( Category = "Actions", Description = "Attack mobile (parameter can be serial or alias).",
             InsertText = "Attack(\"last\")" )]
         public static void Attack( object obj )

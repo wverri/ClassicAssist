@@ -5,6 +5,7 @@ using ClassicAssist.Annotations;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Data.Macros;
+using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.ViewModels.Macros;
@@ -126,6 +127,15 @@ namespace ClassicAssist.UI.ViewModels
 
             macros.Add( "Macros", macroArray );
 
+            JArray useOnce = new JArray();
+
+            foreach ( int serial in ActionCommands.UseOnceList )
+            {
+                useOnce.Add( serial );
+            }
+
+            macros.Add( "UseOnce", useOnce );
+
             json.Add( "Macros", macros );
         }
 
@@ -134,6 +144,14 @@ namespace ClassicAssist.UI.ViewModels
             if ( json["Macros"]?["Macros"] == null )
             {
                 return;
+            }
+
+            if ( json["UseOnce"] != null )
+            {
+                foreach ( JToken token in json["UseOnce"] )
+                {
+                    ActionCommands.UseOnceList.Add( token.ToObject<int>() );
+                }
             }
 
             foreach ( JToken token in json["Macros"]["Macros"] )

@@ -531,6 +531,12 @@
   <data name="Use death screen whilst hidden" xml:space="preserve">
     <value>Use death screen whilst hidden (Chuckles Mode)</value>
   </data>
+  <data name="UseOnce cleared..." xml:space="preserve">
+    <value>UseOnce cleared...</value>
+  </data>
+  <data name="UseOnce: Cannot find type..." xml:space="preserve">
+    <value>UseOnce: Cannot find type...</value>
+  </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>
   </data>

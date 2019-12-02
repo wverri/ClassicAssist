@@ -1303,6 +1303,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UseOnce: Cannot find type....
+        /// </summary>
+        public static string UseOnce__Cannot_find_type___ {
+            get {
+                return ResourceManager.GetString("UseOnce: Cannot find type...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UseOnce cleared....
+        /// </summary>
+        public static string UseOnce_cleared___ {
+            get {
+                return ResourceManager.GetString("UseOnce cleared...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value.
         /// </summary>
         public static string Value {
