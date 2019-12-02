@@ -324,6 +324,48 @@ namespace ClassicAssist.Data.Macros.Commands
             return -1;
         }
 
+        [CommandsDisplay( Category = "Actions", Description = "Request a context menu option.",
+            InsertText = "ContextMenu(0x00aabbcc, 1)" )]
+        public static void ContextMenu( int serial, int entry )
+        {
+            Engine.SendPacketToServer( new ContextMenuRequest( serial ) );
+            Thread.Sleep( 400 );
+            Engine.SendPacketToServer( new ContextMenuClick( serial, entry ) );
+        }
+
+        [CommandsDisplay( Category = "Actions", Description = "Request or wait for a context menu option.",
+            InsertText = "WaitForContext(0x00aabbcc, 1, 5000)" )]
+        public static bool WaitForContext( int serial, int entry, int timeout )
+        {
+            AutoResetEvent are = new AutoResetEvent( false );
+
+            PacketFilterInfo pfi = new PacketFilterInfo( 0xBF,
+                new[]
+                {
+                    PacketFilterConditions.ShortAtPositionCondition( 0x14, 3 ),
+                    PacketFilterConditions.IntAtPositionCondition( serial, 7 )
+                }, ( bytes, info ) =>
+                {
+                    Engine.SendPacketToServer( new ContextMenuClick( serial, entry ) );
+                    are.Set();
+                } );
+
+            Engine.AddReceiveFilter( pfi );
+
+            Engine.SendPacketToServer( new ContextMenuRequest( serial ) );
+
+            try
+            {
+                bool result = are.WaitOne( timeout );
+
+                return result;
+            }
+            finally
+            {
+                Engine.RemoveReceiveFilter( pfi );
+            }
+        }
+
         private enum ShowNamesType
         {
             Mobiles,
