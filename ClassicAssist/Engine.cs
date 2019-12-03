@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Input;
 using ClassicAssist.Data;
+using ClassicAssist.Data.Commands;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Misc;
 using ClassicAssist.UI.Views;
@@ -194,6 +195,8 @@ namespace Assistant
 
             IncomingPacketHandlers.Initialize();
             OutgoingPacketHandlers.Initialize();
+
+            CommandsManager.Initialize();
         }
 
         private static void ProcessIncomingQueue( Packet packet )
@@ -260,7 +263,8 @@ namespace Assistant
 
                 if ( newStatus.HasFlag( MobileStatus.Hidden ) )
                 {
-                    SendPacketToClient( new MobileUpdate( mobile.Serial, mobile.ID == 0x191 ? 0x193 : 0x192, mobile.Hue, newStatus, mobile.X,
+                    SendPacketToClient( new MobileUpdate( mobile.Serial, mobile.ID == 0x191 ? 0x193 : 0x192, mobile.Hue,
+                        newStatus, mobile.X,
                         mobile.Y, mobile.Z, mobile.Direction ) );
                 }
             };
@@ -317,6 +321,13 @@ namespace Assistant
 
         private static bool OnPacketSend( ref byte[] data, ref int length )
         {
+            bool filter = false;
+
+            if ( CommandsManager.IsSpeechPacket( data[0] ) )
+            {
+                 filter = CommandsManager.CheckCommand(data, length);
+            }
+
             if ( _outgoingPacketFilter.MatchFilterAll( data, out PacketFilterInfo[] pfis ) > 0 )
             {
                 foreach ( PacketFilterInfo pfi in pfis )
@@ -333,7 +344,7 @@ namespace Assistant
 
             WaitEntries.CheckWait( data, PacketDirection.Outgoing );
 
-            return true;
+            return !filter;
         }
 
         private static bool OnPacketReceive( ref byte[] data, ref int length )

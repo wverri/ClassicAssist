@@ -192,6 +192,9 @@
   <data name="Commands" xml:space="preserve">
     <value>Commands</value>
   </data>
+  <data name="Commands:" xml:space="preserve">
+    <value>Commands:</value>
+  </data>
   <data name="Connected:" xml:space="preserve">
     <value>Connected:</value>
   </data>
@@ -203,6 +206,9 @@
   </data>
   <data name="Counters" xml:space="preserve">
     <value>Counters</value>
+  </data>
+  <data name="Current Location:" xml:space="preserve">
+    <value>Current Location:</value>
   </data>
   <data name="Do not auto interupt" xml:space="preserve">
     <value>Do not auto interupt</value>

@@ -286,6 +286,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Commands:.
+        /// </summary>
+        public static string Commands_ {
+            get {
+                return ResourceManager.GetString("Commands:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connected:.
         /// </summary>
         public static string Connected_ {
@@ -318,6 +327,15 @@ namespace ClassicAssist.Resources {
         public static string Counters {
             get {
                 return ResourceManager.GetString("Counters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Location:.
+        /// </summary>
+        public static string Current_Location_ {
+            get {
+                return ResourceManager.GetString("Current Location:", resourceCulture);
             }
         }
         
