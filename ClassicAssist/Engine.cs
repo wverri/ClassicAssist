@@ -260,7 +260,8 @@ namespace Assistant
 
                 if ( newStatus.HasFlag( MobileStatus.Hidden ) )
                 {
-                    SendPacketToClient( new MobileDeadIncoming( mobile ) );
+                    SendPacketToClient( new MobileUpdate( mobile.Serial, mobile.ID == 0x191 ? 0x193 : 0x192, mobile.Hue, newStatus, mobile.X,
+                        mobile.Y, mobile.Z, mobile.Direction ) );
                 }
             };
         }
