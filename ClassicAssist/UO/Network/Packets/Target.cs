@@ -13,7 +13,7 @@ namespace ClassicAssist.UO.Network.Packets
         Cancel
     }
 
-    public class Target : Packets, IMacroCommandParser
+    public class Target : BasePacket, IMacroCommandParser
     {
         public Target()
         {

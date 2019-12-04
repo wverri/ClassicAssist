@@ -3,7 +3,7 @@ using ClassicAssist.UO.Network.PacketFilter;
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class GumpButtonClick : Packets, IMacroCommandParser
+    public class GumpButtonClick : BasePacket, IMacroCommandParser
     {
         public GumpButtonClick()
         {

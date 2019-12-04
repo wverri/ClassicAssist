@@ -2,7 +2,7 @@
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class MobileUpdate : Packets
+    public class MobileUpdate : BasePacket
     {
         public MobileUpdate( int serial, int id, int hue, MobileStatus flags, int x, int y, int z, Direction direction )
         {

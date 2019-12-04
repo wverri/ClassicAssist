@@ -187,7 +187,7 @@ namespace ClassicAssist.UI.ViewModels
                 new PacketFilterInfo( 0x73, new[] { new PacketFilterCondition( 1, new[] { value }, 1 ) } ),
                 PacketDirection.Incoming, true );
 
-            Engine.SendPacketToServer( new PingPacket( value ) );
+            Engine.SendPacketToServer( new Ping( value ) );
 
             bool result = we.Lock.WaitOne( 5000 );
 

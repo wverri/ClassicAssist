@@ -67,6 +67,8 @@ namespace Assistant
 
         //public static DateTime NextActionTime { get; set; }
         public static PlayerMobile Player { get; set; }
+
+        public static RehueList RehueList { get; set; } = new RehueList();
         public static string StartupPath { get; set; }
         public static int TargetSerial { get; set; }
         public static TargetType TargetType { get; set; }
@@ -291,9 +293,14 @@ namespace Assistant
             SendPacketToClient( data, data.Length );
         }
 
-        public static void SendPacketToClient( Packets packet )
+        public static void SendPacketToClient( BasePacket basePacket )
         {
-            byte[] data = packet.ToArray();
+            if ( basePacket.Direction != PacketDirection.Any && basePacket.Direction != PacketDirection.Incoming )
+            {
+                throw new InvalidOperationException( "Send packet wrong direction." );
+            }
+
+            byte[] data = basePacket.ToArray();
 
             SendPacketToClient( data, data.Length );
         }
@@ -305,9 +312,14 @@ namespace Assistant
             SendPacketToServer( data, data.Length );
         }
 
-        public static void SendPacketToServer( Packets packet )
+        public static void SendPacketToServer( BasePacket basePacket )
         {
-            byte[] data = packet.ToArray();
+            if ( basePacket.Direction != PacketDirection.Any && basePacket.Direction != PacketDirection.Outgoing )
+            {
+                throw new InvalidOperationException( "Send packet wrong direction." );
+            }
+
+            byte[] data = basePacket.ToArray();
 
             SendPacketToServer( data, data.Length );
         }
@@ -325,7 +337,7 @@ namespace Assistant
 
             if ( CommandsManager.IsSpeechPacket( data[0] ) )
             {
-                 filter = CommandsManager.CheckCommand(data, length);
+                filter = CommandsManager.CheckCommand( data, length );
             }
 
             if ( _outgoingPacketFilter.MatchFilterAll( data, out PacketFilterInfo[] pfis ) > 0 )

@@ -2,7 +2,7 @@
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class ToggleGargoyleFlying : Packets
+    public class ToggleGargoyleFlying : BasePacket
     {
         public ToggleGargoyleFlying()
         {

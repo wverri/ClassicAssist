@@ -3,7 +3,7 @@ using ClassicAssist.UO.Network.PacketFilter;
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class UseObject : Packets, IMacroCommandParser
+    public class UseObject : BasePacket, IMacroCommandParser
     {
         public UseObject()
         {

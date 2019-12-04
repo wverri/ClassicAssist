@@ -19,6 +19,7 @@ namespace ClassicAssist.Data
         private int _lightLevel;
         private string _name;
         private bool _useDeathScreenWhilstHidden;
+        private bool _persistUseOnce;
 
         public bool ActionDelay
         {
@@ -56,6 +57,12 @@ namespace ClassicAssist.Data
         {
             get => _useDeathScreenWhilstHidden;
             set => SetProperty( ref _useDeathScreenWhilstHidden, value );
+        }
+
+        public bool PersistUseOnce
+        {
+            get => _persistUseOnce;
+            set => SetProperty(ref _persistUseOnce, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

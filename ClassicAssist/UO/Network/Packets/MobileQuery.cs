@@ -2,7 +2,7 @@
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class MobileQuery : Packets
+    public class MobileQuery : BasePacket
     {
         public MobileQuery(int serial, MobileQueryType queryType = MobileQueryType.StatsRequest)
         {

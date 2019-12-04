@@ -3,7 +3,7 @@ using ClassicAssist.UO.Data;
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class SetWeaponAbility : Packets
+    public class SetWeaponAbility : BasePacket
     {
         public SetWeaponAbility(int abilityIndex)
         {

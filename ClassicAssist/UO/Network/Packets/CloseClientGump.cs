@@ -2,7 +2,7 @@
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class CloseClientGump : Packets
+    public class CloseClientGump : BasePacket
     {
         public CloseClientGump(int gumpID)
         {

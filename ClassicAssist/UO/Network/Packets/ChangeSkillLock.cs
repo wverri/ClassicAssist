@@ -3,7 +3,7 @@ using ClassicAssist.UO.Data;
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class ChangeSkillLock : Packets
+    public class ChangeSkillLock : BasePacket
     {
         public ChangeSkillLock(SkillEntry skill, LockStatus lockStatus)
         {

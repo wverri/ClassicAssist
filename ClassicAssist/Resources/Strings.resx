@@ -378,6 +378,9 @@
   <data name="Objects" xml:space="preserve">
     <value>Objects</value>
   </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
   <data name="Organizer" xml:space="preserve">
     <value>Organizer</value>
   </data>
@@ -395,6 +398,9 @@
   </data>
   <data name="Pass to UO" xml:space="preserve">
     <value>Pass to UO</value>
+  </data>
+  <data name="Persist Use Once" xml:space="preserve">
+    <value>Persist Use Once</value>
   </data>
   <data name="Play" xml:space="preserve">
     <value>Play</value>

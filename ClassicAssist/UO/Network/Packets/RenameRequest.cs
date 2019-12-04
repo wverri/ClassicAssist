@@ -3,7 +3,7 @@ using ClassicAssist.UO.Network.PacketFilter;
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class RenameRequest : Packets, IMacroCommandParser
+    public class RenameRequest : BasePacket, IMacroCommandParser
     {
         public RenameRequest()
         {

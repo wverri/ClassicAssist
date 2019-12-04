@@ -3,7 +3,7 @@ using ClassicAssist.UO.Data;
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class ClearWeaponAbility : Packets
+    public class ClearWeaponAbility : BasePacket
     {
         public ClearWeaponAbility()
         {

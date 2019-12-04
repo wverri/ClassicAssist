@@ -2,7 +2,7 @@
 
 namespace ClassicAssist.UO.Network.Packets
 {
-    public class DropItem : Packets
+    public class DropItem : BasePacket
     {
         public DropItem(int serial, int containerSerial, int x, int y, int z)
         {

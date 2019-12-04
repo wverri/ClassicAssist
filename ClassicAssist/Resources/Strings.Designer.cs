@@ -844,6 +844,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        public static string Options {
+            get {
+                return ResourceManager.GetString("Options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Organizer.
         /// </summary>
         public static string Organizer {
@@ -894,6 +903,15 @@ namespace ClassicAssist.Resources {
         public static string Pass_to_UO {
             get {
                 return ResourceManager.GetString("Pass to UO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persist Use Once.
+        /// </summary>
+        public static string Persist_Use_Once {
+            get {
+                return ResourceManager.GetString("Persist Use Once", resourceCulture);
             }
         }
         

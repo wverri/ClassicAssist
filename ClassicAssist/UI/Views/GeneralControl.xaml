@@ -51,7 +51,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="{x:Static r:Strings.Light}" Grid.Column="0"/>
-                    <Slider Grid.Column="1" Maximum="31" Value="{Binding LightLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDirectionReversed="True" Minimum="0" Height="20" VerticalAlignment="Center"/>
+                    <Slider Grid.Column="1" Maximum="31" Value="{Binding Options.LightLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDirectionReversed="True" Minimum="0" Height="20" VerticalAlignment="Center"/>
                 </Grid>
             </Grid>
         </GroupBox>
@@ -61,24 +61,23 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
-                <CheckBox Content="{x:Static r:Strings.Always_On_Top}" IsChecked="{Binding AlwaysOnTop}"/>
+                <CheckBox Content="{x:Static r:Strings.Always_On_Top}" IsChecked="{Binding Options.AlwaysOnTop}"/>
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.Resources>
                         <misc:BindingProxy x:Key="proxy" Data="{Binding}"/>
                     </StackPanel.Resources>
-                    <CheckBox IsChecked="{Binding ActionDelay}" DataContext="{Binding}">
+                    <CheckBox IsChecked="{Binding Options.ActionDelay}" DataContext="{Binding}">
                         <CheckBox.ContentTemplate>
                             <ItemContainerTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Label Content="{x:Static r:Strings.Action_Delay_}" Margin="0" Padding="5,0,0,0"/>
-                                    <TextBox Width="40" Margin="10,0,10,0" Text="{Binding Path=Data.ActionDelayMS, Source={StaticResource proxy}}"/>
+                                    <TextBox Width="40" Margin="10,0,10,0" Text="{Binding Path=Data.Options.ActionDelayMS, Source={StaticResource proxy}}"/>
                                     <Label Content="ms" Margin="0" Padding="0"/>
                                 </StackPanel>
                             </ItemContainerTemplate>
                         </CheckBox.ContentTemplate>
                     </CheckBox>
                 </StackPanel>
-                <CheckBox Content="{x:Static r:Strings.Use_death_screen_whilst_hidden}" IsChecked="{Binding UseDeathScreenWhilstHidden}"/>
             </StackPanel>
             <Grid Grid.Row="1">
                 <GroupBox Header="{x:Static r:Strings.Profiles}" Margin="5">
