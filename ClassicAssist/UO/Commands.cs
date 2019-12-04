@@ -29,6 +29,13 @@ namespace ClassicAssist.UO
         public static async Task DragDropAsync( int serial, int amount, int containerSerial, int x = -1, int y = -1,
             int z = 0 )
         {
+            if ( amount == -1 )
+            {
+                Item i = Engine.Items.GetItem( serial );
+
+                amount = i?.Count ?? 1;
+            }
+
             await Task.Run( async () =>
             {
                 DragItem( serial, amount );

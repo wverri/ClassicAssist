@@ -196,6 +196,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel action.
+        /// </summary>
+        public static string Cancel_action {
+            get {
+                return ResourceManager.GetString("Cancel action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot find container....
         /// </summary>
         public static string Cannot_find_container___ {
@@ -835,6 +844,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move to backpack.
+        /// </summary>
+        public static string Move_to_backpack {
+            get {
+                return ResourceManager.GetString("Move to backpack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move to container.
+        /// </summary>
+        public static string Move_to_container {
+            get {
+                return ResourceManager.GetString("Move to container", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -1353,6 +1380,15 @@ namespace ClassicAssist.Resources {
         public static string Timers {
             get {
                 return ResourceManager.GetString("Timers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle item properties.
+        /// </summary>
+        public static string Toggle_item_properties {
+            get {
+                return ResourceManager.GetString("Toggle item properties", resourceCulture);
             }
         }
         
