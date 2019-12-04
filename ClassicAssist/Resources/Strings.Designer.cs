@@ -421,6 +421,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Equip Last Weapon (Quick Weapon Switch).
+        /// </summary>
+        public static string Equip_Last_Weapon__Quick_Weapon_Switch_ {
+            get {
+                return ResourceManager.GetString("Equip Last Weapon (Quick Weapon Switch)", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error: Cannot find player backpack.
         /// </summary>
         public static string Error__Cannot_find_player_backpack {

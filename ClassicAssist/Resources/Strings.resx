@@ -237,6 +237,9 @@
   <data name="Entity Viewer" xml:space="preserve">
     <value>Entity Viewer</value>
   </data>
+  <data name="Equip Last Weapon (Quick Weapon Switch)" xml:space="preserve">
+    <value>Equip Last Weapon (Quick Weapon Switch)</value>
+  </data>
   <data name="Error: Cannot find player backpack" xml:space="preserve">
     <value>Error: Cannot find player backpack</value>
   </data>
