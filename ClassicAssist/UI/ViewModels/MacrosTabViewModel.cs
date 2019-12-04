@@ -5,7 +5,6 @@ using ClassicAssist.Annotations;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Data.Macros;
-using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.ViewModels.Macros;
@@ -173,7 +172,7 @@ namespace ClassicAssist.UI.ViewModels
 
         private static async Task InspectObject( object arg )
         {
-            int serial = await Commands.GetTargeSerialAsync( Strings.Target_object___, 30000 );
+            int serial = await Commands.GetTargeSerialAsync( Strings.Target_object___ );
 
             if ( serial > 0 )
             {

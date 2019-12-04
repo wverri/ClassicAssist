@@ -5,14 +5,14 @@ using System.Threading;
 
 namespace ClassicAssist.UO.Network.PacketFilter
 {
-    public class WaitEntries
+    public class PacketWaitEntries
     {
-        private readonly List<WaitEntry> _waitEntries = new List<WaitEntry>();
+        private readonly List<PacketWaitEntry> _waitEntries = new List<PacketWaitEntry>();
         private readonly object _waitEntryLock = new object();
 
-        public WaitEntry AddWait( PacketFilterInfo pfi, PacketDirection direction, bool autoRemove = false )
+        public PacketWaitEntry Add( PacketFilterInfo pfi, PacketDirection direction, bool autoRemove = false )
         {
-            WaitEntry we = new WaitEntry
+            PacketWaitEntry we = new PacketWaitEntry
             {
                 PFI = pfi, Lock = new AutoResetEvent( false ), PacketDirection = direction, AutoRemove = autoRemove
             };
@@ -35,11 +35,11 @@ namespace ClassicAssist.UO.Network.PacketFilter
                 }
             }
 
-            List<WaitEntry> matchedEntries = new List<WaitEntry>();
+            List<PacketWaitEntry> matchedEntries = new List<PacketWaitEntry>();
 
             lock ( _waitEntryLock )
             {
-                foreach ( WaitEntry t in _waitEntries.Where( t => packet[0] == t.PFI.PacketID )
+                foreach ( PacketWaitEntry t in _waitEntries.Where( t => packet[0] == t.PFI.PacketID )
                     .Where( t => direction == t.PacketDirection ) )
                 {
                     if ( t.PFI.GetConditions() == null )
@@ -86,9 +86,9 @@ namespace ClassicAssist.UO.Network.PacketFilter
                 return false;
             }
 
-            List<WaitEntry> removeList = new List<WaitEntry>();
+            List<PacketWaitEntry> removeList = new List<PacketWaitEntry>();
 
-            foreach ( WaitEntry entry in matchedEntries )
+            foreach ( PacketWaitEntry entry in matchedEntries )
             {
                 entry.Packet = new byte[packet.Length];
                 Buffer.BlockCopy( packet, 0, entry.Packet, 0, packet.Length );
@@ -101,16 +101,16 @@ namespace ClassicAssist.UO.Network.PacketFilter
                 }
             }
 
-            removeList.ForEach( RemoveWait );
+            removeList.ForEach( Remove );
 
             return true;
         }
 
-        public void ClearWait()
+        public void Clear()
         {
             lock ( _waitEntryLock )
             {
-                foreach ( WaitEntry we in _waitEntries )
+                foreach ( PacketWaitEntry we in _waitEntries )
                 {
                     we.Lock.Set();
                 }
@@ -119,7 +119,7 @@ namespace ClassicAssist.UO.Network.PacketFilter
             }
         }
 
-        public WaitEntry[] GetEntries()
+        public PacketWaitEntry[] GetEntries()
         {
             lock ( _waitEntryLock )
             {
@@ -127,28 +127,12 @@ namespace ClassicAssist.UO.Network.PacketFilter
             }
         }
 
-        public void RemoveWait( WaitEntry we )
+        public void Remove( PacketWaitEntry we )
         {
             lock ( _waitEntryLock )
             {
                 _waitEntries.Remove( we );
             }
         }
-    }
-
-    public class WaitEntry
-    {
-        public bool AutoRemove { get; set; }
-        public AutoResetEvent Lock { get; set; }
-        public byte[] Packet { get; set; }
-        public PacketDirection PacketDirection { get; set; }
-        public PacketFilterInfo PFI { get; set; }
-    }
-
-    public enum PacketDirection : byte
-    {
-        Incoming,
-        Outgoing,
-        Any
     }
 }

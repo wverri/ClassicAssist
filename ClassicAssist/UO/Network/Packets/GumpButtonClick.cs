@@ -7,7 +7,6 @@ namespace ClassicAssist.UO.Network.Packets
     {
         public GumpButtonClick()
         {
-            
         }
 
         public GumpButtonClick( int gumpID, int serial, int buttonID )

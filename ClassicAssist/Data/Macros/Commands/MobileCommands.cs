@@ -1,4 +1,6 @@
-﻿using Assistant;
+﻿using System.Linq;
+using Assistant;
+using ClassicAssist.Data.Friends;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
@@ -7,8 +9,64 @@ using UOC = ClassicAssist.UO.Commands;
 namespace ClassicAssist.Data.Macros.Commands
 {
     public static class MobileCommands
-
     {
+        [CommandsDisplay( Category = "Entity",
+            Description = "Adds a mobile to friends list, will display target cursor if no serial/alias supplied.",
+            InsertText = "AddFriend()" )]
+        public static void AddFriend( object obj = null )
+        {
+            int serial = obj != null
+                ? AliasCommands.ResolveSerial( obj )
+                : UOC.GetTargeSerialAsync( Strings.Target_new_friend___ ).Result;
+
+            if ( serial == 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return;
+            }
+
+            Mobile m = Engine.Mobiles.GetMobile( serial );
+
+            if ( m == null )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return;
+            }
+
+            FriendEntry fe = new FriendEntry { Name = m.Name.Trim(), Serial = m.Serial };
+
+            if ( !Options.CurrentOptions.Friends.Contains( fe ) )
+            {
+                Engine.Dispatcher?.Invoke( () => Options.CurrentOptions.Friends.Add( fe ) );
+            }
+        }
+
+        [CommandsDisplay( Category = "Entity",
+            Description =
+                "Removes a mobile from the friends list, will display target cursor if no serial/alias supplied.",
+            InsertText = "RemoveFriend()" )]
+        public static void RemoveFriend( object obj = null )
+        {
+            int serial = obj != null
+                ? AliasCommands.ResolveSerial( obj )
+                : UOC.GetTargeSerialAsync( Strings.Target_friend_to_remove___ ).Result;
+
+            if ( serial == 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return;
+            }
+
+            FriendEntry entry = Options.CurrentOptions.Friends.FirstOrDefault( i => i.Serial == serial );
+
+            if ( entry == null )
+            {
+                return;
+            }
+
+            Engine.Dispatcher?.Invoke( () => Options.CurrentOptions.Friends.Remove( entry ) );
+        }
+
         [CommandsDisplay( Category = "Entity", Description = "Return the name of the givern mobile.",
             InsertText = "if Name(\"self\") == \"Shmoo\":" )]
         public static string Name( object obj = null )

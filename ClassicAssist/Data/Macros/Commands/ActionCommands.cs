@@ -179,7 +179,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( !AliasCommands.FindAlias( "mount" ) )
             {
-                int serial = UOC.GetTargeSerialAsync( Strings.Target_new_mount___, 10000 ).Result;
+                int serial = UOC.GetTargeSerialAsync( Strings.Target_new_mount___ ).Result;
 
                 if ( serial == -1 )
                 {
@@ -344,7 +344,7 @@ namespace ClassicAssist.Data.Macros.Commands
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            WaitEntry we = Engine.WaitEntries.AddWait(
+            PacketWaitEntry we = Engine.PacketWaitEntries.Add(
                 new PacketFilterInfo( 0x73, new[] { new PacketFilterCondition( 1, new[] { value }, 1 ) } ),
                 PacketDirection.Incoming, true );
 

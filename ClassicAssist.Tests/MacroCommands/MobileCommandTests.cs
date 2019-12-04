@@ -14,7 +14,7 @@ namespace ClassicAssist.Tests.MacroCommands
         [TestInitialize]
         public void Initialize()
         {
-            _player = new PlayerMobile( 0x01 ) { Name = "Shmoo", Notoriety = Notoriety.Murderer};
+            _player = new PlayerMobile( 0x01 ) { Name = "Shmoo", Notoriety = Notoriety.Murderer };
             Engine.Player = _player;
             AliasCommands.SetAlias( "self", 0x01 );
         }

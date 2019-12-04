@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Assistant;
+using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
+
 // ReSharper disable UnusedVariable
 
 namespace ClassicAssist.Data.Commands
@@ -16,14 +19,39 @@ namespace ClassicAssist.Data.Commands
 
         private static readonly byte[] _speechPacketIDs = { 0xAD, 0x03 };
 
-        public static char CommandPrefix { get; set; } = '+';
-
         public static void Initialize()
         {
             _commands = new Dictionary<string, Func<string[], bool>>
             {
-                { "help", OnHelp }, { "where", OnSendLocation }
+                { "help", OnHelp },
+                { "where", OnSendLocation },
+                { "addfriend", OnAddFriend },
+                { "removefriend", OnRemoveFriend }
             };
+        }
+
+        private static bool OnRemoveFriend( string[] args )
+        {
+            if ( args.Length != 0 )
+            {
+                return false;
+            }
+
+            Task.Run( () => MobileCommands.RemoveFriend() );
+
+            return true;
+        }
+
+        private static bool OnAddFriend( string[] args )
+        {
+            if ( args.Length != 0 )
+            {
+                return false;
+            }
+
+            Task.Run( () => MobileCommands.AddFriend() );
+
+            return true;
         }
 
         private static bool OnHelp( string[] args )
@@ -77,7 +105,7 @@ namespace ClassicAssist.Data.Commands
                 text = ParseAsciiSpeech( data, data.Length );
             }
 
-            if ( text == null || text[0] != CommandPrefix )
+            if ( text == null || text[0] != Options.CurrentOptions.CommandPrefix )
             {
                 return false;
             }
