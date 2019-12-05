@@ -270,6 +270,9 @@
   <data name="Graphic" xml:space="preserve">
     <value>Graphic</value>
   </data>
+  <data name="Grid Container Viewer" xml:space="preserve">
+    <value>Grid Container Viewer</value>
+  </data>
   <data name="Gumps" xml:space="preserve">
     <value>Gumps</value>
   </data>
@@ -534,6 +537,9 @@
   <data name="Target clothing item..." xml:space="preserve">
     <value>Target clothing item...</value>
   </data>
+  <data name="Target container..." xml:space="preserve">
+    <value>Target container...</value>
+  </data>
   <data name="Target friend to remove..." xml:space="preserve">
     <value>Target friend to remove...</value>
   </data>
@@ -582,6 +588,9 @@
   <data name="Use death screen whilst hidden" xml:space="preserve">
     <value>Use death screen whilst hidden (Chuckles Mode)</value>
   </data>
+  <data name="Use item" xml:space="preserve">
+    <value>Use item</value>
+  </data>
   <data name="UseOnce cleared..." xml:space="preserve">
     <value>UseOnce cleared...</value>
   </data>
@@ -605,5 +614,8 @@
   </data>
   <data name="World_Status" xml:space="preserve">
     <value>World Status</value>
+  </data>
+  <data name="{0} items, {1} selected, {2} total amount" xml:space="preserve">
+    <value>{0} items, {1} selected, {2} total amount</value>
   </data>
 </root>
