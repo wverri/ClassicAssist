@@ -112,7 +112,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
         public void Deserialize( JObject json, Options options )
         {
-            if ( json["Organizer"] == null )
+            if ( json?["Organizer"] == null )
             {
                 return;
             }

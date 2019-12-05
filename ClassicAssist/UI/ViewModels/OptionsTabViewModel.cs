@@ -44,7 +44,7 @@ namespace ClassicAssist.UI.ViewModels
         {
             Options = options;
 
-            JToken config = json["Options"];
+            JToken config = json?["Options"];
 
             if ( config?["UseOnce"] != null )
             {

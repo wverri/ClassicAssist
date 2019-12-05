@@ -86,7 +86,7 @@ namespace ClassicAssist.UI.ViewModels
 
             _hotkeyManager.Items.AddSorted( _commandsCategory );
 
-            JToken hotkeys = json["Hotkeys"];
+            JToken hotkeys = json?["Hotkeys"];
 
             if ( hotkeys?["Commands"] == null )
             {

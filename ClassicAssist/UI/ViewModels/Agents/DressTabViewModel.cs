@@ -148,7 +148,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
         public void Deserialize( JObject json, Options options )
         {
-            if ( json["Dress"] == null )
+            if ( json?["Dress"] == null )
             {
                 return;
             }

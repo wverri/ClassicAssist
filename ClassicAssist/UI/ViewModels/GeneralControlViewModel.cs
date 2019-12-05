@@ -77,7 +77,7 @@ namespace ClassicAssist.UI.ViewModels
         {
             Options = options;
 
-            if ( json["General"] == null )
+            if ( json?["General"] == null )
             {
                 return;
             }

@@ -65,7 +65,7 @@ namespace ClassicAssist.UI.ViewModels
 
         public void Deserialize( JObject json, Options options )
         {
-            if ( json["Debug"] == null )
+            if ( json?["Debug"] == null )
             {
                 return;
             }

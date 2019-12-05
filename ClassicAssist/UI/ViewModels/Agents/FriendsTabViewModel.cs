@@ -59,7 +59,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
         {
             Options = options;
 
-            if ( json["Friends"] == null )
+            if ( json?["Friends"] == null )
             {
                 return;
             }

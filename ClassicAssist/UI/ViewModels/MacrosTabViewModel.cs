@@ -136,9 +136,14 @@ namespace ClassicAssist.UI.ViewModels
             json.Add( "Macros", macros );
         }
 
-        public void Deserialize( [NotNull] JObject json, Options options )
+        public void Deserialize( JObject json, Options options )
         {
-            JToken config = json["Macros"];
+            JToken config = json?["Macros"];
+
+            if ( config?["Macros"] == null )
+            {
+                return;
+            }
 
             foreach ( JToken token in config["Macros"] )
             {
