@@ -38,7 +38,7 @@ namespace ClassicAssist.Data.Macros.Commands
             return Engine.GumpList.ContainsKey( gumpId );
         }
 
-        [CommandsDisplay( Category = "Gumps", Description = "Check for a text in gump.", InsertText = "TODO" )]
+        [CommandsDisplay( Category = "Gumps", Description = "Check for a text in gump.", InsertText = "if InGump(0xf00f, \"lethal darts\"):" )]
         public static bool InGump( int gumpId, string text )
         {
             if ( Engine.Gumps.GetGump( gumpId, out Gump gump ) )
