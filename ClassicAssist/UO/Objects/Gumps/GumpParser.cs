@@ -889,9 +889,9 @@ namespace ClassicAssist.UO.Objects.Gumps
                     case "echandleinput":
                         //TODO
                         break;
-                    default:
-                        throw new InvalidOperationException(
-                            $"Unknown element \"{formatted[0]}\" in custom gump layout:\r\n\r\n{layout}" );
+                    //default:
+                    //    throw new InvalidOperationException(
+                    //        $"Unknown element \"{formatted[0]}\" in custom gump layout:\r\n\r\n{layout}" );
                 }
             }
 

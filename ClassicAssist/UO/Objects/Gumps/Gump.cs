@@ -20,16 +20,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Assistant;
 using ClassicAssist.UO.Data;
 
 namespace ClassicAssist.UO.Objects.Gumps
 {
-    public enum GumpButtonType
-    {
-        Page = 0,
-        Reply = 1
-    }
-
     public class Gump
     {
         private static readonly Random _random = new Random();
@@ -47,7 +42,6 @@ namespace ClassicAssist.UO.Objects.Gumps
 
         private static readonly byte[] BeginTextSeparator = StringToBuffer( " @" );
         private static readonly byte[] EndTextSeparator = StringToBuffer( "@" );
-        public readonly int ID;
 
         public readonly string Layout;
         public readonly GumpPage[] Pages;
@@ -126,6 +120,8 @@ namespace ClassicAssist.UO.Objects.Gumps
                 }
             }
         }
+
+        public int ID { get; }
 
         public bool Movable { get; set; }
 
@@ -344,35 +340,9 @@ namespace ClassicAssist.UO.Objects.Gumps
             return GetElementByCliloc( cliloc, out GumpElement element ) ? element : null;
         }
 
-        public void Close()
-        {
-            //TODO
-            //MacroEx.CloseClientGump( Client, ID );
-            //MacroEx.GumpButtonClick( Client, ID, Serial, 0 );
-        }
-
         public override int GetHashCode()
         {
             return ID.GetHashCode() ^ Layout.GetHashCode();
-        }
-
-        ~Gump()
-        {
-            //TODO
-            //OutgoingPackets.GumpButtonPressedEvent -= OutgoingPackets_GumpButtonPressedEvent;
-        }
-
-        private void OutgoingPackets_GumpButtonPressedEvent( int serial, int gumpID, int buttonID,
-            int[] switches )
-        {
-            if ( gumpID != ID || serial != Serial )
-            {
-                return;
-            }
-
-            //TODO
-            //OutgoingPackets.GumpButtonPressedEvent -= OutgoingPackets_GumpButtonPressedEvent;
-            OnResponse( buttonID, switches );
         }
 
         public virtual void OnResponse( int buttonID, int[] switches )
@@ -381,16 +351,14 @@ namespace ClassicAssist.UO.Objects.Gumps
 
         public void SendGump()
         {
-            //TODO
-            //MacroEx.SendPacketToClient( client, Compile() );
+            byte[] bytes = Compile();
+
+            Engine.SendPacketToClient( bytes, bytes.Length );
         }
 
         public void CloseGump()
         {
-            //TODO
-            //MacroEx.CloseClientGump( client, ID );
-            //OutgoingPackets.GumpButtonPressedEvent -= OutgoingPackets_GumpButtonPressedEvent;
-            OnResponse( 0, null );
+            Commands.CloseClientGump( ID );
         }
 
         public void Add( GumpElement e )

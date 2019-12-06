@@ -173,6 +173,7 @@ namespace ClassicAssist.UO
 
         public static void CloseClientGump( int gumpID )
         {
+            Engine.Gumps.Remove( gumpID );
             Engine.SendPacketToClient( new CloseClientGump( gumpID ) );
         }
 

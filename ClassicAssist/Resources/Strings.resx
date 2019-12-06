@@ -306,6 +306,9 @@
   <data name="Invalid destination container..." xml:space="preserve">
     <value>Invalid destination container...</value>
   </data>
+  <data name="Invalid gump..." xml:space="preserve">
+    <value>Invalid gump...</value>
+  </data>
   <data name="Invalid layer value..." xml:space="preserve">
     <value>Invalid layer value...</value>
   </data>

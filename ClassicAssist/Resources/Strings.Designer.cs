@@ -637,6 +637,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid gump....
+        /// </summary>
+        public static string Invalid_gump___ {
+            get {
+                return ResourceManager.GetString("Invalid gump...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid layer value....
         /// </summary>
         public static string Invalid_layer_value___ {
