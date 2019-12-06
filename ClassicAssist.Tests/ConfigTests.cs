@@ -12,43 +12,63 @@ using Newtonsoft.Json.Linq;
 namespace ClassicAssist.Tests
 {
     [TestClass]
+    [Serializable]
     public class ConfigTests
     {
+        private string _profilePath;
+
         [TestMethod]
         public void WontThrowExceptionOnDeserializeNullConfig()
         {
-            TestConfig( null );
+            AppDomain appDomain = AppDomain.CreateDomain( "WontThrowExceptionOnDeserializeNullConfig",
+                AppDomain.CurrentDomain.Evidence,
+                AppDomain.CurrentDomain.SetupInformation );
+
+            appDomain.DoCallBack( () => TestConfig( null ) );
         }
 
         [TestMethod]
         public void WontThrowExceptionOnDeserializeEmptyConfig()
         {
-            TestConfig( new JObject() );
+            AppDomain appDomain = AppDomain.CreateDomain( "WontThrowExceptionOnDeserializeEmptyConfig",
+                AppDomain.CurrentDomain.Evidence,
+                AppDomain.CurrentDomain.SetupInformation );
+
+            appDomain.DoCallBack( () => TestConfig( new JObject() ) );
         }
 
         public void TestConfig( JObject json )
         {
             string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
 
-            string profilePath = Path.Combine( path, "Profiles" );
+            _profilePath = Path.Combine( path, "Profiles" );
 
-            if (File.Exists( Path.Combine( profilePath, "settings.json" ) ))
+            if ( File.Exists( Path.Combine( _profilePath, "settings.json" ) ) )
             {
-                File.Delete( Path.Combine( profilePath, "settings.json" ) );
+                File.Delete( Path.Combine( _profilePath, "settings.json" ) );
             }
 
             IEnumerable<Type> allSettingProvider = Assembly.GetAssembly( typeof( Engine ) ).GetTypes().Where( t => typeof( ISettingProvider ).IsAssignableFrom( t ) && t.IsClass );
 
             Options options = new Options();
 
-            foreach (Type type in allSettingProvider)
+            foreach ( Type type in allSettingProvider )
             {
-                if (type.IsPublic)
+                if ( !type.IsPublic )
                 {
-                    ISettingProvider p = (ISettingProvider)Activator.CreateInstance( type );
-
-                    p.Deserialize( json, options );
+                    continue;
                 }
+
+                ISettingProvider p = (ISettingProvider) Activator.CreateInstance( type );
+
+                p.Deserialize( json, options );
+
+                p.Serialize( json );
+            }
+
+            if ( File.Exists( Path.Combine( _profilePath, "settings.json" ) ) )
+            {
+                File.Delete( Path.Combine( _profilePath, "settings.json" ) );
             }
         }
     }

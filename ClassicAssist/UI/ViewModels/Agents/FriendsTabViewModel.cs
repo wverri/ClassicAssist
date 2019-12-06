@@ -52,7 +52,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
             config.Add( "Items", friends );
 
-            json.Add( "Friends", config );
+            json?.Add( "Friends", config );
         }
 
         public void Deserialize( JObject json, Options options )

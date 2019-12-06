@@ -143,7 +143,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
             }
 
             dress.Add( "Entries", dressEntries );
-            json.Add( "Dress", dress );
+            json?.Add( "Dress", dress );
         }
 
         public void Deserialize( JObject json, Options options )

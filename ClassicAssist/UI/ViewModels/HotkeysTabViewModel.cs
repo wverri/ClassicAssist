@@ -63,7 +63,7 @@ namespace ClassicAssist.UI.ViewModels
 
             hotkeys.Add( "Commands", commandsArray );
 
-            json.Add( "Hotkeys", hotkeys );
+            json?.Add( "Hotkeys", hotkeys );
         }
 
         public void Deserialize( JObject json, Options options )

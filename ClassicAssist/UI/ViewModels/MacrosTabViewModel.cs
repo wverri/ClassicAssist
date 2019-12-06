@@ -133,7 +133,7 @@ namespace ClassicAssist.UI.ViewModels
 
             macros.Add( "Macros", macroArray );
 
-            json.Add( "Macros", macros );
+            json?.Add( "Macros", macros );
         }
 
         public void Deserialize( JObject json, Options options )
