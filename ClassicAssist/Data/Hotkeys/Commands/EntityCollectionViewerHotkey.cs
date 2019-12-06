@@ -19,8 +19,6 @@ namespace ClassicAssist.Data.Hotkeys.Commands
 
             if ( item.Container == null )
             {
-                Engine.SendPacketToServer( new UseObject( item.Serial ) );
-
                 UOC.WaitForContainerContents( item.Serial, 1000 );
             }
 

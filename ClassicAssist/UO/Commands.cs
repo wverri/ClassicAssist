@@ -475,6 +475,8 @@ namespace ClassicAssist.UO
 
             PacketWaitEntry we = Engine.PacketWaitEntries.Add( pfi, PacketDirection.Incoming, true );
 
+            Engine.SendPacketToServer( new UseObject( serial ) );
+
             try
             {
                 bool result = we.Lock.WaitOne( timeout );

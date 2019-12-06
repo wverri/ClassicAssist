@@ -1474,7 +1474,16 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ENU.
+        ///   Looks up a localized string similar to Unknown macro....
+        /// </summary>
+        public static string Unknown_macro___ {
+            get {
+                return ResourceManager.GetString("Unknown macro...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ENU\0.
         /// </summary>
         public static string UO_LOCALE {
             get {
