@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -487,6 +488,116 @@ namespace ClassicAssist.UO
             {
                 Engine.PacketWaitEntries.Remove( we );
             }
+        }
+
+        private static byte[] GetKeywordBytes( IReadOnlyList<int> keywords )
+        {
+            int length = keywords.Count;
+
+            List<byte> codeBytes = new List<byte> { (byte) ( length >> 4 ) };
+
+            int num3 = length & 15;
+            bool flag = false;
+            int index = 0;
+
+            while ( index < length )
+            {
+                int keywordID = keywords[index];
+
+                if ( flag )
+                {
+                    codeBytes.Add( (byte) ( keywordID >> 4 ) );
+                    num3 = keywordID & 15;
+                }
+                else
+                {
+                    codeBytes.Add( (byte) ( ( num3 << 4 ) | ( ( keywordID >> 8 ) & 15 ) ) );
+                    codeBytes.Add( (byte) keywordID );
+                }
+
+                index++;
+                flag = !flag;
+            }
+
+            if ( !flag )
+            {
+                codeBytes.Add( (byte) ( num3 << 4 ) );
+            }
+
+            return codeBytes.ToArray();
+        }
+
+        public static void Speak( string text, int hue = 34, JournalSpeech speechType = JournalSpeech.Say )
+        {
+            int[] keywords = new int[0];
+
+            if ( speechType == JournalSpeech.Say )
+            {
+                keywords = Speech.GetKeywords( text.ToLower() );
+            }
+
+            PacketWriter writer = new PacketWriter();
+            writer.Write( (byte) 0xAD );
+            writer.Write( (short) 0 ); // len;
+            writer.Write( keywords.Length > 0 ? (byte) 0xC0 : (byte) speechType );
+            writer.Write( (short) hue );
+            writer.Write( (short) 0x3 );
+            writer.WriteAsciiFixed( Strings.UO_LOCALE, 4 );
+
+            if ( keywords.Length > 0 )
+            {
+                byte[] bytes = GetKeywordBytes( keywords );
+
+                writer.Write( bytes, 0, bytes.Length );
+                writer.WriteAsciiNull( text );
+            }
+            else
+            {
+                writer.WriteBigUniNull( text );
+            }
+
+            byte[] packet = writer.ToArray();
+
+            packet[1] = (byte) ( packet.Length << 8 );
+            packet[2] = (byte) packet.Length;
+
+            Engine.SendPacketToServer( packet, packet.Length );
+        }
+
+        public static void PartyMessage( string message )
+        {
+            int len = 6 + ( message.Length + 1 ) * 2;
+            PacketWriter writer = new PacketWriter( len );
+            writer.Write( (byte) 0xBF );
+            writer.Write( (short) len );
+            writer.Write( (short) 6 );
+            writer.Write( (byte) 4 );
+            writer.WriteBigUniNull( message );
+
+            Engine.SendPacketToServer( writer );
+        }
+
+        public static void OverheadMessage( string message, int hue, int serial )
+        {
+            byte[] textBytes = Encoding.BigEndianUnicode.GetBytes( message + '\0' );
+
+            int length = 48 + textBytes.Length;
+
+            Entity entity = (Entity)Engine.Mobiles.GetMobile( serial ) ?? Engine.Items.GetItem( serial );
+
+            PacketWriter pw = new PacketWriter( length );
+            pw.Write( (byte) 0xAE );
+            pw.Write( (short) length );
+            pw.Write( entity.Serial );
+            pw.Write( (ushort) entity.ID );
+            pw.Write( (byte) JournalSpeech.Say );
+            pw.Write( (short) hue );
+            pw.Write( (short) 0x03 );
+            pw.WriteAsciiFixed( Strings.UO_LOCALE, 4 );
+            pw.WriteAsciiFixed( entity.Name, 30 );
+            pw.Write( textBytes, 0, textBytes.Length );
+
+            Engine.SendPacketToClient( pw );
         }
     }
 }
