@@ -8,18 +8,19 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class EntityCommands
     {
-        [CommandsDisplay(Category = "Entity", Description = "Returns the distance to the given entity.", InsertText = "if Distance(\"mount\") < 4:")]
+        [CommandsDisplay( Category = "Entity", Description = "Returns the distance to the given entity.",
+            InsertText = "if Distance(\"mount\") < 4:" )]
         public static double Distance( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
 
-            if (serial == 0)
+            if ( serial == 0 )
             {
                 UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
                 return 0;
             }
 
-            Entity entity = Engine.Items.GetItem( serial ) ?? (Entity)Engine.Mobiles.GetMobile( serial );
+            Entity entity = Engine.Items.GetItem( serial ) ?? (Entity) Engine.Mobiles.GetMobile( serial );
 
             return UOMath.Distance( entity.X, entity.Y, Engine.Player.X, Engine.Player.Y );
         }

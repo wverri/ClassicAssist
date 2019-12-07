@@ -2,7 +2,6 @@
 using ClassicAssist.Resources;
 using ClassicAssist.UI.ViewModels;
 using ClassicAssist.UI.Views;
-using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
 

@@ -15,7 +15,8 @@ namespace ClassicAssist.UO.Data
 
         public static int[] GetKeywords( string input )
         {
-            IEnumerable<SpeechEntry> matches = _entries.Value.Where( e => Regex.IsMatch( input, WildCardToRegular( e.Keywords ) ) );
+            IEnumerable<SpeechEntry> matches =
+                _entries.Value.Where( e => Regex.IsMatch( input, WildCardToRegular( e.Keywords ) ) );
 
             return matches.Select( e => e.Id ).Distinct().ToArray();
         }
@@ -29,24 +30,25 @@ namespace ClassicAssist.UO.Data
         {
             string fullPath = Path.Combine( _dataPath, "speech.mul" );
 
-            using (FileStream reader = new FileStream( fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ))
+            using ( FileStream reader =
+                new FileStream( fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) )
             {
-                using (BinaryReader binaryReader = new BinaryReader( reader ))
+                using ( BinaryReader binaryReader = new BinaryReader( reader ) )
                 {
                     List<SpeechEntry> entries = new List<SpeechEntry>();
 
-                    while (reader.Position < reader.Length)
+                    while ( reader.Position < reader.Length )
                     {
                         int id = ( binaryReader.ReadByte() << 8 ) | binaryReader.ReadByte();
                         int length = ( binaryReader.ReadByte() << 8 ) | binaryReader.ReadByte();
 
-                        byte[] buffer = new byte[ length ];
+                        byte[] buffer = new byte[length];
 
                         binaryReader.Read( buffer, 0, length );
 
                         string text = Encoding.UTF8.GetString( buffer );
 
-                        if (text.Contains( "guards" ))
+                        if ( text.Contains( "guards" ) )
                         {
                         }
 

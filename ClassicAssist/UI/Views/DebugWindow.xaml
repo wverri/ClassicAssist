@@ -28,7 +28,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <ListBox ItemsSource="{Binding Items}" Margin="10" Grid.Row="0"
-                         misc:ListBoxBehavior.ScrollOnNewItem="true"/>
+                         misc:ListBoxBehavior.ScrollOnNewItem="true" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="10,0,10,10">
                     <CheckBox Content="{x:Static resources:Strings.Capture_Packets}" VerticalAlignment="Center"
                               Margin="0,0,10,0" IsChecked="{Binding Running}" />

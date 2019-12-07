@@ -583,7 +583,7 @@ namespace ClassicAssist.UO
 
             int length = 48 + textBytes.Length;
 
-            Entity entity = (Entity)Engine.Mobiles.GetMobile( serial ) ?? Engine.Items.GetItem( serial );
+            Entity entity = (Entity) Engine.Mobiles.GetMobile( serial ) ?? Engine.Items.GetItem( serial );
 
             if ( entity == null )
             {

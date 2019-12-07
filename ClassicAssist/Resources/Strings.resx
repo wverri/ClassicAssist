@@ -141,6 +141,9 @@
   <data name="Aliases" xml:space="preserve">
     <value>Aliases</value>
   </data>
+  <data name="All skills:" xml:space="preserve">
+    <value>All skills:</value>
+  </data>
   <data name="Always On Top" xml:space="preserve">
     <value>Always On Top</value>
   </data>
@@ -209,6 +212,12 @@
   </data>
   <data name="Connected:" xml:space="preserve">
     <value>Connected:</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Copy All" xml:space="preserve">
+    <value>Copy All</value>
   </data>
   <data name="Count" xml:space="preserve">
     <value>Count</value>
@@ -486,6 +495,9 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="Reset +/-" xml:space="preserve">
+    <value>Reset +/-</value>
+  </data>
   <data name="Resistances" xml:space="preserve">
     <value>Resistances</value>
   </data>
@@ -516,11 +528,23 @@
   <data name="Server" xml:space="preserve">
     <value>Server</value>
   </data>
+  <data name="Set" xml:space="preserve">
+    <value>Set</value>
+  </data>
   <data name="Set Containers" xml:space="preserve">
     <value>Set Containers</value>
   </data>
+  <data name="Set Down" xml:space="preserve">
+    <value>Set Down</value>
+  </data>
+  <data name="Set Locked" xml:space="preserve">
+    <value>Set Locked</value>
+  </data>
   <data name="Set Undress Container" xml:space="preserve">
     <value>Set Undress Container</value>
+  </data>
+  <data name="Set Up" xml:space="preserve">
+    <value>Set Up</value>
   </data>
   <data name="Show World Items" xml:space="preserve">
     <value>Show World Items</value>

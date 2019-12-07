@@ -9,6 +9,8 @@ namespace ClassicAssist.Data.Macros
         private bool _loop;
         private string _macro;
 
+        public Action<MacroEntry> ActionSync { get; set; }
+
         public bool DoNotAutoInterrupt
         {
             get => _doNotAutoInterrupt;
@@ -31,7 +33,5 @@ namespace ClassicAssist.Data.Macros
         {
             return Name;
         }
-
-        public Action<MacroEntry> ActionSync { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace ClassicAssist.Data.Macros.Commands
         {
             int serial = AliasCommands.ResolveSerial( obj );
 
-            if ( serial <= 0 )
+            if ( serial == 0 )
             {
                 UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
                 return;
@@ -118,13 +118,13 @@ namespace ClassicAssist.Data.Macros.Commands
         [CommandsDisplay( Category = "Entity",
             Description = "Amount comparison of item or mobile type on the ground.",
             InsertText = "if CountGround(0xff, 0, 10) < 1:" )]
-        public static int CountTypeGround( int graphic, int hue, int range )
+        public static int CountTypeGround( int graphic, int hue = -1, int range = -1 )
         {
             PlayerMobile player = Engine.Player;
 
             IEnumerable<Item> matches = Engine.Items.Where( i =>
                 i.ID == graphic && ( hue == -1 || hue == i.ID ) &&
-                UOMath.Distance( player.X, player.Y, i.X, i.Y ) <= range );
+                ( range == -1 || UOMath.Distance( player.X, player.Y, i.X, i.Y ) <= range ) );
 
             int count = matches.Sum( match => match.Count );
 
@@ -135,7 +135,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             IEnumerable<Mobile> mobileMatches = Engine.Mobiles.Where( i =>
                 i.ID == graphic && ( hue == -1 || hue == i.ID ) &&
-                UOMath.Distance( player.X, player.Y, i.X, i.Y ) <= range );
+                ( range == -1 || UOMath.Distance( player.X, player.Y, i.X, i.Y ) <= range ) );
 
             count += mobileMatches.Count();
 
