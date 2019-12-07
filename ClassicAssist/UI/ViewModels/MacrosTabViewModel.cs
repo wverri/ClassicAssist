@@ -174,7 +174,7 @@ namespace ClassicAssist.UI.ViewModels
 
                 _dispatcher.Invoke( () => IsRunning = false );
             };
-
+            _macroInvoker.ExceptionEvent += exception => { Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) ); };
             _macroInvoker.ExecuteSync();
         }
 
@@ -259,7 +259,7 @@ namespace ClassicAssist.UI.ViewModels
 
                 _dispatcher.Invoke( () => IsRunning = false );
             };
-
+            _macroInvoker.ExceptionEvent += exception => { Commands.SystemMessage( string.Format(Strings.Macro_error___0_, exception.Message) ); };
             _macroInvoker.Execute();
         }
 

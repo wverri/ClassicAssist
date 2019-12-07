@@ -585,6 +585,11 @@ namespace ClassicAssist.UO
 
             Entity entity = (Entity)Engine.Mobiles.GetMobile( serial ) ?? Engine.Items.GetItem( serial );
 
+            if ( entity == null )
+            {
+                return;
+            }
+
             PacketWriter pw = new PacketWriter( length );
             pw.Write( (byte) 0xAE );
             pw.Write( (short) length );

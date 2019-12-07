@@ -790,6 +790,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Macro error: {0}.
+        /// </summary>
+        public static string Macro_error___0_ {
+            get {
+                return ResourceManager.GetString("Macro error: {0}", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Macros.
         /// </summary>
         public static string Macros {
@@ -930,6 +939,15 @@ namespace ClassicAssist.Resources {
         public static string New_Item {
             get {
                 return ResourceManager.GetString("New Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object &quot;{0}&quot; updated....
+        /// </summary>
+        public static string Object___0___updated___ {
+            get {
+                return ResourceManager.GetString("Object \"{0}\" updated...", resourceCulture);
             }
         }
         
