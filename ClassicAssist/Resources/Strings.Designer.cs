@@ -871,6 +871,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Messages.
+        /// </summary>
+        public static string Messages {
+            get {
+                return ResourceManager.GetString("Messages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Misc.
         /// </summary>
         public static string Misc {
@@ -1596,6 +1605,15 @@ namespace ClassicAssist.Resources {
         public static string Use_item {
             get {
                 return ResourceManager.GetString("Use item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use skill.
+        /// </summary>
+        public static string Use_skill {
+            get {
+                return ResourceManager.GetString("Use skill", resourceCulture);
             }
         }
         

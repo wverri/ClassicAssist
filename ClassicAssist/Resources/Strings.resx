@@ -384,6 +384,9 @@
   <data name="Max Price" xml:space="preserve">
     <value>Max Price</value>
   </data>
+  <data name="Messages" xml:space="preserve">
+    <value>Messages</value>
+  </data>
   <data name="Misc" xml:space="preserve">
     <value>Misc</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="Use item" xml:space="preserve">
     <value>Use item</value>
+  </data>
+  <data name="Use skill" xml:space="preserve">
+    <value>Use skill</value>
   </data>
   <data name="UseOnce cleared..." xml:space="preserve">
     <value>UseOnce cleared...</value>

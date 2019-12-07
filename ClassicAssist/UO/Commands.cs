@@ -202,9 +202,15 @@ namespace ClassicAssist.UO
             }
         }
 
-        public static void ChangeSkillLock( SkillEntry skill, LockStatus lockStatus )
+        public static void ChangeSkillLock( SkillEntry skill, LockStatus lockStatus, bool requery = true )
         {
             Engine.SendPacketToServer( new ChangeSkillLock( skill, lockStatus ) );
+
+            if ( requery )
+            {
+                Engine.SendPacketToServer(
+                    new MobileQuery( Engine.Player?.Serial ?? 0, MobileQueryType.SkillsRequest ) );
+            }
         }
 
         public static void UseSkill( Skill skill )

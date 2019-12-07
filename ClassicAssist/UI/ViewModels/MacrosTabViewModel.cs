@@ -239,6 +239,7 @@ namespace ClassicAssist.UI.ViewModels
         private void Stop( object obj )
         {
             IsRunning = false;
+            _macroInvoker.Stop();
         }
 
         private void Execute( object obj )

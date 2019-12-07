@@ -13,6 +13,8 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         private static readonly List<int> _ignoreList = new List<int>();
 
+        [CommandsDisplay( Category = "Entity", Description = "Ignores the given object from find commands",
+            InsertText = "IgnoreObject(\"self\")" )]
         public static void IgnoreObject( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -29,6 +31,8 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
+        [CommandsDisplay( Category = "Entities", Description = "Clears the ignore list.",
+            InsertText = "ClearIgnoreList()" )]
         public static void ClearIgnoreList()
         {
             _ignoreList.Clear();
@@ -142,6 +146,10 @@ namespace ClassicAssist.Data.Macros.Commands
             return count;
         }
 
+        [CommandsDisplay( Category = "Entities",
+            Description =
+                "Searches for entity by graphic ID and sets found alias, defaults to ground if no source given.",
+            InsertText = "FindType(0xff)\r\nUseObject(\"found\")" )]
         public static bool FindType( int graphic, int range = -1, object findLocation = null, int hue = -1 )
         {
             int owner = 0;

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using System.Windows.Threading;
 using Assistant;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Hotkeys;
@@ -28,6 +27,7 @@ namespace ClassicAssist.UI.ViewModels
         private ICommand _setAllSkillLocksCommand;
         private ICommand _setSkillLocksCommand;
         private float _totalBase;
+        private ICommand _useSkillCommand;
 
         public SkillsTabViewModel()
         {
@@ -41,7 +41,8 @@ namespace ClassicAssist.UI.ViewModels
                 Commands.MobileQuery( Engine.Player.Serial, MobileQueryType.SkillsRequest );
             }
 
-            _dispatcher = Dispatcher.CurrentDispatcher;
+            SkillManager manager = SkillManager.GetInstance();
+            manager.Items = Items;
         }
 
         public ObservableCollectionEx<SkillEntry> Items
@@ -71,6 +72,10 @@ namespace ClassicAssist.UI.ViewModels
             get => _totalBase;
             set => SetProperty( ref _totalBase, value );
         }
+
+        public ICommand UseSkillCommand =>
+            _useSkillCommand ?? ( _useSkillCommand =
+                new RelayCommand( UseSkill, o => SelectedItem?.Skill.Invokable ?? false ) );
 
         public void Serialize( JObject json )
         {
@@ -153,8 +158,6 @@ namespace ClassicAssist.UI.ViewModels
             }
 
             Commands.ChangeSkillLock( SelectedItem, lockStatus );
-
-            Commands.MobileQuery( Engine.Player.Serial, MobileQueryType.SkillsRequest );
         }
 
         private void SetAllSkillLocks( object obj )
@@ -165,7 +168,7 @@ namespace ClassicAssist.UI.ViewModels
 
             foreach ( SkillEntry skillEntry in skillsToSet )
             {
-                Commands.ChangeSkillLock( skillEntry, lockStatus );
+                Commands.ChangeSkillLock( skillEntry, lockStatus, false );
             }
 
             Commands.MobileQuery( Engine.Player.Serial, MobileQueryType.SkillsRequest );
@@ -182,7 +185,10 @@ namespace ClassicAssist.UI.ViewModels
 
             foreach ( SkillInfo si in skills )
             {
-                Skill skill = new Skill { ID = si.ID, Name = Skills.GetSkillName( si.ID ) };
+                Skill skill = new Skill
+                {
+                    ID = si.ID, Name = Skills.GetSkillName( si.ID ), Invokable = Skills.IsInvokable( si.ID )
+                };
 
                 SkillEntry se = new SkillEntry
                 {
@@ -195,6 +201,16 @@ namespace ClassicAssist.UI.ViewModels
 
                 _dispatcher.Invoke( () => { Items.Add( se ); } );
             }
+        }
+
+        private void UseSkill( object obj )
+        {
+            if ( SelectedItem == null )
+            {
+                return;
+            }
+
+            Commands.UseSkill( (UO.Data.Skill) SelectedItem.Skill.ID );
         }
 
         private void OnSkillUpdatedEvent( int skillID, float value, float baseValue, LockStatus lockStatus,

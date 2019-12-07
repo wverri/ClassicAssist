@@ -44,6 +44,9 @@
                     <MenuItem Header="{x:Static resources:Strings.Set_Locked}"
                               Command="{Binding Source={StaticResource Proxy}, Path=Data.SetSkillLocksCommand}"
                               CommandParameter="{x:Static data:LockStatus.Locked}" />
+                    <Separator />
+                    <MenuItem Header="{x:Static resources:Strings.Use_skill}"
+                              Command="{Binding Source={StaticResource Proxy}, Path=Data.UseSkillCommand}" />
                 </ContextMenu>
             </ListView.Resources>
             <ListView.ItemContainerStyle>
