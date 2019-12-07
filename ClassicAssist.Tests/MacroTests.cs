@@ -127,7 +127,7 @@ namespace ClassicAssist.Tests
         public void EnsureAllCommandsHaveAttribute()
         {
             IEnumerable<Type> types = Assembly.GetAssembly( typeof( Engine ) ).GetTypes().Where( t =>
-                t.Namespace != null && t.Namespace.EndsWith( "Macros.Commands" ) && t.IsClass && t.IsPublic );
+                t.Namespace != null && t.Namespace.EndsWith( "Macros.Commands" ) && t.IsClass && t.IsPublic && !t.Name.Contains( "Dummy" ) );
 
             foreach ( Type type in types )
             {

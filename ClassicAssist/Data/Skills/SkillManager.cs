@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using ClassicAssist.Annotations;
 using ClassicAssist.UI.Misc;
@@ -12,14 +11,14 @@ namespace ClassicAssist.Data.Skills
         private static SkillManager _instance;
         private ObservableCollectionEx<SkillEntry> _items = new ObservableCollectionEx<SkillEntry>();
 
+        private SkillManager()
+        {
+        }
+
         public ObservableCollectionEx<SkillEntry> Items
         {
             get => _items;
             set => SetProperty( ref _items, value );
-        }
-
-        private SkillManager()
-        {
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
