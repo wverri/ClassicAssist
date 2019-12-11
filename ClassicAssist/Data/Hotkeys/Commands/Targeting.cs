@@ -19,8 +19,10 @@ namespace ClassicAssist.Data.Hotkeys.Commands
             Engine.Player.LastTargetSerial = m.Serial;
         }
 
-        public static Mobile GetNextMobile( IEnumerable<Notoriety> notoriety, bool recurring = false )
+        public static Mobile GetNextMobile( IEnumerable<Notoriety> notoriety )
         {
+            bool recurring = false;
+
             while ( true )
             {
                 Mobile[] mobiles = Engine.Mobiles.SelectEntities( m =>
