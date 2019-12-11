@@ -547,6 +547,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Next Gray.
+        /// </summary>
+        public static string Get_Next_Gray {
+            get {
+                return ResourceManager.GetString("Get Next Gray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Next Innocent.
+        /// </summary>
+        public static string Get_Next_Innocent {
+            get {
+                return ResourceManager.GetString("Get Next Innocent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Graphic.
         /// </summary>
         public static string Graphic {
@@ -1474,6 +1492,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stop Current Macro.
+        /// </summary>
+        public static string Stop_Current_Macro {
+            get {
+                return ResourceManager.GetString("Stop Current Macro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target.
         /// </summary>
         public static string Target {
@@ -1551,6 +1578,15 @@ namespace ClassicAssist.Resources {
         public static string Target_timeout___ {
             get {
                 return ResourceManager.GetString("Target timeout...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Targeting.
+        /// </summary>
+        public static string Targeting {
+            get {
+                return ResourceManager.GetString("Targeting", resourceCulture);
             }
         }
         

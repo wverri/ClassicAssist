@@ -6,6 +6,8 @@ namespace ClassicAssist.UO.Objects
 {
     public class PlayerMobile : Mobile
     {
+        public delegate void dLastTargetChanged( int serial );
+
         private int _lastTargetSerial;
 
         public PlayerMobile( int serial ) : base( serial )
@@ -42,8 +44,14 @@ namespace ClassicAssist.UO.Objects
             get => _lastTargetSerial;
             set
             {
+                if ( value == Serial )
+                {
+                    return;
+                }
+
                 _lastTargetSerial = value;
                 AliasCommands.SetAlias( "last", value );
+                LastTargetChangedEvent?.Invoke( value );
             }
         }
 
@@ -65,5 +73,7 @@ namespace ClassicAssist.UO.Objects
         public int TithingPoints { get; set; }
         public int Weight { get; set; }
         public int WeightMax { get; set; }
+
+        public event dLastTargetChanged LastTargetChangedEvent;
     }
 }

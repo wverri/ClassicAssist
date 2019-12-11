@@ -276,6 +276,12 @@
   <data name="General" xml:space="preserve">
     <value>General</value>
   </data>
+  <data name="Get Next Gray" xml:space="preserve">
+    <value>Get Next Gray</value>
+  </data>
+  <data name="Get Next Innocent" xml:space="preserve">
+    <value>Get Next Innocent</value>
+  </data>
   <data name="Graphic" xml:space="preserve">
     <value>Graphic</value>
   </data>
@@ -585,6 +591,9 @@
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>
   </data>
+  <data name="Stop Current Macro" xml:space="preserve">
+    <value>Stop Current Macro</value>
+  </data>
   <data name="Target" xml:space="preserve">
     <value>Target</value>
   </data>
@@ -611,6 +620,9 @@
   </data>
   <data name="Target timeout..." xml:space="preserve">
     <value>Target timeout...</value>
+  </data>
+  <data name="Targeting" xml:space="preserve">
+    <value>Targeting</value>
   </data>
   <data name="The item needs to be equipped..." xml:space="preserve">
     <value>The item needs to be equipped...</value>
