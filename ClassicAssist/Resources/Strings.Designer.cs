@@ -547,6 +547,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Closest Gray.
+        /// </summary>
+        public static string Get_Closest_Gray {
+            get {
+                return ResourceManager.GetString("Get Closest Gray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get Next Gray.
         /// </summary>
         public static string Get_Next_Gray {
@@ -561,6 +570,24 @@ namespace ClassicAssist.Resources {
         public static string Get_Next_Innocent {
             get {
                 return ResourceManager.GetString("Get Next Innocent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Next Murderer.
+        /// </summary>
+        public static string Get_Next_Murderer {
+            get {
+                return ResourceManager.GetString("Get Next Murderer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Next Unfriendly.
+        /// </summary>
+        public static string Get_Next_Unfriendly {
+            get {
+                return ResourceManager.GetString("Get Next Unfriendly", resourceCulture);
             }
         }
         
@@ -1389,6 +1416,24 @@ namespace ClassicAssist.Resources {
         public static string Set_Down {
             get {
                 return ResourceManager.GetString("Set Down", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Enemy.
+        /// </summary>
+        public static string Set_Enemy {
+            get {
+                return ResourceManager.GetString("Set Enemy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Last Target.
+        /// </summary>
+        public static string Set_Last_Target {
+            get {
+                return ResourceManager.GetString("Set Last Target", resourceCulture);
             }
         }
         

@@ -9,6 +9,8 @@ namespace ClassicAssist.UO.Objects
         public delegate void dLastTargetChanged( int serial );
 
         private int _lastTargetSerial;
+        private int _friendTargetSerial;
+        private int _enemyTargetSerial;
 
         public PlayerMobile( int serial ) : base( serial )
         {
@@ -52,6 +54,28 @@ namespace ClassicAssist.UO.Objects
                 _lastTargetSerial = value;
                 AliasCommands.SetAlias( "last", value );
                 LastTargetChangedEvent?.Invoke( value );
+            }
+        }
+
+        [DisplayFormat( typeof( HexFormatProvider ) )]
+        public int EnemyTargetSerial
+        {
+            get => _enemyTargetSerial;
+            set
+            {
+                _enemyTargetSerial = value;
+                AliasCommands.SetAlias( "enemy", value );
+            }
+        }
+
+        [DisplayFormat( typeof( HexFormatProvider ) )]
+        public int FriendTargetSerial
+        {
+            get => _friendTargetSerial;
+            set
+            {
+                _friendTargetSerial = value;
+                AliasCommands.SetAlias( "friend", value );
             }
         }
 

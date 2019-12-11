@@ -276,11 +276,20 @@
   <data name="General" xml:space="preserve">
     <value>General</value>
   </data>
+  <data name="Get Closest Gray" xml:space="preserve">
+    <value>Get Closest Gray</value>
+  </data>
   <data name="Get Next Gray" xml:space="preserve">
     <value>Get Next Gray</value>
   </data>
   <data name="Get Next Innocent" xml:space="preserve">
     <value>Get Next Innocent</value>
+  </data>
+  <data name="Get Next Murderer" xml:space="preserve">
+    <value>Get Next Murderer</value>
+  </data>
+  <data name="Get Next Unfriendly" xml:space="preserve">
+    <value>Get Next Unfriendly</value>
   </data>
   <data name="Graphic" xml:space="preserve">
     <value>Graphic</value>
@@ -557,6 +566,12 @@
   </data>
   <data name="Set Down" xml:space="preserve">
     <value>Set Down</value>
+  </data>
+  <data name="Set Enemy" xml:space="preserve">
+    <value>Set Enemy</value>
+  </data>
+  <data name="Set Last Target" xml:space="preserve">
+    <value>Set Last Target</value>
   </data>
   <data name="Set Locked" xml:space="preserve">
     <value>Set Locked</value>
