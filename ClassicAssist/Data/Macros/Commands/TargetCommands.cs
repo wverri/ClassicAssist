@@ -132,6 +132,8 @@ namespace ClassicAssist.Data.Macros.Commands
                 0, 0 ) );
         }
 
+        [CommandsDisplay( Category = "Target", Description = "Get mobile and set enemy alias.",
+            InsertText = "GetEnemy([\"Murderer\"])" )]
         public static void GetEnemy( IEnumerable<string> notos, string bodyType = "Any", string distance = "Next" )
         {
             TargetNotoriety notoFlags = TargetNotoriety.None;
@@ -157,24 +159,26 @@ namespace ClassicAssist.Data.Macros.Commands
             TargetManager.GetInstance().GetEnemy( notoFlags, bt, td );
         }
 
+        [CommandsDisplay( Category = "Target", Description = "Get mobile and set friend alias.",
+            InsertText = "GetFriend([\"Murderer\"])" )]
         public static void GetFriend( IEnumerable<string> notos, string bodyType = "Any", string distance = "Next" )
         {
             TargetNotoriety notoFlags = TargetNotoriety.None;
 
-            foreach (string noto in notos)
+            foreach ( string noto in notos )
             {
-                if (Enum.TryParse( noto, true, out TargetNotoriety flag ))
+                if ( Enum.TryParse( noto, true, out TargetNotoriety flag ) )
                 {
                     notoFlags |= flag;
                 }
             }
 
-            if (!Enum.TryParse( bodyType, true, out TargetBodyType bt ))
+            if ( !Enum.TryParse( bodyType, true, out TargetBodyType bt ) )
             {
                 bt = TargetBodyType.Any;
             }
 
-            if (!Enum.TryParse( distance, true, out TargetDistance td ))
+            if ( !Enum.TryParse( distance, true, out TargetDistance td ) )
             {
                 td = TargetDistance.Next;
             }
