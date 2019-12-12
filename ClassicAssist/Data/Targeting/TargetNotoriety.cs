@@ -12,7 +12,6 @@ namespace ClassicAssist.Data.Targeting
         Murderer = 0b1000,
         Friend = 0b10000,
         Gray = 0b100000,
-        Ally = 0b1000000,
-        Any = 0b1111111
+        Any = 0b111111
     }
 }
