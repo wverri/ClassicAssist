@@ -8,9 +8,10 @@ namespace ClassicAssist.UO.Objects
     {
         public delegate void dLastTargetChanged( int serial );
 
-        private int _lastTargetSerial;
-        private int _friendTargetSerial;
         private int _enemyTargetSerial;
+        private int _friendTargetSerial;
+
+        private int _lastTargetSerial;
 
         public PlayerMobile( int serial ) : base( serial )
         {
@@ -25,6 +26,18 @@ namespace ClassicAssist.UO.Objects
         public int DefenseChanceIncreaseMax { get; set; }
 
         public int Dex { get; set; }
+
+        [DisplayFormat( typeof( HexFormatProvider ) )]
+        public int EnemyTargetSerial
+        {
+            get => _enemyTargetSerial;
+            set
+            {
+                _enemyTargetSerial = value;
+                AliasCommands.SetAlias( "enemy", value );
+            }
+        }
+
         public int EnergyResistance { get; set; }
         public int EnergyResistanceMax { get; set; }
         public int FasterCasting { get; set; }
@@ -33,6 +46,18 @@ namespace ClassicAssist.UO.Objects
         public int FireResistanceMax { get; set; }
         public int Followers { get; set; }
         public int FollowersMax { get; set; }
+
+        [DisplayFormat( typeof( HexFormatProvider ) )]
+        public int FriendTargetSerial
+        {
+            get => _friendTargetSerial;
+            set
+            {
+                _friendTargetSerial = value;
+                AliasCommands.SetAlias( "friend", value );
+            }
+        }
+
         public int Gold { get; set; }
         public int HitChanceIncrease { get; set; }
         public int Int { get; set; }
@@ -54,28 +79,6 @@ namespace ClassicAssist.UO.Objects
                 _lastTargetSerial = value;
                 AliasCommands.SetAlias( "last", value );
                 LastTargetChangedEvent?.Invoke( value );
-            }
-        }
-
-        [DisplayFormat( typeof( HexFormatProvider ) )]
-        public int EnemyTargetSerial
-        {
-            get => _enemyTargetSerial;
-            set
-            {
-                _enemyTargetSerial = value;
-                AliasCommands.SetAlias( "enemy", value );
-            }
-        }
-
-        [DisplayFormat( typeof( HexFormatProvider ) )]
-        public int FriendTargetSerial
-        {
-            get => _friendTargetSerial;
-            set
-            {
-                _friendTargetSerial = value;
-                AliasCommands.SetAlias( "friend", value );
             }
         }
 

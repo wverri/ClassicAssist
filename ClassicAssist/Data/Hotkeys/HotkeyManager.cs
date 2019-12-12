@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Assistant;
@@ -67,6 +66,7 @@ namespace ClassicAssist.Data.Hotkeys
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
         }
 
+        // ReSharper disable once RedundantAssignment
         public void SetProperty<T>( ref T obj, T value, [CallerMemberName] string propertyName = "" )
         {
             obj = value;
@@ -123,13 +123,12 @@ namespace ClassicAssist.Data.Hotkeys
 
                     Task.Run( () =>
                         hks.Action.Invoke( hks ) );
+
+                    break;
                 }
             }
 
             return filter;
         }
-
-        [DllImport( "user32.dll", SetLastError = true )]
-        public static extern short GetAsyncKeyState( int vKey );
     }
 }

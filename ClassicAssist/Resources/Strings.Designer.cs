@@ -1429,6 +1429,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Friend.
+        /// </summary>
+        public static string Set_Friend {
+            get {
+                return ResourceManager.GetString("Set Friend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Last Target.
         /// </summary>
         public static string Set_Last_Target {
@@ -1573,11 +1582,38 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Target Enemy.
+        /// </summary>
+        public static string Target_Enemy {
+            get {
+                return ResourceManager.GetString("Target Enemy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Friend.
+        /// </summary>
+        public static string Target_Friend {
+            get {
+                return ResourceManager.GetString("Target Friend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target friend to remove....
         /// </summary>
         public static string Target_friend_to_remove___ {
             get {
                 return ResourceManager.GetString("Target friend to remove...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Last.
+        /// </summary>
+        public static string Target_Last {
+            get {
+                return ResourceManager.GetString("Target Last", resourceCulture);
             }
         }
         

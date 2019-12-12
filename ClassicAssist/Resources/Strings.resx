@@ -570,6 +570,9 @@
   <data name="Set Enemy" xml:space="preserve">
     <value>Set Enemy</value>
   </data>
+  <data name="Set Friend" xml:space="preserve">
+    <value>Set Friend</value>
+  </data>
   <data name="Set Last Target" xml:space="preserve">
     <value>Set Last Target</value>
   </data>
@@ -618,8 +621,17 @@
   <data name="Target container..." xml:space="preserve">
     <value>Target container...</value>
   </data>
+  <data name="Target Enemy" xml:space="preserve">
+    <value>Target Enemy</value>
+  </data>
+  <data name="Target Friend" xml:space="preserve">
+    <value>Target Friend</value>
+  </data>
   <data name="Target friend to remove..." xml:space="preserve">
     <value>Target friend to remove...</value>
+  </data>
+  <data name="Target Last" xml:space="preserve">
+    <value>Target Last</value>
   </data>
   <data name="Target new friend..." xml:space="preserve">
     <value>Target new friend...</value>
