@@ -115,6 +115,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Friend.
+        /// </summary>
+        public static string Add_Friend {
+            get {
+                return ResourceManager.GetString("Add Friend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Address:.
         /// </summary>
         public static string Address_ {
@@ -1186,6 +1195,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prevent targeting friends with Harmful spells.
+        /// </summary>
+        public static string Prevent_targeting_friends_with_Harmful_spells {
+            get {
+                return ResourceManager.GetString("Prevent targeting friends with Harmful spells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Product:.
         /// </summary>
         public static string Product_ {
@@ -1290,6 +1308,15 @@ namespace ClassicAssist.Resources {
         public static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Friend.
+        /// </summary>
+        public static string Remove_Friend {
+            get {
+                return ResourceManager.GetString("Remove Friend", resourceCulture);
             }
         }
         
@@ -1560,6 +1587,15 @@ namespace ClassicAssist.Resources {
         public static string Target {
             get {
                 return ResourceManager.GetString("Target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target blocked... try again....
+        /// </summary>
+        public static string Target_blocked____try_again___ {
+            get {
+                return ResourceManager.GetString("Target blocked... try again...", resourceCulture);
             }
         }
         

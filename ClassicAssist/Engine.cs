@@ -329,6 +329,9 @@ namespace Assistant
 
             byte[] data = basePacket.ToArray();
 
+            if ( data == null )
+                return;
+
             SendPacketToServer( data, data.Length );
         }
 
