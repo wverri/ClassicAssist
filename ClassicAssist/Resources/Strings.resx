@@ -162,6 +162,9 @@
   <data name="Bought" xml:space="preserve">
     <value>Bought</value>
   </data>
+  <data name="BuffIcon" xml:space="preserve">
+    <value>BuffIcon</value>
+  </data>
   <data name="Buffs / Penalties" xml:space="preserve">
     <value>Buffs / Penalties</value>
   </data>
@@ -686,6 +689,9 @@
   </data>
   <data name="Unknown alias &quot;{0}&quot;." xml:space="preserve">
     <value>Unknown alias "{0}".</value>
+  </data>
+  <data name="Unknown buff name..." xml:space="preserve">
+    <value>Unknown buff name...</value>
   </data>
   <data name="Unknown dress agent &quot;{0}&quot;." xml:space="preserve">
     <value>Unknown dress agent "{0}".</value>

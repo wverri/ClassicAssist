@@ -205,6 +205,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to BuffIcon.
+        /// </summary>
+        public static string BuffIcon {
+            get {
+                return ResourceManager.GetString("BuffIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Buffs / Penalties.
         /// </summary>
         public static string Buffs___Penalties {
@@ -1776,6 +1785,15 @@ namespace ClassicAssist.Resources {
         public static string Unknown_alias___0___ {
             get {
                 return ResourceManager.GetString("Unknown alias \"{0}\".", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown buff name....
+        /// </summary>
+        public static string Unknown_buff_name___ {
+            get {
+                return ResourceManager.GetString("Unknown buff name...", resourceCulture);
             }
         }
         

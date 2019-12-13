@@ -48,7 +48,8 @@ namespace ClassicAssist.Data.Macros.Commands
                 return;
             }
 
-            Engine.SendPacketToServer( new Target( TargetType.Object, -1, TargetFlags.None, serial, -1, -1, -1, 0, true ) );
+            Engine.SendPacketToServer( new Target( TargetType.Object, -1, TargetFlags.None, serial, -1, -1, -1, 0,
+                true ) );
         }
 
         [CommandsDisplay( Category = "Target",
