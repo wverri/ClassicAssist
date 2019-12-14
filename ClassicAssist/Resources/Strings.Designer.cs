@@ -1780,6 +1780,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Undress All.
+        /// </summary>
+        public static string Undress_All {
+            get {
+                return ResourceManager.GetString("Undress All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown alias &quot;{0}&quot;..
         /// </summary>
         public static string Unknown_alias___0___ {

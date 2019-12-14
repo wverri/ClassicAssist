@@ -687,6 +687,9 @@
   <data name="Undress" xml:space="preserve">
     <value>Undress</value>
   </data>
+  <data name="Undress All" xml:space="preserve">
+    <value>Undress All</value>
+  </data>
   <data name="Unknown alias &quot;{0}&quot;." xml:space="preserve">
     <value>Unknown alias "{0}".</value>
   </data>
