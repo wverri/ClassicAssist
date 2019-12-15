@@ -78,5 +78,10 @@ namespace ClassicAssist.Data.Macros.Commands
 
             UOC.SystemMessage( _timers[name].ToString() );
         }
+
+        internal static Dictionary<string, OffsetStopwatch> GetAllTimers()
+        {
+            return _timers;
+        }
     }
 }
