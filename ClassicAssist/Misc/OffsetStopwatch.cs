@@ -12,13 +12,19 @@ namespace ClassicAssist.Misc
             _offset = offset;
         }
 
+        public new long ElapsedMilliseconds => base.ElapsedMilliseconds + (long) _offset.TotalMilliseconds;
+        public new long ElapsedTicks => base.ElapsedTicks + _offset.Ticks;
+
         public void Reset( TimeSpan offset )
         {
             _offset = offset;
             Reset();
+            Start();
         }
 
-        public new long ElapsedMilliseconds => base.ElapsedMilliseconds + (long) _offset.TotalMilliseconds;
-        public new long ElapsedTicks => base.ElapsedTicks + _offset.Ticks;
+        public override string ToString()
+        {
+            return $"Elapsed: {TimeSpan.FromMilliseconds( ElapsedMilliseconds )}";
+        }
     }
 }
