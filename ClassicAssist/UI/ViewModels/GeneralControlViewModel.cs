@@ -68,7 +68,7 @@ namespace ClassicAssist.UI.ViewModels
                 ["LightLevel"] = Options.CurrentOptions.LightLevel,
                 ["ActionDelay"] = Options.CurrentOptions.ActionDelay,
                 ["ActionDelayMS"] = Options.CurrentOptions.ActionDelayMS,
-                ["UpdateGumpVersion"] = Options.CurrentOptions.UpdateGumpVersion.ToString()
+                ["UpdateGumpVersion"] = Options.CurrentOptions.UpdateGumpVersion?.ToString() ?? "0.0.0.0"
             };
 
             json?.Add( "General", obj );
