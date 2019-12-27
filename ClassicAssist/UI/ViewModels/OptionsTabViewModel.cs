@@ -36,6 +36,8 @@ namespace ClassicAssist.UI.ViewModels
             options.Add( "UseOnce", useOnce );
             options.Add( "UseDeathScreenWhilstHidden", Options.UseDeathScreenWhilstHidden );
             options.Add( "CommandPrefix", Options.CommandPrefix );
+            options.Add( "RangeCheckLastTarget", Options.RangeCheckLastTarget );
+            options.Add( "RangeCheckLastTargetAmount", Options.RangeCheckLastTargetAmount );
 
             json?.Add( "Options", options );
         }
@@ -61,6 +63,8 @@ namespace ClassicAssist.UI.ViewModels
 
             Options.UseDeathScreenWhilstHidden = config?["UseDeathScreenWhilstHidden"]?.ToObject<bool>() ?? false;
             Options.CommandPrefix = config?["CommandPrefix"]?.ToObject<char>() ?? '=';
+            Options.RangeCheckLastTarget = config?["RangeCheckLastTarget"]?.ToObject<bool>() ?? false;
+            Options.RangeCheckLastTargetAmount = config?["RangeCheckLastTargetAmount"]?.ToObject<int>() ?? 11;
         }
     }
 }

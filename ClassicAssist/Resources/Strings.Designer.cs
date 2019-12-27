@@ -1303,6 +1303,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Range check last target.
+        /// </summary>
+        public static string Range_check_last_target {
+            get {
+                return ResourceManager.GetString("Range check last target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ready....
         /// </summary>
         public static string Ready___ {
@@ -1758,6 +1767,15 @@ namespace ClassicAssist.Resources {
         public static string Target_object___ {
             get {
                 return ResourceManager.GetString("Target object...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target out of range, try again....
+        /// </summary>
+        public static string Target_out_of_range__try_again___ {
+            get {
+                return ResourceManager.GetString("Target out of range, try again...", resourceCulture);
             }
         }
         

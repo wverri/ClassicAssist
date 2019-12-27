@@ -28,6 +28,8 @@ namespace ClassicAssist.Data
         private bool _persistUseOnce;
         private bool _preventAttackingFriendsInWarMode;
         private bool _preventTargetingFriendsWithHarmful;
+        private bool _rangeCheckLastTarget;
+        private int _rangeCheckLastTargetAmount = 11;
         private bool _useDeathScreenWhilstHidden;
 
         public bool ActionDelay
@@ -102,6 +104,18 @@ namespace ClassicAssist.Data
         {
             get => _preventTargetingFriendsWithHarmful;
             set => SetProperty( ref _preventTargetingFriendsWithHarmful, value );
+        }
+
+        public bool RangeCheckLastTarget
+        {
+            get => _rangeCheckLastTarget;
+            set => SetProperty( ref _rangeCheckLastTarget, value );
+        }
+
+        public int RangeCheckLastTargetAmount
+        {
+            get => _rangeCheckLastTargetAmount;
+            set => SetProperty( ref _rangeCheckLastTargetAmount, value );
         }
 
         public Version UpdateGumpVersion { get; set; }
