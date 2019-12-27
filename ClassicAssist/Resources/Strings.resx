@@ -753,6 +753,9 @@
   <data name="Use death screen whilst hidden" xml:space="preserve">
     <value>Use death screen whilst hidden (Chuckles Mode)</value>
   </data>
+  <data name="Use experimental fizzle detection" xml:space="preserve">
+    <value>Use experimental fizzle detection</value>
+  </data>
   <data name="Use item" xml:space="preserve">
     <value>Use item</value>
   </data>

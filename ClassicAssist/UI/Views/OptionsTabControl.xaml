@@ -51,6 +51,8 @@
                     </ItemContainerTemplate>
                 </CheckBox.ContentTemplate>
             </CheckBox>
+            <CheckBox Content="{x:Static resources:Strings.Use_experimental_fizzle_detection}"
+                      IsChecked="{Binding Options.UseExperimentalFizzleDetection}" />
         </StackPanel>
     </Grid>
 </UserControl>

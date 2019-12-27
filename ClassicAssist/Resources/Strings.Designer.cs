@@ -1978,6 +1978,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use experimental fizzle detection.
+        /// </summary>
+        public static string Use_experimental_fizzle_detection {
+            get {
+                return ResourceManager.GetString("Use experimental fizzle detection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use item.
         /// </summary>
         public static string Use_item {
