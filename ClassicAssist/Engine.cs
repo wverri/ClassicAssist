@@ -84,6 +84,7 @@ namespace Assistant
         public static TargetFlags TargetFlags { get; set; }
         public static int TargetSerial { get; set; }
         public static TargetType TargetType { get; set; }
+        public static ThreadQueue<int> UseObjectQueue { get; set; }
         public static bool WaitingForTarget { get; set; }
         internal static ConcurrentDictionary<int, int> GumpList { get; set; } = new ConcurrentDictionary<int, int>();
 
@@ -112,6 +113,17 @@ namespace Assistant
 
             _mainThread.SetApartmentState( ApartmentState.STA );
             _mainThread.Start();
+
+            if ( Options.CurrentOptions.UseObjectQueue )
+            {
+                UseObjectQueue = new ThreadQueue<int>( ProcessUseObjectQueue );
+            }
+        }
+
+        private static void ProcessUseObjectQueue( int serial )
+        {
+            Engine.SendPacketToServer( new UseObject( serial ) );
+            Thread.Sleep( Options.CurrentOptions.ActionDelayMS );
         }
 
         internal static unsafe void InitializePlugin( PluginHeader* plugin )
@@ -285,6 +297,7 @@ namespace Assistant
                 }
 
                 Assembly assembly = Assembly.LoadFrom( fullPath );
+
                 return assembly;
             }
 
