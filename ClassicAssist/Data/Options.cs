@@ -173,7 +173,8 @@ namespace ClassicAssist.Data
 
             EnsureProfilePath( Engine.StartupPath ?? Environment.CurrentDirectory );
 
-            File.WriteAllText( Path.Combine( _profilePath, options.Name ?? DEFAULT_SETTINGS_FILENAME ), obj.ToString() );
+            File.WriteAllText( Path.Combine( _profilePath, options.Name ?? DEFAULT_SETTINGS_FILENAME ),
+                obj.ToString() );
         }
 
         private static void EnsureProfilePath( string startupPath )
@@ -227,11 +228,8 @@ namespace ClassicAssist.Data
 
         public static string[] GetProfiles()
         {
-            return Directory
-                .EnumerateFiles(
-                    _profilePath ?? Path.Combine( Engine.StartupPath ?? Environment.CurrentDirectory, "Profiles" ),
-                    "*.json" )
-                .ToArray();
+            EnsureProfilePath( Engine.StartupPath ?? Environment.CurrentDirectory );
+            return Directory.EnumerateFiles( _profilePath, "*.json" ).ToArray();
         }
     }
 }
