@@ -112,7 +112,7 @@ namespace ClassicAssist.UI.ViewModels
         public ICommand ShowCommandsCommand =>
             _showCommandsCommand ?? ( _showCommandsCommand = new RelayCommand( ShowCommands, o => true ) );
 
-        public ICommand StopCommand => _stopCommand ?? ( _stopCommand = new RelayCommand( Stop, o => IsRunning ) );
+        public ICommand StopCommand => _stopCommand ?? ( _stopCommand = new RelayCommandAsync( Stop, o => IsRunning ) );
 
         public void Serialize( JObject json )
         {
@@ -198,12 +198,12 @@ namespace ClassicAssist.UI.ViewModels
 
             _currentMacro = entry;
 
-            _macroInvoker = new MacroInvoker( entry );
-            _macroInvoker.StoppedEvent += () =>
-            {
-                _currentMacro = null;
-                _dispatcher.Invoke( () => IsRunning = false );
-            };
+            //_macroInvoker = new MacroInvoker( entry );
+            //_macroInvoker.StoppedEvent += () =>
+            //{
+            //    _currentMacro = null;
+            //    _dispatcher.Invoke( () => IsRunning = false );
+            //};
 
             _macroInvoker.ExceptionEvent += exception =>
             {
@@ -280,10 +280,14 @@ namespace ClassicAssist.UI.ViewModels
             }
         }
 
-        private void Stop( object obj )
+        private async Task Stop( object obj )
         {
-            _cancellationToken?.Cancel();
-            _macroInvoker.Stop();
+            await Task.Run( () =>
+            {
+                _cancellationToken?.Cancel();
+                _macroInvoker.Stop();
+            } );
+
             IsRunning = false;
         }
 
@@ -301,14 +305,14 @@ namespace ClassicAssist.UI.ViewModels
 
             if ( IsRunning )
             {
-                Stop( _currentMacro );
+                Stop( _currentMacro ).Wait();
             }
 
             _dispatcher.Invoke( () => IsRunning = true );
             _dispatcher.Invoke( () => SelectedItem = entry );
 
             _currentMacro = entry;
-            _currentMacro.Stop = () => Stop( _currentMacro );
+            _currentMacro.Stop = () => Stop( _currentMacro ).Wait();
 
             _macroInvoker = new MacroInvoker( entry );
             _macroInvoker.StoppedEvent += () =>

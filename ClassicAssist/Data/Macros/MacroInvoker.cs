@@ -111,6 +111,12 @@ namespace ClassicAssist.Data.Macros
 
         public void Stop()
         {
+            if ( Thread == null || !Thread.IsAlive )
+            {
+                return;
+            }
+
+            Thread?.Interrupt();
             Thread?.Abort();
         }
 
@@ -143,10 +149,7 @@ namespace ClassicAssist.Data.Macros
 
                     sw.Stop();
 
-                    if ( token.IsCancellationRequested )
-                    {
-                        break;
-                    }
+                    token.ThrowIfCancellationRequested();
 
                     if ( sw.ElapsedMilliseconds < 50 )
                     {
