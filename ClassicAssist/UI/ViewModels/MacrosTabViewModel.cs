@@ -198,13 +198,6 @@ namespace ClassicAssist.UI.ViewModels
 
             _currentMacro = entry;
 
-            //_macroInvoker = new MacroInvoker( entry );
-            //_macroInvoker.StoppedEvent += () =>
-            //{
-            //    _currentMacro = null;
-            //    _dispatcher.Invoke( () => IsRunning = false );
-            //};
-
             _macroInvoker.ExceptionEvent += exception =>
             {
                 Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
