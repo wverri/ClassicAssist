@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Assistant;
@@ -21,17 +20,15 @@ namespace ClassicAssist.UI.ViewModels
 {
     public class MacrosTabViewModel : HotkeySettableViewModel<MacroEntry>, ISettingProvider
     {
-        private CancellationTokenSource _cancellationToken;
+        private readonly MacroManager _manager;
         private int _caretPosition;
         private ICommand _clearHotkeyCommand;
         private MacroEntry _currentMacro;
         private TextDocument _document;
-        private RelayCommand _executeCommand;
+        private ICommand _executeCommand;
         private ICommand _inspectObjectCommand;
         private bool _isRecording;
         private bool _isRunning;
-        private MacroInvoker _macroInvoker;
-        private readonly MacroManager _manager;
         private RelayCommand _newMacroCommand;
         private ICommand _recordCommand;
         private RelayCommand _removeMacroCommand;
@@ -68,9 +65,9 @@ namespace ClassicAssist.UI.ViewModels
             set => SetProperty( ref _document, value );
         }
 
-        public RelayCommand ExecuteCommand =>
+        public ICommand ExecuteCommand =>
             _executeCommand ??
-            ( _executeCommand = new RelayCommand( Execute, o => !IsRunning && SelectedItem != null ) );
+            ( _executeCommand = new RelayCommandAsync( Execute, o => !IsRunning && SelectedItem != null ) );
 
         public ICommand InspectObjectCommand =>
             _inspectObjectCommand ??
@@ -176,7 +173,7 @@ namespace ClassicAssist.UI.ViewModels
                         Hotkey = new ShortcutKeys( token["Keys"] )
                     };
 
-                    entry.Action = hks => Execute( entry );
+                    entry.Action = async hks => await Execute( entry );
 
                     Items.Add( entry );
                 }
@@ -191,7 +188,7 @@ namespace ClassicAssist.UI.ViewModels
             }
         }
 
-        private void Execute( object obj )
+        private async Task Execute( object obj )
         {
             if ( !( obj is MacroEntry entry ) )
             {
@@ -203,7 +200,7 @@ namespace ClassicAssist.UI.ViewModels
                 return;
             }
 
-            if (IsRunning)
+            if ( IsRunning )
             {
                 Stop( _currentMacro ).Wait();
             }
@@ -214,19 +211,10 @@ namespace ClassicAssist.UI.ViewModels
             _currentMacro = entry;
             _currentMacro.Stop = () => Stop( _currentMacro ).Wait();
 
-            _macroInvoker = new MacroInvoker( entry );
-            _macroInvoker.StoppedEvent += () =>
-            {
-                _currentMacro = null;
-                _dispatcher.Invoke( () => IsRunning = false );
-            };
+            await Task.Run( () => { _manager.Execute( entry ); } );
 
-            _macroInvoker.ExceptionEvent += exception =>
-            {
-                Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
-            };
-
-            _manager.Execute( entry );
+            _dispatcher.Invoke( () => IsRunning = false );
+            _currentMacro = null;
         }
 
         private static void ShowActiveObjectsWindow( object obj )
@@ -237,7 +225,7 @@ namespace ClassicAssist.UI.ViewModels
 
         private void OnDisconnectedEvent()
         {
-            _macroInvoker?.Stop();
+            _manager.Stop();
         }
 
         private static void ClearHotkey( object obj )
@@ -278,7 +266,7 @@ namespace ClassicAssist.UI.ViewModels
 
             MacroEntry macro = new MacroEntry { Name = $"Macro-{count + 1}", Macro = string.Empty };
 
-            macro.Action = hks => Execute( macro );
+            macro.Action = async hks => await Execute( macro );
 
             Items.Add( macro );
 
@@ -295,13 +283,9 @@ namespace ClassicAssist.UI.ViewModels
 
         private async Task Stop( object obj )
         {
-            await Task.Run( () =>
-            {
-                _cancellationToken?.Cancel();
-                _macroInvoker.Stop();
-            } );
+            _manager.Stop();
 
-            IsRunning = false;
+            await Task.CompletedTask;
         }
 
         private void ShowCommands( object obj )

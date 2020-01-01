@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Assistant;
+using ClassicAssist.Resources;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
@@ -14,6 +15,7 @@ namespace ClassicAssist.Data.Macros
         private static readonly object _lock = new object();
         private static MacroManager _instance;
         private readonly List<IMacroCommandParser> _parsers = new List<IMacroCommandParser>();
+        private MacroInvoker _invoker;
 
         private MacroManager()
         {
@@ -90,10 +92,17 @@ namespace ClassicAssist.Data.Macros
 
         public void Execute( MacroEntry macro )
         {
+            _invoker = new MacroInvoker( macro );
+            _invoker.ExceptionEvent += exception =>
+            {
+                UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
+            };
+            _invoker.Execute();
         }
 
         public void Stop()
         {
+            _invoker.Stop();
         }
     }
 }
