@@ -166,6 +166,8 @@ namespace ClassicAssist.UI.ViewModels.Agents
         {
             Items.Clear();
 
+            AddHotkeyCategory();
+
             if ( json?["Dress"] == null )
             {
                 return;

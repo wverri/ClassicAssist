@@ -8,24 +8,32 @@ namespace ClassicAssist.UI.ViewModels
 {
     public abstract class HotkeySettableViewModel<T> : BaseViewModel where T : HotkeySettable
     {
-        private readonly HotkeyEntry _category;
+        private readonly string _name;
+        private HotkeyEntry _category;
         private ObservableCollectionEx<T> _items = new ObservableCollectionEx<T>();
 
         protected HotkeySettableViewModel( string name )
         {
-            _category = new HotkeyEntry { IsCategory = true, Name = name };
-
-            HotkeyManager hotkey = HotkeyManager.GetInstance();
-
-            hotkey.Items.AddSorted( _category );
-
-            Items.CollectionChanged += OnCollectionChanged;
+            _name = name;
         }
 
         public ObservableCollectionEx<T> Items
         {
             get => _items;
             set => SetProperty( ref _items, value );
+        }
+
+        protected void AddHotkeyCategory()
+        {
+            _category = new HotkeyEntry { IsCategory = true, Name = _name };
+
+            HotkeyManager hotkey = HotkeyManager.GetInstance();
+
+            hotkey.Items.AddSorted( _category );
+
+            Items.CollectionChanged += OnCollectionChanged;
+
+            _category.Children = new ObservableCollectionEx<HotkeySettable>();
         }
 
         protected virtual void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )

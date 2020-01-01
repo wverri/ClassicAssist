@@ -115,6 +115,8 @@ namespace ClassicAssist.UI.ViewModels.Agents
         {
             Items.Clear();
 
+            AddHotkeyCategory();
+
             if ( json?["Organizer"] == null )
             {
                 return;
