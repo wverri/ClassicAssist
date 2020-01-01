@@ -87,5 +87,13 @@ namespace ClassicAssist.Data.Macros
 
             return _instance;
         }
+
+        public void Execute( MacroEntry macro )
+        {
+        }
+
+        public void Stop()
+        {
+        }
     }
 }

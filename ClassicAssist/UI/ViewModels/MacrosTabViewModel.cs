@@ -31,6 +31,7 @@ namespace ClassicAssist.UI.ViewModels
         private bool _isRecording;
         private bool _isRunning;
         private MacroInvoker _macroInvoker;
+        private readonly MacroManager _manager;
         private RelayCommand _newMacroCommand;
         private ICommand _recordCommand;
         private RelayCommand _removeMacroCommand;
@@ -43,13 +44,13 @@ namespace ClassicAssist.UI.ViewModels
         {
             Engine.DisconnectedEvent += OnDisconnectedEvent;
 
-            MacroManager manager = MacroManager.GetInstance();
+            _manager = MacroManager.GetInstance();
 
-            manager.IsRecording = () => _isRecording;
-            manager.InsertDocument = str => { _dispatcher.Invoke( () => { SelectedItem.Macro += str; } ); };
-            manager.Items = Items;
-            manager.IsPlaying = () => _isRunning;
-            manager.CurrentMacro = () => _currentMacro;
+            _manager.IsRecording = () => _isRecording;
+            _manager.InsertDocument = str => { _dispatcher.Invoke( () => { SelectedItem.Macro += str; } ); };
+            _manager.Items = Items;
+            _manager.IsPlaying = () => _isRunning;
+            _manager.CurrentMacro = () => _currentMacro;
         }
 
         public int CaretPosition
@@ -176,7 +177,6 @@ namespace ClassicAssist.UI.ViewModels
                     };
 
                     entry.Action = hks => Execute( entry );
-                    entry.ActionSync = macroEntry => ExecuteSync( entry );
 
                     Items.Add( entry );
                 }
@@ -191,21 +191,42 @@ namespace ClassicAssist.UI.ViewModels
             }
         }
 
-        private void ExecuteSync( MacroEntry entry )
+        private void Execute( object obj )
         {
+            if ( !( obj is MacroEntry entry ) )
+            {
+                return;
+            }
+
+            if ( _currentMacro != null && _currentMacro.DoNotAutoInterrupt && _currentMacro == entry )
+            {
+                return;
+            }
+
+            if (IsRunning)
+            {
+                Stop( _currentMacro ).Wait();
+            }
+
             _dispatcher.Invoke( () => IsRunning = true );
             _dispatcher.Invoke( () => SelectedItem = entry );
 
             _currentMacro = entry;
+            _currentMacro.Stop = () => Stop( _currentMacro ).Wait();
+
+            _macroInvoker = new MacroInvoker( entry );
+            _macroInvoker.StoppedEvent += () =>
+            {
+                _currentMacro = null;
+                _dispatcher.Invoke( () => IsRunning = false );
+            };
 
             _macroInvoker.ExceptionEvent += exception =>
             {
                 Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
             };
 
-            _cancellationToken = new CancellationTokenSource();
-
-            _macroInvoker.ExecuteSync( entry.Loop, _cancellationToken.Token );
+            _manager.Execute( entry );
         }
 
         private static void ShowActiveObjectsWindow( object obj )
@@ -219,7 +240,7 @@ namespace ClassicAssist.UI.ViewModels
             _macroInvoker?.Stop();
         }
 
-        private void ClearHotkey( object obj )
+        private static void ClearHotkey( object obj )
         {
             if ( !( obj is MacroEntry entry ) )
             {
@@ -258,7 +279,6 @@ namespace ClassicAssist.UI.ViewModels
             MacroEntry macro = new MacroEntry { Name = $"Macro-{count + 1}", Macro = string.Empty };
 
             macro.Action = hks => Execute( macro );
-            macro.ActionSync = macroEntry => ExecuteSync( macro );
 
             Items.Add( macro );
 
@@ -282,50 +302,6 @@ namespace ClassicAssist.UI.ViewModels
             } );
 
             IsRunning = false;
-        }
-
-        private void Execute( object obj )
-        {
-            if ( !( obj is MacroEntry entry ) )
-            {
-                return;
-            }
-
-            if ( _currentMacro != null && _currentMacro.DoNotAutoInterrupt && _currentMacro == entry )
-            {
-                return;
-            }
-
-            if ( IsRunning )
-            {
-                Stop( _currentMacro ).Wait();
-            }
-
-            _dispatcher.Invoke( () => IsRunning = true );
-            _dispatcher.Invoke( () => SelectedItem = entry );
-
-            _currentMacro = entry;
-            _currentMacro.Stop = () => Stop( _currentMacro ).Wait();
-
-            _macroInvoker = new MacroInvoker( entry );
-            _macroInvoker.StoppedEvent += () =>
-            {
-                if ( entry.Loop && !_macroInvoker.IsFaulted && IsRunning )
-                {
-                    ExecuteSync( entry );
-                    return;
-                }
-
-                _currentMacro = null;
-                _dispatcher.Invoke( () => IsRunning = false );
-            };
-
-            _macroInvoker.ExceptionEvent += exception =>
-            {
-                Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
-            };
-
-            _macroInvoker.Execute();
         }
 
         private void ShowCommands( object obj )
