@@ -152,8 +152,6 @@ namespace ClassicAssist.UI.ViewModels
         {
             Items.Clear();
 
-            AddHotkeyCategory();
-
             JToken config = json?["Macros"];
 
             if ( config == null )
