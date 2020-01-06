@@ -7,6 +7,7 @@ using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
+using ClassicAssist.Data.Regions;
 using UOC = ClassicAssist.UO.Commands;
 
 // ReSharper disable UnusedVariable
@@ -88,6 +89,7 @@ namespace ClassicAssist.Data.Commands
             }
 
             UOC.SystemMessage( $"{Strings.Current_Location_} {player.X}, {player.Y}, {player.Map}" );
+            UOC.SystemMessage( $"Region: {Regions.Regions.GetRegion( Engine.Player )}" );
 
             return true;
         }
