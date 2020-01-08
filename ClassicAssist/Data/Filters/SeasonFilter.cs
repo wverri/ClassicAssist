@@ -4,7 +4,7 @@ using ClassicAssist.UO.Network.PacketFilter;
 
 namespace ClassicAssist.Data.Filters
 {
-    [FilterOptions( Name = "Seasons", DefaultEnabled = false )]
+    [FilterOptions( Name = "Seasons", DefaultEnabled = true )]
     public class SeasonFilter : FilterEntry
     {
         private readonly byte[] _desolationSeason = { 0xBC, 0x04, 0x00 };
@@ -17,6 +17,12 @@ namespace ClassicAssist.Data.Filters
             if ( enabled )
             {
                 Engine.AddReceiveFilter( pfi );
+
+                if ( Engine.Player != null && Engine.Player.Map == Map.Felucca )
+                {
+                    Engine.SendPacketToClient( _desolationSeason, _desolationSeason.Length );
+                    return;
+                }
 
                 Engine.SendPacketToClient( _standardSeason, _standardSeason.Length );
             }
