@@ -4,7 +4,7 @@ using ClassicAssist.UO.Network.PacketFilter;
 
 namespace ClassicAssist.Data.Filters
 {
-    [FilterOptions( Name = "Seasons", DefaultEnabled = true )]
+    [FilterOptions( Name = "Seasons", DefaultEnabled = false )]
     public class SeasonFilter : FilterEntry
     {
         private readonly byte[] _desolationSeason = { 0xBC, 0x04, 0x00 };
