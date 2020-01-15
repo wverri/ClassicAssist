@@ -232,6 +232,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto accept only from friends.
+        /// </summary>
+        public static string Auto_accept_only_from_friends {
+            get {
+                return ResourceManager.GetString("Auto accept only from friends", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto accept party invites.
+        /// </summary>
+        public static string Auto_accept_party_invites {
+            get {
+                return ResourceManager.GetString("Auto accept party invites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bandage Self.
         /// </summary>
         public static string Bandage_Self {
@@ -471,6 +489,15 @@ namespace ClassicAssist.Resources {
         public static string Commands_ {
             get {
                 return ResourceManager.GetString("Commands:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete.
+        /// </summary>
+        public static string Complete {
+            get {
+                return ResourceManager.GetString("Complete", resourceCulture);
             }
         }
         
@@ -880,11 +907,11 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Heal Poition.
+        ///   Looks up a localized string similar to Heal Potion.
         /// </summary>
-        public static string Heal_Poition {
+        public static string Heal_Potion {
             get {
-                return ResourceManager.GetString("Heal Poition", resourceCulture);
+                return ResourceManager.GetString("Heal Potion", resourceCulture);
             }
         }
         
