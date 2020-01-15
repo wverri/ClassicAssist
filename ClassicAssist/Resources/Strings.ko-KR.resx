@@ -975,4 +975,10 @@
   <data name="WarMode Toggle" xml:space="preserve">
     <value>전쟁 모드 토글</value>
   </data>
+  <data name="Set Container" xml:space="preserve">
+    <value>상자 선택</value>
+  </data>
+  <data name="Scavenger" xml:space="preserve">
+    <value>폐품업자</value>
+  </data>
 </root>
