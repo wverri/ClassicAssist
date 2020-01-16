@@ -40,7 +40,7 @@ namespace ClassicAssist.UO
                 amount = i?.Count ?? 1;
             }
 
-            lock (_dragDropLock)
+            lock ( _dragDropLock )
             {
                 DragItem( serial, amount );
 
@@ -55,6 +55,11 @@ namespace ClassicAssist.UO
         public static void EquipItem( Item item, Layer layer )
         {
             int containerSerial = Engine.Player?.Serial ?? 0;
+
+            if ( containerSerial == 0 || containerSerial == -1 )
+            {
+                return;
+            }
 
             if ( layer == Layer.Invalid )
             {
