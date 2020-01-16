@@ -124,16 +124,16 @@
     <value>Impossibile individuare il pacchetto di aggiornamento...</value>
   </data>
   <data name="Checking for latest release..." xml:space="preserve">
-    <value>Verifica dell'ultima versione in corso...</value>
+    <value>Ricerca dell'ultima versione in corso...</value>
   </data>
   <data name="ClassicAssist Updater" xml:space="preserve">
-    <value>Programma di aggiornamento ClassicAssist</value>
+    <value>ClassicAssist Updater</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Vicino</value>
   </data>
   <data name="Copying {0}..." xml:space="preserve">
-    <value>Copia {0} in corso...</value>
+    <value>Copia di {0} in corso...</value>
   </data>
   <data name="Done." xml:space="preserve">
     <value>Fatto.</value>
@@ -142,16 +142,16 @@
     <value>Scaricato</value>
   </data>
   <data name="Downloaded size doesn't match expected..." xml:space="preserve">
-    <value>Le dimensioni scaricate non corrispondono alle attese...</value>
+    <value>Le dimensioni del Download non corrispondono alle attese...</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>Scaricare</value>
+    <value>Sto Scaricando</value>
   </data>
   <data name="Error:" xml:space="preserve">
     <value>Errore:</value>
   </data>
   <data name="Extracting package..." xml:space="preserve">
-    <value>Pacchetto di estrazione in corso...</value>
+    <value>Estrazione pacchetto in corso...</value>
   </data>
   <data name="Latest Release:" xml:space="preserve">
     <value>Ultima versione:</value>
@@ -163,7 +163,7 @@
     <value>Nessuna risorsa di rilascio...</value>
   </data>
   <data name="Relaunching updater..." xml:space="preserve">
-    <value>Reindirizzamento dei programma di aggiornamento in corso...</value>
+    <value>Riavvio Updater...</value>
   </data>
   <data name="Unable to locate GitHub release" xml:space="preserve">
     <value>Impossibile individuare la versione di GitHub</value>
