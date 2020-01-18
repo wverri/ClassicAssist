@@ -16,7 +16,7 @@ namespace ClassicAssist.Data.Macros
         private static readonly object _lock = new object();
         private static MacroManager _instance;
         private readonly List<IMacroCommandParser> _parsers = new List<IMacroCommandParser>();
-        private MacroInvoker _invoker;
+        private IMacroInvoker _invoker;
 
         private MacroManager()
         {
@@ -93,21 +93,37 @@ namespace ClassicAssist.Data.Macros
 
         public void Execute( MacroEntry macro )
         {
-            _invoker = MacroInvoker.GetInstance();
-
-            void OnException( Exception exception )
+            switch ( macro.MacroType )
             {
-                UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
-
-                if ( exception is SyntaxErrorException syntaxError )
+                case MacroType.Python:
                 {
-                    UO.Commands.SystemMessage( $"{Strings.Line_Number}: {syntaxError.RawSpan.Start.Line}" );
-                }
-            }
+                    _invoker = PythonInvoker.GetInstance();
 
-            _invoker.ExceptionEvent += OnException;
-            _invoker.Execute( macro );
-            _invoker.ExceptionEvent -= OnException;
+                    void OnException( Exception exception )
+                    {
+                        UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
+
+                        if ( exception is SyntaxErrorException syntaxError )
+                        {
+                            UO.Commands.SystemMessage( $"{Strings.Line_Number}: {syntaxError.RawSpan.Start.Line}" );
+                        }
+                    }
+
+                    _invoker.ExceptionEvent += OnException;
+                    _invoker.Execute( macro );
+                    _invoker.ExceptionEvent -= OnException;
+
+                    break;
+                }
+                case MacroType.Steam:
+                {
+                    _invoker = SteamEngineInvoker.GetInstance();
+                    _invoker.Execute( macro );
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void Stop()

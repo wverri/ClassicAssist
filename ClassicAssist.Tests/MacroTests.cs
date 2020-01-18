@@ -18,7 +18,7 @@ namespace ClassicAssist.Tests
         {
             MacroEntry me = new MacroEntry();
 
-            MacroInvoker mi = MacroInvoker.GetInstance();
+            PythonInvoker mi = PythonInvoker.GetInstance();
 
             mi.Execute( me );
         }
@@ -28,7 +28,7 @@ namespace ClassicAssist.Tests
         {
             MacroEntry me = new MacroEntry { Macro = "while true:\r\n\t" };
 
-            MacroInvoker mi = MacroInvoker.GetInstance();
+            PythonInvoker mi = PythonInvoker.GetInstance();
 
             mi.Execute(me);
 
@@ -44,7 +44,7 @@ namespace ClassicAssist.Tests
         {
             MacroEntry me = new MacroEntry();
 
-            MacroInvoker mi = MacroInvoker.GetInstance();
+            PythonInvoker mi = PythonInvoker.GetInstance();
 
             AutoResetEvent are = new AutoResetEvent( false );
 
@@ -67,7 +67,7 @@ namespace ClassicAssist.Tests
         {
             MacroEntry me = new MacroEntry();
 
-            MacroInvoker mi = MacroInvoker.GetInstance();
+            PythonInvoker mi = PythonInvoker.GetInstance();
 
             AutoResetEvent are = new AutoResetEvent( false );
 
@@ -90,7 +90,7 @@ namespace ClassicAssist.Tests
         {
             MacroEntry me = new MacroEntry { Macro = "Dummy(5,7)" };
 
-            MacroInvoker mi = MacroInvoker.GetInstance();
+            PythonInvoker mi = PythonInvoker.GetInstance();
 
             mi.Execute(me);
 
@@ -104,7 +104,7 @@ namespace ClassicAssist.Tests
         {
             MacroEntry me = new MacroEntry { Macro = "kjdkdsdksdfsdk" };
 
-            MacroInvoker mi = MacroInvoker.GetInstance();
+            PythonInvoker mi = PythonInvoker.GetInstance();
 
             AutoResetEvent are = new AutoResetEvent( false );
 

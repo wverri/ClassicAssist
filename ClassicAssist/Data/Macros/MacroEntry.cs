@@ -8,6 +8,7 @@ namespace ClassicAssist.Data.Macros
         private bool _doNotAutoInterrupt;
         private bool _loop;
         private string _macro = string.Empty;
+        private MacroType _macroType = MacroType.Python;
 
         public bool DoNotAutoInterrupt
         {
@@ -25,6 +26,12 @@ namespace ClassicAssist.Data.Macros
         {
             get => _macro;
             set => SetProperty( ref _macro, value );
+        }
+
+        public MacroType MacroType
+        {
+            get => _macroType;
+            set => SetProperty( ref _macroType, value );
         }
 
         public Action Stop { get; set; }

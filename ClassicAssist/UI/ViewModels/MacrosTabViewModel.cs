@@ -127,7 +127,8 @@ namespace ClassicAssist.UI.ViewModels
                     { "DoNotAutoInterrupt", macroEntry.DoNotAutoInterrupt },
                     { "Macro", macroEntry.Macro },
                     { "PassToUO", macroEntry.PassToUO },
-                    { "Keys", macroEntry.Hotkey.ToJObject() }
+                    { "Keys", macroEntry.Hotkey.ToJObject() },
+                    { "MacroType", macroEntry.MacroType.ToString() }
                 };
 
                 macroArray.Add( entry );
@@ -170,7 +171,8 @@ namespace ClassicAssist.UI.ViewModels
                         DoNotAutoInterrupt = GetJsonValue( token, "DoNotAutoInterrupt", false ),
                         Macro = GetJsonValue( token, "Macro", string.Empty ),
                         PassToUO = GetJsonValue( token, "PassToUO", true ),
-                        Hotkey = new ShortcutKeys( token["Keys"] )
+                        Hotkey = new ShortcutKeys( token["Keys"] ),
+                        MacroType = GetJsonValue( token, "MacroType", MacroType.Python )
                     };
 
                     entry.Action = async hks => await Execute( entry );
