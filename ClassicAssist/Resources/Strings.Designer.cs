@@ -259,6 +259,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Autoloot.
+        /// </summary>
+        public static string Autoloot {
+            get {
+                return ResourceManager.GetString("Autoloot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Autoloot matching items.
+        /// </summary>
+        public static string Autoloot_matching_items {
+            get {
+                return ResourceManager.GetString("Autoloot matching items", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bandage Self.
         /// </summary>
         public static string Bandage_Self {
@@ -615,6 +633,15 @@ namespace ClassicAssist.Resources {
         public static string Current_Location_ {
             get {
                 return ResourceManager.GetString("Current Location:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable inside guardzone.
+        /// </summary>
+        public static string Disable_inside_guardzone {
+            get {
+                return ResourceManager.GetString("Disable inside guardzone", resourceCulture);
             }
         }
         
@@ -1519,6 +1546,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operator.
+        /// </summary>
+        public static string Operator {
+            get {
+                return ResourceManager.GetString("Operator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Options.
         /// </summary>
         public static string Options {
@@ -1794,6 +1830,15 @@ namespace ClassicAssist.Resources {
         public static string Regeneration {
             get {
                 return ResourceManager.GetString("Regeneration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rehue matching items.
+        /// </summary>
+        public static string Rehue_matching_items {
+            get {
+                return ResourceManager.GetString("Rehue matching items", resourceCulture);
             }
         }
         

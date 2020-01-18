@@ -993,4 +993,19 @@
   <data name="Hue Picker" xml:space="preserve">
     <value>Hue Picker</value>
   </data>
+  <data name="Disable inside guardzone" xml:space="preserve">
+    <value>Disable inside guardzone</value>
+  </data>
+  <data name="Autoloot" xml:space="preserve">
+    <value>Autoloot</value>
+  </data>
+  <data name="Autoloot matching items" xml:space="preserve">
+    <value>Autoloot matching items</value>
+  </data>
+  <data name="Rehue matching items" xml:space="preserve">
+    <value>Rehue matching items</value>
+  </data>
+  <data name="Operator" xml:space="preserve">
+    <value>Operator</value>
+  </data>
 </root>

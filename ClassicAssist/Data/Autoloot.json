@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Hue",
+    "Cliloc": 0,
+    "ConstraintType": 1
+  },
+  {
+    "Name": "Faster Casting",
+    "Cliloc": 0,
+    "ConstraintType": 0
+  },
+  {
+    "Name": "Faster Cast Recovery",
+    "Cliloc": 0,
+    "ConstraintType": 0
+  }
+]
