@@ -130,6 +130,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <avalon:TextEditor ShowLineNumbers="True" x:Name="CodeTextEditor" Grid.Row="0"
                                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
@@ -150,7 +151,17 @@
                                                  CaretBinding="{Binding CaretPosition}" />
                 </i:Interaction.Behaviors>
             </avalon:TextEditor>
-            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <valueConverters1:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
+                </StackPanel.Resources>
+                <TextBlock Text="{x:Static resources:Strings.Macro_Format_}" Margin="0,0,10,0" />
+                <RadioButton Content="{x:Static resources:Strings.Python}" Margin="0,0,10,0"
+                             IsChecked="{Binding SelectedItem.MacroType, ConverterParameter=Python, Converter={StaticResource EnumMatchToBooleanConverter}}" />
+                <RadioButton Content="{x:Static resources:Strings.Steam}"
+                             IsChecked="{Binding SelectedItem.MacroType, ConverterParameter=Steam, Converter={StaticResource EnumMatchToBooleanConverter}}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
                 <StackPanel.Resources>
                     <Style TargetType="Button">
                         <Setter Property="Margin" Value="10,10,10,0" />

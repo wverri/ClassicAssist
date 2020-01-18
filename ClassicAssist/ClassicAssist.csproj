@@ -61,6 +61,9 @@
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\steam-engine\Steam\UOSteam.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="cuoapi">
       <HintPath>cuoapi.dll</HintPath>
     </Reference>

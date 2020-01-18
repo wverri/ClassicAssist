@@ -1339,6 +1339,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Macro Format:.
+        /// </summary>
+        public static string Macro_Format_ {
+            get {
+                return ResourceManager.GetString("Macro Format:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Macros.
         /// </summary>
         public static string Macros {
@@ -1807,6 +1816,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Python.
+        /// </summary>
+        public static string Python {
+            get {
+                return ResourceManager.GetString("Python", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Queue Last Target / Target Self.
         /// </summary>
         public static string Queue_Last_Target___Target_Self {
@@ -2226,6 +2244,15 @@ namespace ClassicAssist.Resources {
         public static string Status_ {
             get {
                 return ResourceManager.GetString("Status:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steam.
+        /// </summary>
+        public static string Steam {
+            get {
+                return ResourceManager.GetString("Steam", resourceCulture);
             }
         }
         

@@ -1026,4 +1026,13 @@
   <data name="Project Homepage" xml:space="preserve">
     <value>Project Homepage</value>
   </data>
+  <data name="Macro Format:" xml:space="preserve">
+    <value>Macro Format:</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
 </root>
