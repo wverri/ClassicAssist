@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
 using Assistant;
 using ClassicAssist.UO.Objects;
+using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace ClassicAssist.Data.Regions
 {
@@ -68,27 +69,8 @@ namespace ClassicAssist.Data.Regions
 
     public static class Regions
     {
-        private static readonly List<Region> _regions = Deserialize();
-
-        public static void Add( Region region )
+        private static Region[] _defaultRegions =
         {
-            if ( !_regions.Contains( region ) )
-            {
-                _regions.Add( region );
-            }
-
-            Serialize();
-        }
-
-        public static bool Contains( string name )
-        {
-            return _regions.FirstOrDefault( r => r.Name == name ) != null;
-        }
-
-        private static List<Region> Deserialize()
-        {
-            Region[] _defaultRegions =
-            {
                 new Region
                 {
                     X1 = 0,
@@ -201,35 +183,37 @@ namespace ClassicAssist.Data.Regions
                 }
             };
 
-            try
+        private static readonly Lazy<List<Region>> _regions = new Lazy<List<Region>>(LoadRegions);
+
+        private static List<Region> LoadRegions()
+        {
+            JsonSerializer serializer = new JsonSerializer();
+
+            using ( StreamReader sr = new StreamReader( Path.Combine( Engine.StartupPath, "Data", "Regions.json" ) ) )
             {
-                using ( XmlReader xr =
-                    XmlReader.Create( Path.Combine( Path.Combine( Engine.StartupPath, "Data", "regions.xml" ) ) ) )
+                using ( JsonTextReader reader = new JsonTextReader( sr ) )
                 {
-                    XmlSerializer xs = new XmlSerializer( typeof( RegionList ) );
+                    RegionList regionList = serializer.Deserialize<RegionList>( reader );
 
-                    RegionList list = (RegionList) xs.Deserialize( xr );
-
-                    if ( list?.Regions == null )
-                    {
-                        return new List<Region>( _defaultRegions );
-                    }
-
-                    foreach ( Region defaultRegion in _defaultRegions )
-                    {
-                        if ( !list.Regions.Contains( defaultRegion ) )
-                        {
-                            list.Regions.Add( defaultRegion );
-                        }
-                    }
-
-                    return list.Regions;
+                    if ( regionList != null )
+                        return regionList.Regions;
                 }
             }
-            catch ( IOException )
+
+            return new List<Region>( _defaultRegions );
+        }
+
+        public static void Add( Region region )
+        {
+            if ( !_regions.Value.Contains( region ) )
             {
-                return new List<Region>( _defaultRegions );
+                _regions.Value.Add( region );
             }
+        }
+
+        public static bool Contains( string name )
+        {
+            return _regions.Value.FirstOrDefault( r => r.Name == name ) != null;
         }
 
         public static Region GetRegion( PlayerMobile player )
@@ -240,7 +224,7 @@ namespace ClassicAssist.Data.Regions
         public static Region GetRegion( int x, int y, int map )
         {
             IEnumerable<Region> matching =
-                _regions.Where( r => x >= r.X1 && y >= r.Y1 && x <= r.X2 && y <= r.Y2 && map == r.Map );
+                _regions.Value.Where( r => x >= r.X1 && y >= r.Y1 && x <= r.X2 && y <= r.Y2 && map == r.Map );
 
             List<Region> list = matching.ToList();
 
@@ -274,33 +258,14 @@ namespace ClassicAssist.Data.Regions
         {
             PlayerMobile player = Engine.Player;
 
-            if ( player == null )
-            {
-                return null;
-            }
-
-            return GetRegion( entity.X, entity.Y, (int) player.Map );
+            return player == null ? null : GetRegion( entity.X, entity.Y, (int) player.Map );
         }
 
         public static void Remove( Region region )
         {
-            if ( _regions.Contains( region ) )
+            if ( _regions.Value.Contains( region ) )
             {
-                _regions.Remove( region );
-            }
-
-            Serialize();
-        }
-
-        private static void Serialize()
-        {
-            XmlWriterSettings xws = new XmlWriterSettings { Indent = true };
-
-            using ( XmlWriter xw = XmlWriter.Create( Path.Combine( Engine.StartupPath, "Data", "regions.xml" ), xws ) )
-            {
-                XmlSerializer xs = new XmlSerializer( typeof( RegionList ) );
-
-                xs.Serialize( xw, new RegionList { Regions = _regions } );
+                _regions.Value.Remove( region );
             }
         }
     }

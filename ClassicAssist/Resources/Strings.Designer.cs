@@ -1618,11 +1618,29 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prevent attacking innocents in guardzone.
+        /// </summary>
+        public static string Prevent_attacking_innocents_in_guardzone {
+            get {
+                return ResourceManager.GetString("Prevent attacking innocents in guardzone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prevent targeting friends with Harmful spells.
         /// </summary>
         public static string Prevent_targeting_friends_with_Harmful_spells {
             get {
                 return ResourceManager.GetString("Prevent targeting friends with Harmful spells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prevent targeting innocents in guardzone.
+        /// </summary>
+        public static string Prevent_targeting_innocents_in_guardzone {
+            get {
+                return ResourceManager.GetString("Prevent targeting innocents in guardzone", resourceCulture);
             }
         }
         

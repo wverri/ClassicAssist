@@ -981,4 +981,7 @@
   <data name="Scavenger" xml:space="preserve">
     <value>스캐빈저</value>
   </data>
+  <data name="Prevent attacking innocents in guardzone" xml:space="preserve">
+    <value>가드존에서 블루공격 막기</value>
+  </data>
 </root>

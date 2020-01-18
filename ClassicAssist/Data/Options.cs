@@ -35,6 +35,7 @@ namespace ClassicAssist.Data
         private bool _persistUseOnce;
         private bool _preventAttackingFriendsInWarMode;
         private bool _preventTargetingFriendsWithHarmful;
+        private bool _preventTargetingInnocentsInGuardzone;
         private bool _queueLastTarget;
         private bool _rangeCheckLastTarget;
         private int _rangeCheckLastTargetAmount = 11;
@@ -142,6 +143,12 @@ namespace ClassicAssist.Data
         {
             get => _preventTargetingFriendsWithHarmful;
             set => SetProperty( ref _preventTargetingFriendsWithHarmful, value );
+        }
+
+        public bool PreventTargetingInnocentsInGuardzone
+        {
+            get => _preventTargetingInnocentsInGuardzone;
+            set => SetProperty( ref _preventTargetingInnocentsInGuardzone, value );
         }
 
         public bool QueueLastTarget
