@@ -987,4 +987,7 @@
   <data name="Prevent attacking innocents in guardzone" xml:space="preserve">
     <value>Previeni attacco innocenti in zona guardie</value>
   </data>
+  <data name="Applies to hotkeys / macros only." xml:space="preserve">
+    <value>Si applica solo ai tasti di scelta rapida/macro.</value>
+  </data>
 </root>

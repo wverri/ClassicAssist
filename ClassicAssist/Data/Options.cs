@@ -34,6 +34,7 @@ namespace ClassicAssist.Data
         private string _name;
         private bool _persistUseOnce;
         private bool _preventAttackingFriendsInWarMode;
+        private bool _preventAttackingInnocentsInGuardzone;
         private bool _preventTargetingFriendsWithHarmful;
         private bool _preventTargetingInnocentsInGuardzone;
         private bool _queueLastTarget;
@@ -137,6 +138,12 @@ namespace ClassicAssist.Data
         {
             get => _preventAttackingFriendsInWarMode;
             set => SetProperty( ref _preventAttackingFriendsInWarMode, value );
+        }
+
+        public bool PreventAttackingInnocentsInGuardzone
+        {
+            get => _preventAttackingInnocentsInGuardzone;
+            set => SetProperty( ref _preventAttackingInnocentsInGuardzone, value );
         }
 
         public bool PreventTargetingFriendsWithHarmful

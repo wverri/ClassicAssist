@@ -7,7 +7,6 @@ using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
-using ClassicAssist.Data.Regions;
 using UOC = ClassicAssist.UO.Commands;
 
 // ReSharper disable UnusedVariable

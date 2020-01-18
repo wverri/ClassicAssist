@@ -205,6 +205,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Applies to hotkeys / macros only..
+        /// </summary>
+        public static string Applies_to_hotkeys___macros_only_ {
+            get {
+                return ResourceManager.GetString("Applies to hotkeys / macros only.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attack Enemy.
         /// </summary>
         public static string Attack_Enemy {

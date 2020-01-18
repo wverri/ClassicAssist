@@ -5,7 +5,6 @@ using System.Linq;
 using Assistant;
 using ClassicAssist.UO.Objects;
 using Newtonsoft.Json;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace ClassicAssist.Data.Regions
 {
@@ -69,121 +68,121 @@ namespace ClassicAssist.Data.Regions
 
     public static class Regions
     {
-        private static Region[] _defaultRegions =
+        private static readonly Region[] _defaultRegions =
         {
-                new Region
-                {
-                    X1 = 0,
-                    Y1 = 0,
-                    X2 = 7168,
-                    Y2 = 4096,
-                    Map = 0,
-                    Attributes = RegionAttributes.Wilderness,
-                    Name = "Felucca",
-                    Priority = -1
-                },
-                new Region
-                {
-                    X1 = 0,
-                    Y1 = 0,
-                    X2 = 7168,
-                    Y2 = 4096,
-                    Map = 1,
-                    Attributes = RegionAttributes.Wilderness,
-                    Name = "Trammel",
-                    Priority = -1
-                },
-                new Region
-                {
-                    X1 = 0,
-                    Y1 = 0,
-                    X2 = 2304,
-                    Y2 = 1600,
-                    Map = 2,
-                    Attributes = RegionAttributes.Wilderness,
-                    Name = "Ilshenar",
-                    Priority = -1
-                },
-                new Region
-                {
-                    X1 = 0,
-                    Y1 = 0,
-                    X2 = 2560,
-                    Y2 = 2048,
-                    Map = 3,
-                    Attributes = RegionAttributes.Wilderness,
-                    Name = "Malas",
-                    Priority = -1
-                },
-                new Region
-                {
-                    X1 = 0,
-                    Y1 = 0,
-                    X2 = 1448,
-                    Y2 = 1448,
-                    Map = 4,
-                    Attributes = RegionAttributes.Wilderness,
-                    Name = "Tokuno",
-                    Priority = -1
-                },
-                new Region
-                {
-                    X1 = 0,
-                    Y1 = 0,
-                    X2 = 1280,
-                    Y2 = 4096,
-                    Map = 5,
-                    Attributes = RegionAttributes.Wilderness,
-                    Name = "TerMur",
-                    Priority = -1
-                },
-                new Region
-                {
-                    X1 = 5271,
-                    Y1 = 1159,
-                    X2 = 5311,
-                    Y2 = 1191,
-                    Map = 0,
-                    Attributes = RegionAttributes.Jail,
-                    Name = "Jail",
-                    Priority = byte.MaxValue
-                },
-                new Region
-                {
-                    X1 = 5271,
-                    Y1 = 1159,
-                    X2 = 5311,
-                    Y2 = 1191,
-                    Map = 1,
-                    Attributes = RegionAttributes.Jail,
-                    Name = "Jail",
-                    Priority = byte.MaxValue
-                },
-                new Region
-                {
-                    X1 = 2720,
-                    Y1 = 2089,
-                    X2 = 2726,
-                    Y2 = 2094,
-                    Map = 0,
-                    Attributes = RegionAttributes.Jail,
-                    Name = "OSI Unattended Macroing Jail",
-                    Priority = byte.MaxValue
-                },
-                new Region
-                {
-                    X1 = 2720,
-                    Y1 = 2089,
-                    X2 = 2726,
-                    Y2 = 2094,
-                    Map = 1,
-                    Attributes = RegionAttributes.Jail,
-                    Name = "OSI Unattended Macroing Jail",
-                    Priority = byte.MaxValue
-                }
-            };
+            new Region
+            {
+                X1 = 0,
+                Y1 = 0,
+                X2 = 7168,
+                Y2 = 4096,
+                Map = 0,
+                Attributes = RegionAttributes.Wilderness,
+                Name = "Felucca",
+                Priority = -1
+            },
+            new Region
+            {
+                X1 = 0,
+                Y1 = 0,
+                X2 = 7168,
+                Y2 = 4096,
+                Map = 1,
+                Attributes = RegionAttributes.Wilderness,
+                Name = "Trammel",
+                Priority = -1
+            },
+            new Region
+            {
+                X1 = 0,
+                Y1 = 0,
+                X2 = 2304,
+                Y2 = 1600,
+                Map = 2,
+                Attributes = RegionAttributes.Wilderness,
+                Name = "Ilshenar",
+                Priority = -1
+            },
+            new Region
+            {
+                X1 = 0,
+                Y1 = 0,
+                X2 = 2560,
+                Y2 = 2048,
+                Map = 3,
+                Attributes = RegionAttributes.Wilderness,
+                Name = "Malas",
+                Priority = -1
+            },
+            new Region
+            {
+                X1 = 0,
+                Y1 = 0,
+                X2 = 1448,
+                Y2 = 1448,
+                Map = 4,
+                Attributes = RegionAttributes.Wilderness,
+                Name = "Tokuno",
+                Priority = -1
+            },
+            new Region
+            {
+                X1 = 0,
+                Y1 = 0,
+                X2 = 1280,
+                Y2 = 4096,
+                Map = 5,
+                Attributes = RegionAttributes.Wilderness,
+                Name = "TerMur",
+                Priority = -1
+            },
+            new Region
+            {
+                X1 = 5271,
+                Y1 = 1159,
+                X2 = 5311,
+                Y2 = 1191,
+                Map = 0,
+                Attributes = RegionAttributes.Jail,
+                Name = "Jail",
+                Priority = byte.MaxValue
+            },
+            new Region
+            {
+                X1 = 5271,
+                Y1 = 1159,
+                X2 = 5311,
+                Y2 = 1191,
+                Map = 1,
+                Attributes = RegionAttributes.Jail,
+                Name = "Jail",
+                Priority = byte.MaxValue
+            },
+            new Region
+            {
+                X1 = 2720,
+                Y1 = 2089,
+                X2 = 2726,
+                Y2 = 2094,
+                Map = 0,
+                Attributes = RegionAttributes.Jail,
+                Name = "OSI Unattended Macroing Jail",
+                Priority = byte.MaxValue
+            },
+            new Region
+            {
+                X1 = 2720,
+                Y1 = 2089,
+                X2 = 2726,
+                Y2 = 2094,
+                Map = 1,
+                Attributes = RegionAttributes.Jail,
+                Name = "OSI Unattended Macroing Jail",
+                Priority = byte.MaxValue
+            }
+        };
 
-        private static readonly Lazy<List<Region>> _regions = new Lazy<List<Region>>(LoadRegions);
+        private static readonly Lazy<List<Region>> _regions = new Lazy<List<Region>>( LoadRegions );
 
         private static List<Region> LoadRegions()
         {
@@ -196,7 +195,9 @@ namespace ClassicAssist.Data.Regions
                     RegionList regionList = serializer.Deserialize<RegionList>( reader );
 
                     if ( regionList != null )
+                    {
                         return regionList.Regions;
+                    }
                 }
             }
 
