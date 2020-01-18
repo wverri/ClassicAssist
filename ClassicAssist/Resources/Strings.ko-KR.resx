@@ -990,4 +990,7 @@
   <data name="Applies to hotkeys / macros only." xml:space="preserve">
     <value>단축키/매크로에만 적용됩니다.</value>
   </data>
+  <data name="Hue Picker" xml:space="preserve">
+    <value>색조 피커</value>
+  </data>
 </root>

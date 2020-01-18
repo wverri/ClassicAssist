@@ -990,4 +990,7 @@
   <data name="Applies to hotkeys / macros only." xml:space="preserve">
     <value>仅适用于热键/宏。</value>
   </data>
+  <data name="Hue Picker" xml:space="preserve">
+    <value>色调选取器</value>
+  </data>
 </root>

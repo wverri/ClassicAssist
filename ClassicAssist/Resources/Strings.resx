@@ -990,4 +990,7 @@
   <data name="Applies to hotkeys / macros only." xml:space="preserve">
     <value>Applies to hotkeys / macros only.</value>
   </data>
+  <data name="Hue Picker" xml:space="preserve">
+    <value>Hue Picker</value>
+  </data>
 </root>

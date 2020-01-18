@@ -952,6 +952,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hue Picker.
+        /// </summary>
+        public static string Hue_Picker {
+            get {
+                return ResourceManager.GetString("Hue Picker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore ping packets.
         /// </summary>
         public static string Ignore_ping_packets {
