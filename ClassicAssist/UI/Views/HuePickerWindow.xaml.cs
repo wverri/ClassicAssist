@@ -25,7 +25,7 @@ namespace ClassicAssist.UI.Views
 
             for ( int i = 0; i < 3000; i++ )
             {
-                Items.Add( new HuePickerEntry { Index = i, Entry = Hues._lazyHueEntries.Value[i] } );
+                Items.Add( new HuePickerEntry { Index = i + 1, Entry = Hues._lazyHueEntries.Value[i] } );
             }
         }
 
