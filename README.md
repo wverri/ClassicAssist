@@ -1,4 +1,4 @@
-﻿﻿[![Build status](https://ci.appveyor.com/api/projects/status/8ky24q5mvc1h0xll/branch/master?svg=true)](https://ci.appveyor.com/project/Reetus/classicassist/branch/master)
+﻿[![Build status](https://ci.appveyor.com/api/projects/status/8ky24q5mvc1h0xll/branch/master?svg=true)](https://ci.appveyor.com/project/Reetus/classicassist/branch/master)
 
 # ClassicAssist
 
@@ -26,3 +26,7 @@ If you encounter any issues or require a feature not currently added, please rai
 ## Translation
 
 If your native language isn't English and you'd like to contribute a translation into your language, send a pull request or open an issue.
+
+## Credits
+
+Steam language parser by Jaedan - https://github.com/jaedan/steam-engine
