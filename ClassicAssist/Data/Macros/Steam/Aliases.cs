@@ -9,16 +9,16 @@ namespace ClassicAssist.Data.Macros.Steam
     {
         public static void Register()
         {
-            Interpreter.RegisterAliasHandler( "backpack", Backpack );
-            Interpreter.RegisterAliasHandler( "bank", Bank );
-            Interpreter.RegisterAliasHandler( "enemy", Enemy );
-            Interpreter.RegisterAliasHandler( "last", Last );
-            Interpreter.RegisterAliasHandler( "lasttarget", Last );
-            Interpreter.RegisterAliasHandler( "lastobject", LastObject );
-            Interpreter.RegisterAliasHandler( "lefthand", LeftHand );
-            Interpreter.RegisterAliasHandler( "mount", Mount );
-            Interpreter.RegisterAliasHandler( "righthand", RightHand );
-            Interpreter.RegisterAliasHandler( "self", Self );
+            //Interpreter.RegisterAliasHandler( "backpack", Backpack );
+            //Interpreter.RegisterAliasHandler( "bank", Bank );
+            //Interpreter.RegisterAliasHandler( "enemy", Enemy );
+            //Interpreter.RegisterAliasHandler( "last", Last );
+            //Interpreter.RegisterAliasHandler( "lasttarget", Last );
+            //Interpreter.RegisterAliasHandler( "lastobject", LastObject );
+            //Interpreter.RegisterAliasHandler( "lefthand", LeftHand );
+            //Interpreter.RegisterAliasHandler( "mount", Mount );
+            //Interpreter.RegisterAliasHandler( "righthand", RightHand );
+            //Interpreter.RegisterAliasHandler( "self", Self );
         }
 
         private static int Self( ref ASTNode node )
