@@ -1035,4 +1035,7 @@
   <data name="Steam" xml:space="preserve">
     <value>Steam</value>
   </data>
+  <data name="Required argument was missing." xml:space="preserve">
+    <value>Required argument was missing.</value>
+  </data>
 </root>
