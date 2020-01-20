@@ -12,16 +12,26 @@ namespace ClassicAssist.Data.Macros.Steam
         public static void Register()
         {
             Interpreter.RegisterCommandHandler( "fly", Fly );
-            Interpreter.RegisterCommandHandler( "land", Land );
-            Interpreter.RegisterCommandHandler( "setability", SetAbility );
-            Interpreter.RegisterCommandHandler( "attack", Attack );
-            Interpreter.RegisterCommandHandler( "sysmsg", SysMsg );
-            Interpreter.RegisterCommandHandler( "useskill", UseSkill );
-            Interpreter.RegisterCommandHandler( "clearhands", ClearHands );
-            Interpreter.RegisterCommandHandler( "clickobject", ClickObject );
-            Interpreter.RegisterCommandHandler( "bandageself", BandageSelf );
+            //Interpreter.RegisterCommandHandler( "land", Land );
+            //Interpreter.RegisterCommandHandler( "setability", SetAbility );
+            //Interpreter.RegisterCommandHandler( "attack", Attack );
+            //Interpreter.RegisterCommandHandler( "sysmsg", SysMsg );
+            //Interpreter.RegisterCommandHandler( "useskill", UseSkill );
+            //Interpreter.RegisterCommandHandler( "clearhands", ClearHands );
+            //Interpreter.RegisterCommandHandler( "clickobject", ClickObject );
+            //Interpreter.RegisterCommandHandler( "bandageself", BandageSelf );
             Interpreter.RegisterCommandHandler( "usetype", UseType );
-            Interpreter.RegisterCommandHandler( "useobject", UseObject );
+            //Interpreter.RegisterCommandHandler( "useobject", UseObject );
+        }
+
+        private static bool UseType( string command, Argument[] args, bool quiet, bool force )
+        {
+            throw new NotImplementedException();
+        }
+
+        private static bool Fly( string command, Argument[] args, bool quiet, bool force )
+        {
+            throw new NotImplementedException();
         }
 
         private static bool UseObject( ref ASTNode node, bool quiet, bool force )
