@@ -376,6 +376,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot find sound file....
+        /// </summary>
+        public static string Cannot_find_sound_file___ {
+            get {
+                return ResourceManager.GetString("Cannot find sound file...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Capture Packets.
         /// </summary>
         public static string Capture_Packets {
@@ -471,6 +480,15 @@ namespace ClassicAssist.Resources {
         public static string Combat {
             get {
                 return ResourceManager.GetString("Combat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command currently not implemented..
+        /// </summary>
+        public static string Command_currently_not_implemented_ {
+            get {
+                return ResourceManager.GetString("Command currently not implemented.", resourceCulture);
             }
         }
         

@@ -1000,6 +1000,12 @@
     <value>Steam</value>
   </data>
   <data name="Required argument was missing." xml:space="preserve">
-    <value>Required argument was missing.</value>
+    <value>Required argument was missing.</value>  
+  </data>
+  <data name="Cannot find sound file..." xml:space="preserve">
+    <value>Cannot find sound file...</value>
+  </data>
+  <data name="Command currently not implemented." xml:space="preserve">
+    <value>Command currently not implemented.</value>
   </data>
 </root>

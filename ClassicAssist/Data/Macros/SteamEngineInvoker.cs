@@ -1,4 +1,5 @@
-﻿using UOSteam;
+﻿using ClassicAssist.Data.Macros.Steam;
+using UOSteam;
 
 namespace ClassicAssist.Data.Macros
 {
@@ -7,13 +8,13 @@ namespace ClassicAssist.Data.Macros
         private static SteamEngineInvoker _instance;
         private static readonly object _lock = new object();
 
-        public event PythonInvoker.dMacroException ExceptionEvent;
-
         public SteamEngineInvoker()
         {
-            Steam.Aliases.Register();
+            Aliases.Register();
             Steam.Commands.Register();
         }
+
+        public event PythonInvoker.dMacroException ExceptionEvent;
 
         public void Stop()
         {

@@ -65,5 +65,17 @@ namespace ClassicAssist.Data.Macros.Commands
         {
             return _lists;
         }
+
+        [CommandsDisplay( Category = "Lists", Description = "Clear a list by name.",
+            InsertText = "ClearList(\"list\")" )]
+        public static void ClearList( string listName )
+        {
+            if ( !_lists.ContainsKey( listName ) )
+            {
+                return;
+            }
+
+            _lists[listName].Clear();
+        }
     }
 }
