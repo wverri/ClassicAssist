@@ -216,6 +216,9 @@ namespace ClassicAssist.Data.Macros.Commands
             return SpecialMovesManager.GetInstance().SpecialMoveExists( name );
         }
 
+        [CommandsDisplay( Category = "Entity",
+            Description = "Returns the Direction the entity is in relative to the player.",
+            InsertText = "Run(DirectionTo(\"enemy\"))" )]
         public static string DirectionTo( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );

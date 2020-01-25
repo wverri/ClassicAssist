@@ -20,6 +20,9 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         public static bool QuietMode { get; set; }
 
+        [CommandsDisplay( Category = "Main",
+            Description = "Set quiet mode True/False, True reduces the number of messages macro commands emit.",
+            InsertText = "SetQuietMode(True)" )]
         public static void SetQuietMode( bool onOff )
         {
             QuietMode = onOff;
