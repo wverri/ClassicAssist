@@ -1014,7 +1014,4 @@
   <data name="Autolooting '{0}'" xml:space="preserve">
     <value>Autolooting '{0}'</value>
   </data>
-  <data name="Cannot find sound file..." xml:space="preserve">
-    <value>Cannot find sound file...</value>
-  </data>
 </root>
