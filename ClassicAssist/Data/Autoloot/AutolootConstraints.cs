@@ -1,22 +1,30 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using ClassicAssist.Annotations;
 
 namespace ClassicAssist.Data.Autoloot
 {
-    public class AutolootConstraints : INotifyPropertyChanged
+    public class AutolootConstraints : INotifyPropertyChanged, IComparable<AutolootConstraints>
     {
-        private int _cliloc;
+        private int _clilocIndex;
+        private int[] _clilocs;
         private AutolootConstraintType _constraintType;
         private string _name;
-        private string _operator = "==";
+        private AutolootOperator _operator = AutolootOperator.Equal;
         private int _value;
 
-        public int Cliloc
+        public int ClilocIndex
         {
-            get => _cliloc;
-            set => SetProperty( ref _cliloc, value );
+            get => _clilocIndex;
+            set => SetProperty( ref _clilocIndex, value );
+        }
+
+        public int[] Clilocs
+        {
+            get => _clilocs;
+            set => SetProperty( ref _clilocs, value );
         }
 
         public AutolootConstraintType ConstraintType
@@ -31,7 +39,7 @@ namespace ClassicAssist.Data.Autoloot
             set => SetProperty( ref _name, value );
         }
 
-        public string Operator
+        public AutolootOperator Operator
         {
             get => _operator;
             set => SetProperty( ref _operator, value );
@@ -41,6 +49,23 @@ namespace ClassicAssist.Data.Autoloot
         {
             get => _value;
             set => SetProperty( ref _value, value );
+        }
+
+        public int CompareTo( AutolootConstraints other )
+        {
+            if ( ReferenceEquals( this, other ) )
+            {
+                return 0;
+            }
+
+            if ( ReferenceEquals( null, other ) )
+            {
+                return 1;
+            }
+
+            int nameComparison = string.Compare( _name, other._name, StringComparison.Ordinal );
+
+            return nameComparison;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

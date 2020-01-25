@@ -277,6 +277,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Autolooting &apos;{0}&apos;.
+        /// </summary>
+        public static string Autolooting___0__ {
+            get {
+                return ResourceManager.GetString("Autolooting \'{0}\'", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bandage Self.
         /// </summary>
         public static string Bandage_Self {
@@ -390,6 +399,15 @@ namespace ClassicAssist.Resources {
         public static string Cannot_find_item___ {
             get {
                 return ResourceManager.GetString("Cannot find item...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot find sound file....
+        /// </summary>
+        public static string Cannot_find_sound_file___ {
+            get {
+                return ResourceManager.GetString("Cannot find sound file...", resourceCulture);
             }
         }
         

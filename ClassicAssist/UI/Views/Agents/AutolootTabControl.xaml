@@ -9,8 +9,9 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
              xmlns:controls="clr-namespace:ClassicAssist.UI.Controls"
+             xmlns:autoloot="clr-namespace:ClassicAssist.Data.Autoloot"
              mc:Ignorable="d"
-             d:DesignHeight="250" d:DesignWidth="500">
+             d:DesignHeight="250" d:DesignWidth="500" x:Name="userControl">
     <d:DesignerProperties.DesignStyle>
         <Style TargetType="UserControl">
             <Setter Property="Background" Value="White" />
@@ -70,11 +71,12 @@
                         <GridViewColumn Header="{x:Static resources:Strings.Operator}" Width="75">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ComboBox SelectedIndex="0" Width="50" Text="{Binding Operator}">
-                                        <ComboBoxItem Content="==" />
-                                        <ComboBoxItem Content="!=" />
-                                        <ComboBoxItem Content="&lt;=" />
-                                        <ComboBoxItem Content="&gt;=" />
+                                    <ComboBox Width="50" SelectedItem="{Binding Operator}"
+                                              ItemsSource="{Binding Source={misc:EnumBindingSource {x:Type autoloot:AutolootOperator}}}">
+                                        <!--<i:Interaction.Behaviors>
+                                            <misc:ComboBoxBehavior CommandBinding="{Binding Path=DataContext.ChangeOperatorCommand, ElementName=userControl}"
+                                                                    OnlyUserTriggered="True" CommandParameter="{Binding}" />
+                                        </i:Interaction.Behaviors>-->
                                     </ComboBox>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

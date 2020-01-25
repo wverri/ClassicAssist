@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Assistant;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Autoloot;
+using ClassicAssist.Data.Regions;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
+using ClassicAssist.UO.Network.PacketFilter;
+using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using Microsoft.Scripting.Utils;
 using Newtonsoft.Json;
@@ -60,10 +67,12 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
                     foreach ( AutolootConstraints constraint in constraints )
                     {
-                        Constraints.Add( constraint );
+                        Constraints.AddSorted( constraint );
                     }
                 }
             }
+
+            IncomingPacketHandlers.CorpseContainerDisplayEvent += OnCorpseContainerDisplayEvent;
         }
 
         public ObservableCollection<AutolootConstraints> Constraints
@@ -160,9 +169,9 @@ namespace ClassicAssist.UI.ViewModels.Agents
                         JObject constraintObj = new JObject
                         {
                             { "Name", constraint.Name },
-                            { "Cliloc", constraint.Cliloc },
+                            { "Clilocs", constraint.Clilocs.ToJArray() },
                             { "ConstraintType", constraint.ConstraintType.ToString() },
-                            { "Operator", constraint.Operator },
+                            { "Operator", constraint.Operator.ToString() },
                             { "Value", constraint.Value }
                         };
 
@@ -212,16 +221,18 @@ namespace ClassicAssist.UI.ViewModels.Agents
                     {
                         List<AutolootConstraints> constraintsList = new List<AutolootConstraints>();
 
+                        // ReSharper disable once LoopCanBeConvertedToQuery
                         foreach ( JToken constraintToken in token["Constraints"] )
                         {
                             AutolootConstraints constraintObj = new AutolootConstraints
                             {
                                 Name = constraintToken["Name"]?.ToObject<string>() ?? "Unknown",
-                                Cliloc = constraintToken["Cliloc"]?.ToObject<int>() ?? 0,
+                                Clilocs = constraintToken["Clilocs"]?.ToIntArray() ?? new[] { 0 },
                                 ConstraintType =
                                     constraintToken["ConstraintType"]?.ToObject<AutolootConstraintType>() ??
                                     AutolootConstraintType.Object,
-                                Operator = constraintToken["Operator"]?.ToObject<string>() ?? "==",
+                                Operator = constraintToken["Operator"]?.ToObject<AutolootOperator>() ??
+                                           AutolootOperator.Equal,
                                 Value = constraintToken["Value"]?.ToObject<int>() ?? 0
                             };
 
@@ -232,6 +243,84 @@ namespace ClassicAssist.UI.ViewModels.Agents
                     }
 
                     Items.Add( entry );
+                }
+            }
+        }
+
+        private void OnCorpseContainerDisplayEvent( int serial )
+        {
+            if ( !Enabled )
+            {
+                return;
+            }
+
+            PacketWaitEntry we = Engine.PacketWaitEntries.Add( new PacketFilterInfo( 0x3C,
+                    new[] { PacketFilterConditions.IntAtPositionCondition( serial, 19 ) } ),
+                PacketDirection.Incoming );
+
+            bool result = we.Lock.WaitOne( 5000 );
+
+            if ( !result )
+            {
+                return;
+            }
+
+            IEnumerable<Item> items = Engine.Items.GetItem( serial )?.Container.GetItems();
+
+            if ( items == null )
+            {
+                return;
+            }
+
+            foreach ( AutolootEntry entry in Items )
+            {
+                IEnumerable<Item> matchItems = AutolootFilter( items, entry );
+
+                if ( matchItems == null )
+                {
+                    continue;
+                }
+
+                List<Item> lootItems = new List<Item>();
+
+                foreach ( Item matchItem in matchItems )
+                {
+                    if ( entry.Rehue )
+                    {
+                        Engine.SendPacketToClient( new ContainerContentUpdate( matchItem.Serial, matchItem.ID,
+                            matchItem.Direction, matchItem.Count,
+                            matchItem.X, matchItem.Y, matchItem.Grid, matchItem.Owner, entry.RehueHue ) );
+                    }
+
+                    if ( DisableInGuardzone &&
+                         Engine.Player.GetRegion().Attributes.HasFlag( RegionAttributes.Guarded ) )
+                    {
+                        continue;
+                    }
+
+                    if ( entry.Autoloot )
+                    {
+                        lootItems.Add( matchItem );
+                    }
+                }
+
+                foreach ( Item lootItem in lootItems )
+                {
+                    int containerSerial = ContainerSerial;
+
+                    if ( containerSerial == 0 )
+                    {
+                        if ( Engine.Player.Backpack == null )
+                        {
+                            return;
+                        }
+
+                        containerSerial = Engine.Player.Backpack.Serial;
+                    }
+
+                    Thread.Sleep( Options.CurrentOptions.ActionDelayMS );
+                    UOC.SystemMessage( string.Format( Strings.Autolooting___0__, lootItem.Name ) );
+                    UOC.DragDropAsync( lootItem.Serial, lootItem.Count, containerSerial ).Wait();
                 }
             }
         }
@@ -292,7 +381,9 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
             Items.Add( new AutolootEntry
             {
-                Name = TileData.GetStaticTile( item.ID ).Name, ID = item.ID, Constraints = null
+                Name = TileData.GetStaticTile( item.ID ).Name,
+                ID = item.ID,
+                Constraints = new ObservableCollection<AutolootConstraints>()
             } );
         }
 
@@ -318,6 +409,98 @@ namespace ClassicAssist.UI.ViewModels.Agents
             if ( HuePickerWindow.GetHue( out int hue ) )
             {
                 entry.RehueHue = hue;
+            }
+        }
+
+        public static IEnumerable<Item> AutolootFilter( IEnumerable<Item> items, AutolootEntry entry )
+        {
+            return items == null
+                ? null
+                : ( from item in items
+                    where item.ID == entry.ID
+                    let predicates = ConstraintsToPredicates( entry.Constraints )
+                    where !predicates.Any() || CheckPredicates( item, predicates )
+                    select item ).ToList();
+        }
+
+        private static bool CheckPredicates( Item item, IEnumerable<Predicate<Item>> predicates )
+        {
+            return predicates.All( predicate => predicate( item ) );
+        }
+
+        public static IEnumerable<Predicate<Item>> ConstraintsToPredicates(
+            IEnumerable<AutolootConstraints> constraints )
+        {
+            List<Predicate<Item>> predicates = new List<Predicate<Item>>();
+
+            foreach ( AutolootConstraints constraint in constraints )
+            {
+                switch ( constraint.ConstraintType )
+                {
+                    case AutolootConstraintType.Properties:
+                        predicates.Add( i => i.Properties != null && constraint.Clilocs.Any( cliloc =>
+                                                 i.Properties.Any( p =>
+                                                     p.Cliloc == cliloc && ( constraint.ClilocIndex == -1 || Operation(
+                                                                                 constraint.Operator,
+                                                                                 int.Parse( p.Arguments[
+                                                                                     constraint.ClilocIndex] ),
+                                                                                 constraint.Value ) ) ) ) );
+                        break;
+                    case AutolootConstraintType.Object:
+
+                        predicates.Add( i =>
+                            ItemHasObjectProperty( i, constraint.Name ) && Operation( constraint.Operator,
+                                GetItemObjectPropertyValue<int>( i, constraint.Name ), constraint.Value ) );
+
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return predicates;
+        }
+
+        public static bool ItemHasObjectProperty( Item item, string propertyName )
+        {
+            PropertyInfo propertyInfo = item.GetType().GetProperty( propertyName );
+
+            if ( propertyInfo == null )
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static T GetItemObjectPropertyValue<T>( Item item, string propertyName )
+        {
+            PropertyInfo propertyInfo = item.GetType().GetProperty( propertyName );
+
+            if ( propertyInfo == null )
+            {
+                return default;
+            }
+
+            T val = (T) propertyInfo.GetValue( item );
+
+            return val;
+        }
+
+        public static bool Operation( AutolootOperator @operator, int x, int y )
+        {
+            switch ( @operator )
+            {
+                case AutolootOperator.GreaterThan:
+                    return x >= y;
+                case AutolootOperator.LessThan:
+                    return x <= y;
+                case AutolootOperator.Equal:
+                    return x == y;
+                case AutolootOperator.NotEqual:
+                    return x != y;
+                default:
+                    throw new ArgumentOutOfRangeException( nameof( @operator ), @operator, null );
             }
         }
     }
