@@ -196,7 +196,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return false;
             }
 
-            if ( MainCommands.QuietMode )
+            if ( MacroManager.QuietMode )
             {
                 return true;
             }
@@ -254,7 +254,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return false;
             }
 
-            if ( MainCommands.QuietMode )
+            if ( MacroManager.QuietMode )
             {
                 return true;
             }

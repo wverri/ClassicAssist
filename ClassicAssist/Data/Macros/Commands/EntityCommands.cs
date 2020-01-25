@@ -74,7 +74,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.Hue;
             }
 
-            if ( !MainCommands.QuietMode )
+            if ( !MacroManager.QuietMode )
             {
                 UOC.SystemMessage( Strings.Entity_not_found___ );
             }
@@ -104,7 +104,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.ID;
             }
 
-            if ( !MainCommands.QuietMode )
+            if ( !MacroManager.QuietMode )
             {
                 UOC.SystemMessage( Strings.Entity_not_found___ );
             }
@@ -134,7 +134,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.X;
             }
 
-            if ( !MainCommands.QuietMode )
+            if ( !MacroManager.QuietMode )
             {
                 UOC.SystemMessage( Strings.Entity_not_found___ );
             }
@@ -164,7 +164,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.Y;
             }
 
-            if ( !MainCommands.QuietMode )
+            if ( !MacroManager.QuietMode )
             {
                 UOC.SystemMessage( Strings.Entity_not_found___ );
             }
@@ -194,7 +194,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.Z;
             }
 
-            if ( !MainCommands.QuietMode )
+            if ( !MacroManager.QuietMode )
             {
                 UOC.SystemMessage( Strings.Entity_not_found___ );
             }
