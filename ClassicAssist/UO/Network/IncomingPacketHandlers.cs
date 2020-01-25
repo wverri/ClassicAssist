@@ -237,7 +237,7 @@ namespace ClassicAssist.UO.Network
             int type = reader.ReadUInt16();
             int count = reader.ReadInt16();
 
-            if ( type < 0x3ea )
+            if ( type < 0x3e9 )
             {
                 return;
             }
