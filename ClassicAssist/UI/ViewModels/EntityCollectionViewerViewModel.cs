@@ -11,6 +11,7 @@ using ClassicAssist.Data.Autoloot;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
+using ClassicAssist.UI.Models;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;

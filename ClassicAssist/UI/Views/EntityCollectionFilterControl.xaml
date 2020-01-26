@@ -113,8 +113,9 @@
                                         <Image Source="{StaticResource PlusIcon}" Height="8" />
                                     </Button>
                                     <Button Command="{Binding RemoveCommand, ElementName=userControl}"
-                                            CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
-                                        <Image Source="{StaticResource MinusIcon}" Height="8" Margin="5,0,0,0" />
+                                            CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"
+                                            Margin="5,0,0,0">
+                                        <Image Source="{StaticResource MinusIcon}" Height="8" />
                                     </Button>
                                 </StackPanel>
                             </DataTemplate>

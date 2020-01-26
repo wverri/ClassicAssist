@@ -13,6 +13,7 @@ using ClassicAssist.Annotations;
 using ClassicAssist.Data.Autoloot;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
+using ClassicAssist.UI.Models;
 using ClassicAssist.UI.ViewModels;
 using Microsoft.Win32;
 using Newtonsoft.Json;

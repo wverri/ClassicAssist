@@ -4,7 +4,7 @@ using System.Windows.Input;
 using ClassicAssist.Annotations;
 using ClassicAssist.Data.Autoloot;
 
-namespace ClassicAssist.UI.Views
+namespace ClassicAssist.UI.Models
 {
     public class EntityCollectionFilter : INotifyPropertyChanged
     {
