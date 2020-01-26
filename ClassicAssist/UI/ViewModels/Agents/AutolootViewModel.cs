@@ -250,7 +250,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
             }
         }
 
-        private void OnCorpseContainerDisplayEvent( int serial )
+        internal void OnCorpseContainerDisplayEvent( int serial )
         {
             if ( !Enabled )
             {
