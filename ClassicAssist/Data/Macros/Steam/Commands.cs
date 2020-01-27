@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using ClassicAssist.Data.Macros.Commands;
+﻿using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Resources;
+using ClassicAssist.UO.Data;
 using UOSteam;
 using UOC = ClassicAssist.UO.Commands;
 
@@ -11,342 +10,244 @@ namespace ClassicAssist.Data.Macros.Steam
     {
         public static void Register()
         {
-            Interpreter.RegisterCommandHandler( "fly", Fly );
-            //Interpreter.RegisterCommandHandler( "land", Land );
-            //Interpreter.RegisterCommandHandler( "setability", SetAbility );
-            //Interpreter.RegisterCommandHandler( "attack", Attack );
-            //Interpreter.RegisterCommandHandler( "sysmsg", SysMsg );
-            //Interpreter.RegisterCommandHandler( "useskill", UseSkill );
-            //Interpreter.RegisterCommandHandler( "clearhands", ClearHands );
-            //Interpreter.RegisterCommandHandler( "clickobject", ClickObject );
-            //Interpreter.RegisterCommandHandler( "bandageself", BandageSelf );
-            Interpreter.RegisterCommandHandler( "usetype", UseType );
-            //Interpreter.RegisterCommandHandler( "useobject", UseObject );
+            Interpreter.RegisterCommandHandler( "attack", AttackCommand );
+            Interpreter.RegisterCommandHandler( "autoloot", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "bandageself", BandageSelfCommand );
+            Interpreter.RegisterCommandHandler( "buy", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "cast", CastCommand );
+            Interpreter.RegisterCommandHandler( "clearusequeue", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "clearbuy", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "clearhands", ClearHandsCommand );
+            Interpreter.RegisterCommandHandler( "clearjournal", ClearJournalCommand );
+            Interpreter.RegisterCommandHandler( "clearlist", ClearListCommand );
+            Interpreter.RegisterCommandHandler( "clearsell", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "clickobject", ClickObjectCommand );
+            Interpreter.RegisterCommandHandler( "clickscreen", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "closegump", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "counter", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "createlist", CreateListCommand );
+            Interpreter.RegisterCommandHandler( "dress", DressCommand );
+            Interpreter.RegisterCommandHandler( "dressconfig", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "equipitem", EquipItemCommand );
+            Interpreter.RegisterCommandHandler( "equipwand", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "feed", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "fly", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "guildbutton", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "headmsg", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "helpbutton", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "hotkeys", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "info", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "land", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "logoutbutton", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "mapuo", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "messagebox", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "moveitem", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "moveitemoffset", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "movetype", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "movetypeoffset", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "msg", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "organizer", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "paperdoll", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "pause", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "ping", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "playmacro", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "playsound", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "poplist", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "promptalias", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "pushlist", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "questsbutton", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "removelist", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "rename", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "replygump", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "resync", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "run", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "sell", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "setability", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "setalias", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "shownames", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "snapshot", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "sysmsg", SysMsgCommand );
+            Interpreter.RegisterCommandHandler( "toggleautoloot", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "togglehands", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "togglemounted", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "togglescavenger", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "turn", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "undress", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "unsetalias", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "useobject", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "useonce", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "useskill", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "usetype", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "virtue", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "waitforgump", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "waitforjournal", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "walk", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "where", NotImplementedCommand );
         }
 
-        private static bool UseType( string command, Argument[] args, bool quiet, bool force )
+        private static bool SysMsgCommand( string command, Argument[] args, bool quiet, bool force )
         {
-            throw new NotImplementedException();
-        }
-
-        private static bool Fly( string command, Argument[] args, bool quiet, bool force )
-        {
-            throw new NotImplementedException();
-        }
-
-        private static bool UseObject( ref ASTNode node, bool quiet, bool force )
-        {
-            node = node.Next();
-
-            object[] args = ParseArguments( node );
-
-            if ( args.Length == 0 )
-            {
-                UOC.SystemMessage( "Usage: useobject 'alias'/serial" );
-                node = null;
-                return true;
-            }
-
-            object obj = GetArgument<object>( args, 0, null, true );
-
-            ObjectCommands.UseObject( obj );
-
-            node = null;
-
-            return true;
-        }
-
-        private static bool UseType( ref ASTNode node, bool quiet, bool force )
-        {
-            node = node.Next();
-
-            object[] args = ParseArguments( node );
-
-            if ( args.Length == 0 )
-            {
-                UOC.SystemMessage( "Usage: usetype 'alias'/id [hue] [container]" );
-                node = null;
-                return true;
-            }
-
-            object obj = GetArgument<object>( args, 0, null, true );
-            int hue = GetArgument( args, 1, -1 );
-            object container = GetArgument<object>( args, 2, null );
-
-            ObjectCommands.UseType( obj, hue, container );
-
-            node = null;
-
-            return true;
-        }
-
-        // ReSharper disable once RedundantAssignment
-        private static bool BandageSelf( ref ASTNode node, bool quiet, bool force )
-        {
-            ConsumeCommands.BandageSelf();
-
-            node = null;
-
-            return true;
-        }
-
-        private static bool ClickObject( ref ASTNode node, bool quiet, bool force )
-        {
-            node = node.Next();
-
-            object[] args = ParseArguments( node );
-
-            if ( args.Length == 0 )
-            {
-                UOC.SystemMessage( "Usage: clickobject 'alias'/serial" );
-                node = null;
-                return true;
-            }
-
-            object obj = GetArgument<object>( args, 0, null, true );
-
-            ActionCommands.ClickObject( obj );
-
-            node = null;
-
-            return true;
-        }
-
-        private static bool ClearHands( ref ASTNode node, bool quiet, bool force )
-        {
-            node = node.Next();
-
-            object[] args = ParseArguments( node );
-
-            if ( args.Length == 0 )
-            {
-                UOC.SystemMessage( "Usage: clearhands 'left/right/both'" );
-                node = null;
-                return true;
-            }
-
-            string hands = GetArgument( args, 0, string.Empty, true );
-
-            ActionCommands.ClearHands( hands );
-
-            node = null;
-
-            return true;
-        }
-
-        private static bool Attack( ref ASTNode node, bool quiet, bool force )
-        {
-            node = node.Next();
-
-            object[] args = ParseArguments( node );
-
-            if ( args.Length == 0 )
-            {
-                UOC.SystemMessage( "Usage: attack 'alias'/serial" );
-                node = null;
-                return true;
-            }
-
-            object obj = GetArgument<object>( args, 0, null, true );
-
-            ActionCommands.Attack( obj );
-
-            node = null;
-
-            return true;
-        }
-
-        private static bool SetAbility( ref ASTNode node, bool quiet, bool force )
-        {
-            node = node.Next();
-
-            object[] args = ParseArguments( node );
-
-            if ( args.Length == 0 )
-            {
-                UOC.SystemMessage( "Usage: setability 'primary/secondary' ['on'/'off'/'toggle']" );
-                node = null;
-                return true;
-            }
-
-            string ability = GetArgument( args, 0, string.Empty, true );
-            string onOff = GetArgument( args, 1, "toggle" );
-
-            AbilitiesCommands.SetAbility( ability, onOff );
-
-            node = null;
-            return true;
-        }
-
-        // ReSharper disable once RedundantAssignment
-        private static bool Land( ref ASTNode node, bool quiet, bool force )
-        {
-            AbilitiesCommands.Land();
-
-            node = null;
-            return true;
-        }
-
-        // ReSharper disable once RedundantAssignment
-        private static bool Fly( ref ASTNode node, bool quiet, bool force )
-        {
-            AbilitiesCommands.Fly();
-
-            node = null;
-            return true;
-        }
-
-        private static bool UseSkill( ref ASTNode node, bool quiet, bool force )
-        {
-            node = node.Next();
-
-            object[] args = ParseArguments( node );
-
-            if ( args.Length == 0 )
-            {
-                UOC.SystemMessage( "Usage: useskill 'skill/last'" );
-                node = null;
-                return true;
-            }
-
-            string skill = GetArgument( args, 0, string.Empty, true );
-
-            SkillCommands.UseSkill( skill );
-
-            node = null;
-            return true;
-        }
-
-        private static bool SysMsg( ref ASTNode node, bool quiet, bool force )
-        {
-            node = node.Next();
-
-            object[] args = ParseArguments( node );
-
             if ( args.Length == 0 )
             {
                 UOC.SystemMessage( "Usage: sysmsg 'text' [hue]" );
-                node = null;
                 return true;
             }
 
-            string text = GetArgument( args, 0, string.Empty );
-            int hue = GetArgument( args, 1, 946 );
+            string text = args[0].AsString();
+
+            int hue = 946;
+
+            if ( args.Length > 1 )
+            {
+                hue = args[1].AsInt();
+            }
 
             UOC.SystemMessage( text, hue );
-
-            node = null;
 
             return true;
         }
 
-        private static T GetArgument<T>( IReadOnlyList<object> objects, int i, T defaultValue,
-            bool throwException = false )
+        private static bool EquipItemCommand( string command, Argument[] args, bool quiet, bool force )
         {
-            try
+            if ( args.Length < 2 )
             {
-                return (T) objects[i];
+                UOC.SystemMessage( "Usage: equipitem serial layer" );
+                return true;
             }
-            catch ( Exception )
-            {
-                if ( throwException )
-                {
-                    throw new ArgumentException( Strings.Required_argument_was_missing_ );
-                }
 
-                return defaultValue;
-            }
+            uint serial = args[0].AsSerial();
+            string layer = ( (Layer) args[1].AsInt() ).ToString();
+
+            ActionCommands.EquipItem( serial, layer );
+
+            return true;
         }
 
-        private static object[] ParseArguments( ASTNode node )
+        private static bool DressCommand( string command, Argument[] args, bool quiet, bool force )
         {
-            List<object> argsList = new List<object>();
-
-            do
+            if ( args.Length == 0 )
             {
-                if ( node == null )
-                {
-                    break;
-                }
-
-                switch ( node.Type )
-                {
-                    case ASTNodeType.IF:
-                        break;
-                    case ASTNodeType.ELSEIF:
-                        break;
-                    case ASTNodeType.ELSE:
-                        break;
-                    case ASTNodeType.ENDIF:
-                        break;
-                    case ASTNodeType.WHILE:
-                        break;
-                    case ASTNodeType.ENDWHILE:
-                        break;
-                    case ASTNodeType.FOR:
-                        break;
-                    case ASTNodeType.ENDFOR:
-                        break;
-                    case ASTNodeType.BREAK:
-                        break;
-                    case ASTNodeType.CONTINUE:
-                        break;
-                    case ASTNodeType.STOP:
-                        break;
-                    case ASTNodeType.REPLAY:
-                        break;
-                    case ASTNodeType.EQUAL:
-                        break;
-                    case ASTNodeType.NOT_EQUAL:
-                        break;
-                    case ASTNodeType.LESS_THAN:
-                        break;
-                    case ASTNodeType.LESS_THAN_OR_EQUAL:
-                        break;
-                    case ASTNodeType.GREATER_THAN:
-                        break;
-                    case ASTNodeType.GREATER_THAN_OR_EQUAL:
-                        break;
-                    case ASTNodeType.NOT:
-                        break;
-                    case ASTNodeType.AND:
-                        break;
-                    case ASTNodeType.OR:
-                        break;
-                    case ASTNodeType.STRING:
-                        argsList.Add( node.Lexeme );
-                        break;
-                    case ASTNodeType.SERIAL:
-                        argsList.Add( Convert.ToInt32( node.Lexeme, 16 ) );
-                        break;
-                    case ASTNodeType.INTEGER:
-                        argsList.Add( Convert.ToInt32( node.Lexeme ) );
-                        break;
-                    case ASTNodeType.QUIET:
-                        break;
-                    case ASTNodeType.FORCE:
-                        break;
-                    case ASTNodeType.SCRIPT:
-                        break;
-                    case ASTNodeType.STATEMENT:
-                        break;
-                    case ASTNodeType.COMMAND:
-                        break;
-                    case ASTNodeType.LOGICAL_EXPRESSION:
-                        break;
-                    case ASTNodeType.UNARY_EXPRESSION:
-                        break;
-                    case ASTNodeType.BINARY_EXPRESSION:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                node = node.Next();
+                //TODO
             }
-            while ( node != null );
+            else
+            {
+                string dressName = args[0].AsString();
 
-            return argsList.ToArray();
+                AgentCommands.Dress( dressName );
+            }
+
+            return true;
+        }
+
+        private static bool CreateListCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: createlist 'list name'" );
+                return true;
+            }
+
+            string listName = args[0].AsString();
+
+            ListCommands.CreateList( listName );
+
+            return true;
+        }
+
+        private static bool ClickObjectCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: clickobject 'alias'/serial" );
+                return true;
+            }
+
+            uint serial = args[0].AsSerial();
+
+            ActionCommands.ClickObject( serial );
+
+            return true;
+        }
+
+        private static bool ClearListCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: clearlist 'list'" );
+                return true;
+            }
+
+            string listName = args[0].AsString();
+
+            ListCommands.ClearList( listName );
+
+            return true;
+        }
+
+        private static bool ClearJournalCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            JournalCommands.ClearJournal();
+
+            return true;
+        }
+
+        private static bool ClearHandsCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: clearhands 'left'/'right'/'both'" );
+                return true;
+            }
+
+            string hands = args[0].AsString().ToLower();
+
+            ActionCommands.ClearHands( hands );
+
+            return true;
+        }
+
+        private static bool CastCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: cast 'spell'" );
+                return true;
+            }
+
+            string spell = args[0].AsString().ToLower();
+
+            SpellCommands.Cast( spell );
+
+            return true;
+        }
+
+        private static bool BandageSelfCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            ConsumeCommands.BandageSelf();
+
+            return true;
+        }
+
+        private static bool AttackCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: attack 'alias'/serial" );
+                return true;
+            }
+
+            uint serial = args[0].AsSerial();
+
+            ActionCommands.Attack( serial );
+
+            return true;
+        }
+
+        private static bool NotImplementedCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            UOC.SystemMessage( Strings.Command_currently_not_implemented_ );
+
+            return true;
         }
     }
 }

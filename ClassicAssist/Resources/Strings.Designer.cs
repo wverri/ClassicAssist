@@ -520,6 +520,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Command currently not implemented..
+        /// </summary>
+        public static string Command_currently_not_implemented_ {
+            get {
+                return ResourceManager.GetString("Command currently not implemented.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command Prefix:.
         /// </summary>
         public static string Command_Prefix_ {
@@ -1924,6 +1933,7 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+<<<<<<< HEAD
         ///   Looks up a localized string similar to Reset.
         /// </summary>
         public static string Reset {
@@ -1933,6 +1943,8 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+=======
+>>>>>>> origin/uosteam
         ///   Looks up a localized string similar to Required argument was missing..
         /// </summary>
         public static string Required_argument_was_missing_ {
