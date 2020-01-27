@@ -1026,4 +1026,19 @@
   <data name="Project Homepage" xml:space="preserve">
     <value>프로젝트 홈페이지</value>
   </data>
+  <data name="Macro Format:" xml:space="preserve">
+    <value>매크로 형식:</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>파이썬</value>
+  </data>
+  <data name="Steam" xml:space="preserve">
+    <value>증기</value>
+  </data>
+  <data name="Required argument was missing." xml:space="preserve">
+    <value>필요한 인수가 없습니다.</value>
+  </data>
+  <data name="Command currently not implemented." xml:space="preserve">
+    <value>명령이 현재 구현되지 않았습니다.</value>
+  </data>
 </root>

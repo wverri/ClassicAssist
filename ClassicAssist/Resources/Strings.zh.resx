@@ -1026,4 +1026,31 @@
   <data name="Project Homepage" xml:space="preserve">
     <value>项目主页</value>
   </data>
+  <data name="Macro Format:" xml:space="preserve">
+    <value>宏格式：</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Steam" xml:space="preserve">
+    <value>蒸汽</value>
+  </data>
+  <data name="Required argument was missing." xml:space="preserve">
+    <value>缺少必需的参数。</value>
+  </data>
+  <data name="Macro Format:_Duplicate[1]" xml:space="preserve">
+    <value>宏格式：</value>
+  </data>
+  <data name="Python_Duplicate[1]" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Steam_Duplicate[1]" xml:space="preserve">
+    <value>蒸汽</value>
+  </data>
+  <data name="Required argument was missing._Duplicate[1]" xml:space="preserve">
+    <value>缺少必需的参数。</value>
+  </data>
+  <data name="Command currently not implemented." xml:space="preserve">
+    <value>命令当前未实现。</value>
+  </data>
 </root>

@@ -1038,17 +1038,6 @@
   <data name="Project Homepage" xml:space="preserve">
     <value>Project Homepage</value>
   </data>
-  <data name="Macro Format:" xml:space="preserve">
-    <value>Macro Format:</value>
-  </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
-  </data>
-  <data name="Steam" xml:space="preserve">
-    <value>Steam</value>
-  </data>
-  <data name="Required argument was missing." xml:space="preserve">
-    <value>Required argument was missing.</value>
   <data name="Command currently not implemented." xml:space="preserve">
     <value>Command currently not implemented.</value>
   </data>

@@ -1008,18 +1008,6 @@
   <data name="Operator" xml:space="preserve">
     <value>Operator</value>
   </data>    
-  <data name="Macro Format:" xml:space="preserve">
-    <value>Macro Format:</value>
-  </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
-  </data>
-  <data name="Steam" xml:space="preserve">
-    <value>Steam</value>
-  </data>
-  <data name="Required argument was missing." xml:space="preserve">
-    <value>Required argument was missing.</value>
-  </data>
   <data name="Cannot find sound file..." xml:space="preserve">
     <value>Cannot find sound file...</value>
   </data>

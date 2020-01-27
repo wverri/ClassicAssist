@@ -1933,23 +1933,20 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-<<<<<<< HEAD
-        ///   Looks up a localized string similar to Reset.
-        /// </summary>
-        public static string Reset {
-            get {
-                return ResourceManager.GetString("Reset", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-=======
->>>>>>> origin/uosteam
         ///   Looks up a localized string similar to Required argument was missing..
         /// </summary>
         public static string Required_argument_was_missing_ {
             get {
                 return ResourceManager.GetString("Required argument was missing.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        public static string Reset {
+            get {
+                return ResourceManager.GetString("Reset", resourceCulture);
             }
         }
         

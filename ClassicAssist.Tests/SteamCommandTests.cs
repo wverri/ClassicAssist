@@ -152,6 +152,16 @@ namespace ClassicAssist.Tests
             Engine.Player.SetLayer( Layer.OneHanded, 0 );
         }
 
+        [TestMethod]
+        public void SetAliasTest()
+        {
+            _steamInvoker.Execute( CreateMacro( "setalias 'shmoo' 1" ) );
+
+            int val = AliasCommands.GetAlias( "shmoo" );
+
+            Assert.AreEqual( 1, val );
+        }
+
         private static MacroEntry CreateMacro( string text )
         {
             return new MacroEntry { Name = "Test", Macro = text };

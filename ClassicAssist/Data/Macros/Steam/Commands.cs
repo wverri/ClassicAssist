@@ -62,9 +62,9 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "resync", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "run", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "sell", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "setability", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "setalias", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "shownames", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "setability", SetAbilityCommand );
+            Interpreter.RegisterCommandHandler( "setalias", SetAliasCommand );
+            Interpreter.RegisterCommandHandler( "shownames", ShowNamesCommand );
             Interpreter.RegisterCommandHandler( "snapshot", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "sysmsg", SysMsgCommand );
             Interpreter.RegisterCommandHandler( "toggleautoloot", NotImplementedCommand );
@@ -76,13 +76,61 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "unsetalias", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "useobject", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "useonce", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "useskill", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "useskill", UseSkillCommand );
             Interpreter.RegisterCommandHandler( "usetype", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "virtue", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "waitforgump", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "waitforjournal", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "walk", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "where", NotImplementedCommand );
+        }
+
+        private static bool SetAbilityCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if (args.Length == 0)
+            {
+                UOC.SystemMessage( "Usage: setability 'primary/secondary'" );
+                return true;
+            }
+
+            AbilitiesCommands.SetAbility( args[0].AsString().ToLower() );
+
+            return true;
+        }
+
+        private static bool UseSkillCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: useskill 'skill'" );
+                return true;
+            }
+
+            SkillCommands.UseSkill( args[0].AsString().ToLower() );
+
+            return true;
+        }
+
+        private static bool ShowNamesCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            ActionCommands.ShowNames( args[0].AsString().ToLower() );
+            return true;
+        }
+
+        private static bool SetAliasCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: setalias 'alias' value" );
+                return true;
+            }
+
+            string alias = args[0].AsString();
+            int serial = args[1].AsInt();
+
+            AliasCommands.SetAlias( alias, serial );
+
+            return true;
         }
 
         private static bool SysMsgCommand( string command, Argument[] args, bool quiet, bool force )

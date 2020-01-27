@@ -36,11 +36,11 @@ namespace ClassicAssist.Data.Macros
             }
             catch ( SyntaxError se )
             {
-                UO.Commands.SystemMessage( se.ToString() );
+                UO.Commands.SystemMessage( se.Message );
             }
             catch ( RunTimeError re )
             {
-                UO.Commands.SystemMessage( re.ToString() );
+                UO.Commands.SystemMessage( re.Message );
             }
         }
 
