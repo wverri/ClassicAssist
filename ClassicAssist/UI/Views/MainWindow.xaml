@@ -9,8 +9,9 @@
         xmlns:data="clr-namespace:ClassicAssist.Data"
         xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:wpfPlus="clr-namespace:WpfPlus;assembly=WpfPlus"
         mc:Ignorable="d"
-        Height="500" Width="625" Style="{DynamicResource WindowStyle}" Topmost="{Binding AlwaysOnTop}"
+        Height="500" Width="625" Topmost="{Binding AlwaysOnTop}" Style="{DynamicResource FlatWindowStyle}"
         Title="{Binding Title}">
     <i:Interaction.Behaviors>
         <misc:LoadOptionsOnWindowLoaded />
@@ -21,6 +22,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <wpfPlus:DarkTheme />
                 <ResourceDictionary Source="../../Resources/ResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

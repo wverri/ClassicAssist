@@ -59,6 +59,7 @@
     <PackageReference Include="Octokit" Version="0.36.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.0-preview3.19551.4" />
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+    <PackageReference Include="WpfPlus.Plus" Version="1.2.8" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="cuoapi">
