@@ -9,7 +9,7 @@
         xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
         xmlns:debug="clr-namespace:ClassicAssist.UI.Views.Debug"
         mc:Ignorable="d"
-        Title="Debug Window" Height="450" Width="600" Topmost="{Binding Topmost}">
+        Title="Debug Window" Height="450" Width="600" Topmost="{Binding Topmost}" Background="{DynamicResource ThemeWindowBackgroundBrush}">
     <Window.DataContext>
         <viewModels:DebugViewModel />
     </Window.DataContext>

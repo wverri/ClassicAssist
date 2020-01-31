@@ -80,7 +80,7 @@
                 <CheckBox Content="{x:Static resources:Strings.Disable_inside_guardzone}"
                           IsChecked="{Binding DisableInGuardzone}" />
             </StackPanel>
-            <ListView x:Name="listView" Grid.Row="1" Margin="0,10,0,10" ItemsSource="{Binding Items}"
+            <ListBox x:Name="listView" Grid.Row="1" Margin="0,10,0,10" ItemsSource="{Binding Items}"
                       SelectedItem="{Binding SelectedItem}" />
             <StackPanel Grid.Row="2">
                 <Grid>

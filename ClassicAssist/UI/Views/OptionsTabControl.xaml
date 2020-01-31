@@ -32,10 +32,10 @@
                 <misc:BindingProxy x:Key="proxy" Data="{Binding}" />
             </StackPanel.Resources>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="{x:Static resources:Strings.Language}" />
-                <ComboBox Margin="10,0,0,0" Padding="10,2,10,2"
+                <Label Content="{x:Static resources:Strings.Language}" />
+                <ComboBox Margin="10,0,10,0" Padding="10,2,10,2"
                           ItemsSource="{Binding Source={misc1:EnumBindingSource {x:Type misc1:Language}}}"
-                          x:Name="langCombo" SelectedItem="{x:Static data:AssistantOptions.LanguageOverride}">
+                          x:Name="langCombo" SelectedItem="{x:Static data:AssistantOptions.LanguageOverride}" MinWidth="100">
                     <i:Interaction.Behaviors>
                         <misc1:ComboBoxBehavior CommandBinding="{Binding SetLanguageOverrideCommand}"
                                                 CommandParameter="{Binding SelectedItem, ElementName=langCombo}"
@@ -44,15 +44,15 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="{x:Static resources:Strings.Command_Prefix_}" />
-                <ComboBox Text="{Binding CurrentOptions.CommandPrefix}" Margin="10,0,0,0" Padding="10,2,10,2">
+                <Label Content="{x:Static resources:Strings.Command_Prefix_}" />
+                <ComboBox Text="{Binding CurrentOptions.CommandPrefix}" Margin="10,0,10,0" Padding="10,2,10,2" MinWidth="50">
                     <ComboBoxItem Content="+" />
                     <ComboBoxItem Content="=" />
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="{x:Static resources:Strings.Smart_last_target_}" />
-                <ComboBox Text="{Binding CurrentOptions.SmartTargetOption, Mode=TwoWay}" Margin="10,0,0,0"
+                <Label Content="{x:Static resources:Strings.Smart_last_target_}" />
+                <ComboBox Text="{Binding CurrentOptions.SmartTargetOption, Mode=TwoWay}" Margin="10,0,10,0"
                           ItemsSource="{Binding Source={misc1:EnumBindingSource {x:Type data:SmartTargetOption}}}"
                           MinWidth="100" />
             </StackPanel>
@@ -64,8 +64,7 @@
                 <CheckBox.ContentTemplate>
                     <ItemContainerTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="{x:Static resources:Strings.Range_check_last_target}" Margin="0"
-                                   Padding="5,0,0,0" />
+                            <Label Content="{x:Static resources:Strings.Range_check_last_target}" Margin="0"/>
                             <TextBox Width="40" Margin="10,0,10,0"
                                      Text="{Binding Path=Data.CurrentOptions.RangeCheckLastTargetAmount, Source={StaticResource proxy}}" />
                         </StackPanel>
@@ -78,8 +77,7 @@
                 <CheckBox.ContentTemplate>
                     <ItemContainerTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="{x:Static resources:Strings.Use_object_queue}" Margin="0"
-                                   Padding="5,0,0,0" />
+                            <Label Content="{x:Static resources:Strings.Use_object_queue}" Margin="0"/>
                             <TextBox Width="40" Margin="10,0,10,0"
                                      Text="{Binding Path=Data.CurrentOptions.UseObjectQueueAmount, Source={StaticResource proxy}}" />
                             <Label Content="{x:Static resources:Strings.items}" Margin="0"
@@ -94,8 +92,7 @@
                 <CheckBox.ContentTemplate>
                     <ItemContainerTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="{x:Static resources:Strings.Limit_Mouse_Wheel_Retrigger}" Margin="0"
-                                   Padding="5,0,0,0" />
+                            <Label Content="{x:Static resources:Strings.Limit_Mouse_Wheel_Retrigger}" Margin="0"/>
                             <TextBox Width="40" Margin="10,0,10,0"
                                      Text="{Binding Path=Data.CurrentOptions.LimitMouseWheelTriggerMS, Source={StaticResource proxy}}" />
                             <Label Content="ms" Margin="0"

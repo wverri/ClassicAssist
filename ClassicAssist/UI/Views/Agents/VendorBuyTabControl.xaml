@@ -15,7 +15,11 @@
         </Style>
     </d:DesignerProperties.DesignStyle>
     <UserControl.Resources>
-        <ValueConverters:CellWidthValueConverter x:Key="CellWidthValueConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../../Resources/ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.DataContext>
         <agents:VendorBuyTabViewModel />

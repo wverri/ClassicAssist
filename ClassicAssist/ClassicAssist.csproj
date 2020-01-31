@@ -13,7 +13,6 @@
     <None Remove="Data\Spells.json" />
     <None Remove="Data\Weapons.json" />
     <None Remove="Python.xshd" />
-    <None Remove="Resources\bug.png" />
     <None Remove="zlib32.dll" />
     <None Remove="zlib64.dll" />
   </ItemGroup>
@@ -68,9 +67,6 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>..\Output\net48\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\bug.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

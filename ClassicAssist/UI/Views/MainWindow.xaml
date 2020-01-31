@@ -11,7 +11,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:wpfPlus="clr-namespace:WpfPlus;assembly=WpfPlus"
         mc:Ignorable="d"
-        Height="500" Width="625" Topmost="{Binding AlwaysOnTop}" Style="{DynamicResource FlatWindowStyle}"
+        Height="500" Width="625" Topmost="{Binding AlwaysOnTop}" Background="{DynamicResource ThemeWindowBackgroundBrush}"
         Title="{Binding Title}">
     <i:Interaction.Behaviors>
         <misc:LoadOptionsOnWindowLoaded />
@@ -22,8 +22,8 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <wpfPlus:DarkTheme />
                 <ResourceDictionary Source="../../Resources/ResourceDictionary.xaml" />
+                <ResourceDictionary Source="../../Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -33,7 +33,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="10">
-            <TabControl Style="{StaticResource TabControlStyle}">
+            <TabControl>
                 <TabItem Header="{x:Static r:Strings.General}">
                     <local:GeneralControl />
                 </TabItem>
@@ -59,7 +59,7 @@
         </Grid>
         <Grid Grid.Row="1" HorizontalAlignment="Left" Margin="5,0,5,5">
             <Button Command="{Binding DebugCommand}">
-                <Image Source="../../Resources/bug.png" Height="16" Width="16" />
+                <Image Source="{StaticResource bugIcon}" Height="16" Width="16" />
             </Button>
         </Grid>
     </Grid>
