@@ -5,19 +5,17 @@
     <ResourceDictionary.MergedDictionaries>
         <wpfPlus:DarkTheme />
     </ResourceDictionary.MergedDictionaries>
-    <Color x:Key="ThemeWindowBackgrouncColour">Black</Color>
-    <Color x:Key="ThemeBackgroundColour">#272727</Color>
-    <Color x:Key="ThemeForegroundColour">#CCCCCC</Color>
-    <Color x:Key="ThemeBorderColour">#474747</Color>
-    <Color x:Key="ThemeTabBackgroundColour">#121212</Color>
-    <SolidColorBrush x:Key="ThemeBackgroundBrush" Color="{DynamicResource ThemeBackgroundColour}"/>
-    <SolidColorBrush x:Key="ThemeForegroundBrush" Color="{DynamicResource ThemeForegroundColour}"/>
-    <SolidColorBrush x:Key="ThemeWindowBackgroundBrush" Color="{DynamicResource ThemeWindowBackgrouncColour}"/>
-    <SolidColorBrush x:Key="ThemeBorderBrush" Color="{DynamicResource ThemeBorderColour}"/>
-    <SolidColorBrush x:Key="ThemeTabBackgroundBrush" Color="{DynamicResource ThemeTabBackgroundColour}"/>
+    <SolidColorBrush x:Key="ThemeBackgroundBrush" Color="#272727" />
+    <SolidColorBrush x:Key="ThemeForegroundBrush" Color="#CCCCCC" />
+    <SolidColorBrush x:Key="ThemeWindowBackgroundBrush" Color="Black" />
+    <SolidColorBrush x:Key="ThemeBorderBrush" Color="#474747" />
+    <SolidColorBrush x:Key="ThemeTabBackgroundBrush" Color="#121212" />
+    <SolidColorBrush x:Key="IconForegroundBrush" Color="#CCCCCC" />
 
     <Style x:Key="{x:Type CheckBox}" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
-        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
@@ -56,8 +54,10 @@
                                     Value="{StaticResource ThemeTabBackgroundBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ThemeBackgroundBrush}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ThemeBorderBrush}" />
+                            <Setter TargetName="Border" Property="Background"
+                                    Value="{StaticResource ThemeBackgroundBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush"
+                                    Value="{StaticResource ThemeBorderBrush}" />
                         </Trigger>
                         <!--<Trigger Property="IsEnabled" Value="false">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource DisabledBackgroundBrush}" />
@@ -90,10 +90,10 @@
         </Setter>
     </Style>
     <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource {x:Type GroupBox}}">
-        <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type GroupBox}">
@@ -122,51 +122,53 @@
         </Setter>
     </Style>
     <Style TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type Label}}">
-        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}"/>
-        <Setter Property="Padding" Value="0"/>
-    </Style>
-    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}"/>
-    <Style TargetType="{x:Type TreeView}" BasedOn="{StaticResource TreeViewStyle}"/>
-    <Style TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource GridSplitterStyle}"/>
-    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxStyle}"/>
-    <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource ScrollViewerStyle}"/>
-    <Style TargetType="{x:Type avalonedit:TextEditor}">
         <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
-        <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
-        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}" />
+    <Style TargetType="{x:Type TreeView}" BasedOn="{StaticResource TreeViewStyle}" />
+    <Style TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource GridSplitterStyle}" />
+    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxStyle}" />
+    <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource ScrollViewerStyle}" />
+    <Style x:Key="{x:Type avalonedit:TextEditor}" TargetType="{x:Type avalonedit:TextEditor}"
+           BasedOn="{StaticResource {x:Type avalonedit:TextEditor}}">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource ThemeBackgroundBrush}" />
+        <Setter Property="FlowDirection" Value="LeftToRight" />
         <!-- AvalonEdit does not support RTL, so ensure we use LTR by default -->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type avalonedit:TextEditor}">
                     <Border
-						Background="{TemplateBinding Background}"
-						BorderBrush="{TemplateBinding BorderBrush}"
-						BorderThickness="{TemplateBinding BorderThickness}">
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
                         <ScrollViewer
-							Focusable="False"
-							Name="PART_ScrollViewer"
-							CanContentScroll="True"
-							VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
-							HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
-							Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
-							VerticalContentAlignment="Top"
-							HorizontalContentAlignment="Left"
-							Padding="{TemplateBinding Padding}"
-						/>
+                            Focusable="False"
+                            Name="PART_ScrollViewer"
+                            CanContentScroll="True"
+                            VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+                            HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
+                            Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
+                            VerticalContentAlignment="Top"
+                            HorizontalContentAlignment="Left"
+                            Padding="{TemplateBinding Padding}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="WordWrap"
-						         Value="True">
+                                 Value="True">
                             <Setter TargetName="PART_ScrollViewer"
-							        Property="HorizontalScrollBarVisibility"
-							        Value="Disabled" />
+                                    Property="HorizontalScrollBarVisibility"
+                                    Value="Disabled" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style  TargetType="{x:Type TabControl}">
+    <Style TargetType="{x:Type TabControl}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -174,28 +176,28 @@
                 <ControlTemplate TargetType="{x:Type TabControl}">
                     <Grid KeyboardNavigation.TabNavigation="Local">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <TabPanel 
+                        <TabPanel
                             Name="HeaderPanel"
                             Grid.Row="0"
-                            Panel.ZIndex="1" 
-                            Margin="0,0,4,-1" 
+                            Panel.ZIndex="1"
+                            Margin="0,0,4,-1"
                             IsItemsHost="True"
                             KeyboardNavigation.TabIndex="1"
                             Background="Transparent" />
-                        <Border 
-                            Name="Border" 
-                            Grid.Row="1" 
-                            Background="{StaticResource ThemeBackgroundBrush}" 
-                            BorderBrush="{StaticResource ThemeBorderBrush}" 
-                            BorderThickness="1" 
-                            CornerRadius="2" 
+                        <Border
+                            Name="Border"
+                            Grid.Row="1"
+                            Background="{StaticResource ThemeBackgroundBrush}"
+                            BorderBrush="{StaticResource ThemeBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="2"
                             KeyboardNavigation.TabNavigation="Local"
                             KeyboardNavigation.DirectionalNavigation="Contained"
-                            KeyboardNavigation.TabIndex="2" >
-                            <ContentPresenter 
+                            KeyboardNavigation.TabIndex="2">
+                            <ContentPresenter
                                 Name="PART_SelectedContentHost"
                                 Margin="4"
                                 ContentSource="SelectedContent" />
@@ -212,30 +214,31 @@
         </Setter>
     </Style>
     <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
                     <Grid>
-                        <Border 
+                        <Border
                             Name="Border"
-                            Margin="0,0,-4,0" 
+                            Margin="0,0,-4,0"
                             Background="{DynamicResource ThemeBackgroundBrush}"
-                            BorderBrush="{DynamicResource ThemeBorderBrush}" 
-                            BorderThickness="1,1,1,1" 
-                            CornerRadius="2,12,0,0" >
+                            BorderBrush="{DynamicResource ThemeBorderBrush}"
+                            BorderThickness="1,1,1,1"
+                            CornerRadius="2,12,0,0">
                             <ContentPresenter x:Name="ContentSite"
                                               VerticalAlignment="Center"
                                               HorizontalAlignment="Center"
                                               ContentSource="Header"
                                               Margin="12,2,12,2"
-                                              RecognizesAccessKey="True"/>
+                                              RecognizesAccessKey="True" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Panel.ZIndex" Value="100" />
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
+                            <Setter TargetName="Border" Property="Background"
+                                    Value="{DynamicResource ThemeBackgroundBrush}" />
                             <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
                         </Trigger>
                         <!--<Trigger Property="IsEnabled" Value="False">
@@ -248,69 +251,69 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxStyle}"/>
+    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxStyle}" />
     <Style x:Key="{x:Static GridView.GridViewScrollViewerStyleKey}"
-       TargetType="ScrollViewer">
+           TargetType="ScrollViewer">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollViewer">
                     <Grid Background="{TemplateBinding Background}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <DockPanel Margin="{TemplateBinding Padding}">
                             <ScrollViewer DockPanel.Dock="Top"
-              HorizontalScrollBarVisibility="Hidden"
-              VerticalScrollBarVisibility="Hidden"
-              Focusable="false">
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden"
+                                          Focusable="false">
                                 <GridViewHeaderRowPresenter Margin="2,0,2,0"
-                Columns="{Binding Path=TemplatedParent.View.Columns,
+                                                            Columns="{Binding Path=TemplatedParent.View.Columns,
                           RelativeSource={RelativeSource TemplatedParent}}"
-                ColumnHeaderContainerStyle="{Binding
+                                                            ColumnHeaderContainerStyle="{Binding
                              Path=TemplatedParent.View.ColumnHeaderContainerStyle,
                              RelativeSource={RelativeSource TemplatedParent}}"
-                ColumnHeaderTemplate="{Binding
+                                                            ColumnHeaderTemplate="{Binding
                              Path=TemplatedParent.View.ColumnHeaderTemplate,
                              RelativeSource={RelativeSource TemplatedParent}}"
-                ColumnHeaderTemplateSelector="{Binding 
+                                                            ColumnHeaderTemplateSelector="{Binding 
                              Path=TemplatedParent.View.ColumnHeaderTemplateSelector,
                              RelativeSource={RelativeSource TemplatedParent}}"
-                AllowsColumnReorder="{Binding
+                                                            AllowsColumnReorder="{Binding
                              Path=TemplatedParent.View.AllowsColumnReorder,
                              RelativeSource={RelativeSource TemplatedParent}}"
-                ColumnHeaderContextMenu="{Binding
+                                                            ColumnHeaderContextMenu="{Binding
                              Path=TemplatedParent.View.ColumnHeaderContextMenu,
                              RelativeSource={RelativeSource TemplatedParent}}"
-                ColumnHeaderToolTip="{Binding
+                                                            ColumnHeaderToolTip="{Binding
                              Path=TemplatedParent.View.ColumnHeaderToolTip,
                              RelativeSource={RelativeSource TemplatedParent}}"
-                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                             </ScrollViewer>
 
                             <ScrollContentPresenter Name="PART_ScrollContentPresenter"
-              KeyboardNavigation.DirectionalNavigation="Local"/>
+                                                    KeyboardNavigation.DirectionalNavigation="Local" />
                         </DockPanel>
 
                         <ScrollBar Name="PART_HorizontalScrollBar"
-            Orientation="Horizontal"
-            Grid.Row="1"
-            Maximum="{TemplateBinding ScrollableWidth}"
-            ViewportSize="{TemplateBinding ViewportWidth}"
-            Value="{TemplateBinding HorizontalOffset}"
-            Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+                                   Orientation="Horizontal"
+                                   Grid.Row="1"
+                                   Maximum="{TemplateBinding ScrollableWidth}"
+                                   ViewportSize="{TemplateBinding ViewportWidth}"
+                                   Value="{TemplateBinding HorizontalOffset}"
+                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
 
                         <ScrollBar Name="PART_VerticalScrollBar"
-            Grid.Column="1"
-            Maximum="{TemplateBinding ScrollableHeight}"
-            ViewportSize="{TemplateBinding ViewportHeight}"
-            Value="{TemplateBinding VerticalOffset}"
-            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+                                   Grid.Column="1"
+                                   Maximum="{TemplateBinding ScrollableHeight}"
+                                   ViewportSize="{TemplateBinding ViewportHeight}"
+                                   Value="{TemplateBinding VerticalOffset}"
+                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
 
                     </Grid>
                 </ControlTemplate>
@@ -319,16 +322,16 @@
     </Style>
 
     <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
-        <Setter Property="Width" Value="18"/>
-        <Setter Property="Background" Value="{StaticResource ThemeBackgroundBrush}"/>
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Background" Value="{StaticResource ThemeBackgroundBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Border Padding="{TemplateBinding Padding}"
-          Background="Transparent">
+                            Background="Transparent">
                         <Rectangle HorizontalAlignment="Center"
-            Width="1"
-            Fill="{TemplateBinding Background}"/>
+                                   Width="1"
+                                   Fill="{TemplateBinding Background}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -336,46 +339,46 @@
     </Style>
 
     <Style x:Key="{x:Type GridViewColumnHeader}"
-       TargetType="GridViewColumnHeader">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+           TargetType="GridViewColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Foreground"
-          Value="{DynamicResource ThemeForegroundBrush}"/>
+                Value="{DynamicResource ThemeForegroundBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GridViewColumnHeader">
                     <Grid>
                         <Border Name="HeaderBorder"
-            BorderThickness="0,1,0,1"
-            BorderBrush="{DynamicResource ThemeBorderBrush}"
-            Background="{DynamicResource ThemeBackgroundBrush}"
-            Padding="2,0,2,0">
+                                BorderThickness="0,1,0,1"
+                                BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                Background="{DynamicResource ThemeBackgroundBrush}"
+                                Padding="2,0,2,0">
                             <ContentPresenter Name="HeaderContent"
-              Margin="0,0,0,1"
-              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-              RecognizesAccessKey="True"
-              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                              Margin="0,0,0,1"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              RecognizesAccessKey="True"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         </Border>
                         <Thumb x:Name="PART_HeaderGripper"
-            HorizontalAlignment="Right"
-            Margin="0,0,-9,0"
-            Style="{StaticResource GridViewColumnHeaderGripper}"/>
+                               HorizontalAlignment="Right"
+                               Margin="0,0,-9,0"
+                               Style="{StaticResource GridViewColumnHeaderGripper}" />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter TargetName="HeaderBorder"
-                    Property="Background" Value="{StaticResource ThemeBackgroundBrush}"/>
+                                    Property="Background" Value="{StaticResource ThemeBackgroundBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
                             <Setter TargetName="HeaderBorder"
-                    Property="Background" Value="{StaticResource ThemeBackgroundBrush}"/>
+                                    Property="Background" Value="{StaticResource ThemeBackgroundBrush}" />
                             <Setter TargetName="HeaderContent"
-                    Property="Margin" Value="1,1,0,0"/>
+                                    Property="Margin" Value="1,1,0,0" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground"
-                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -383,14 +386,14 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="Role" Value="Floating">
-                <Setter Property="Opacity" Value="0.7"/>
+                <Setter Property="Opacity" Value="0.7" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="GridViewColumnHeader">
                             <Canvas Name="PART_FloatingHeaderCanvas">
                                 <Rectangle Fill="#60000000"
-                Width="{TemplateBinding ActualWidth}"
-                Height="{TemplateBinding ActualHeight}"/>
+                                           Width="{TemplateBinding ActualWidth}"
+                                           Height="{TemplateBinding ActualHeight}" />
                             </Canvas>
                         </ControlTemplate>
                     </Setter.Value>
@@ -401,9 +404,9 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="GridViewColumnHeader">
                             <Border Name="HeaderBorder"
-              BorderThickness="0,1,0,1"
-              BorderBrush="{DynamicResource ThemeBorderBrush}"
-              Background="{DynamicResource ThemeBackgroundBrush}"/>
+                                    BorderThickness="0,1,0,1"
+                                    BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                    Background="{DynamicResource ThemeBackgroundBrush}" />
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -411,40 +414,44 @@
         </Style.Triggers>
     </Style>
 
-    <Style  TargetType="ListView">
-        <Setter Property="SnapsToDevicePixels" Value="true"/>
-        <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Style TargetType="ListView">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListView">
                     <Border Name="Border"
-          BorderThickness="1"
-          BorderBrush="{StaticResource ThemeBorderBrush}"
-          Background="{StaticResource ThemeBackgroundBrush}">
-                        <ScrollViewer Style="{DynamicResource
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource ThemeBorderBrush}"
+                            Background="{StaticResource ThemeBackgroundBrush}">
+                        <ScrollViewer
+                            Style="{DynamicResource
                         {x:Static GridView.GridViewScrollViewerStyleKey}}">
                             <ItemsPresenter />
                         </ScrollViewer>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsGrouping"
-                   Value="true">
+                                 Value="true">
                             <Setter Property="ScrollViewer.CanContentScroll"
-                    Value="false"/>
+                                    Value="false" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
-                   Value="false">
+                                 Value="false">
                             <Setter TargetName="Border"
-                    Property="Background"
-                    Value="{StaticResource ThemeBorderBrush}"/>
+                                    Property="Background"
+                                    Value="{StaticResource ThemeBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style x:Key="{x:Type TextBlock}" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
     </Style>
 </ResourceDictionary>

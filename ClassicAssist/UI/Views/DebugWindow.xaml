@@ -9,17 +9,10 @@
         xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
         xmlns:debug="clr-namespace:ClassicAssist.UI.Views.Debug"
         mc:Ignorable="d"
-        Title="Debug Window" Height="450" Width="600" Topmost="{Binding Topmost}" Background="{DynamicResource ThemeWindowBackgroundBrush}">
+        Title="Debug Window" Height="450" Width="600" Topmost="{Binding Topmost}">
     <Window.DataContext>
         <viewModels:DebugViewModel />
     </Window.DataContext>
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Resources/ResourceDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <TabControl Margin="10">
         <TabItem Header="{x:Static resources:Strings.Main}">
             <Grid>

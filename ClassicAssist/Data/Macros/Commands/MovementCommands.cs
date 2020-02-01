@@ -76,7 +76,6 @@ namespace ClassicAssist.Data.Macros.Commands
             }
             catch ( IndexOutOfRangeException oore )
             {
-
             }
 
             return false;
