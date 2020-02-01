@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ClassicAssist.UI.Views.Agents.AutolootTabControl"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,16 +10,9 @@
              xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
              xmlns:controls="clr-namespace:ClassicAssist.UI.Controls"
              xmlns:autoloot="clr-namespace:ClassicAssist.Data.Autoloot"
+             x:Class="ClassicAssist.UI.Views.Agents.AutolootTabControl"
              mc:Ignorable="d"
              d:DesignHeight="250" d:DesignWidth="500" x:Name="userControl">
-    <d:DesignerProperties.DesignStyle>
-        <Style TargetType="UserControl">
-            <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
-        </Style>
-    </d:DesignerProperties.DesignStyle>
-    <UserControl.DataContext>
-        <agents:AutolootViewModel />
-    </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -67,8 +60,12 @@
                     </DrawingGroup>
                 </DrawingImage.Drawing>
             </DrawingImage>
+            <SolidColorBrush x:Key="ListBorder" Color="#828790"/>
         </ResourceDictionary>
     </UserControl.Resources>
+    <UserControl.DataContext>
+        <agents:AutolootViewModel />
+    </UserControl.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
@@ -103,7 +100,7 @@
                         Command="{Binding SetContainerCommand}" />
             </StackPanel>
         </Grid>
-        <Grid Column="1" Margin="10">
+        <Grid Grid.Column="1" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -121,12 +118,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <ComboBox Width="50" SelectedItem="{Binding Operator}"
-                                              ItemsSource="{Binding Source={misc:EnumBindingSource {x:Type autoloot:AutolootOperator}}}">
-                                        <!--<i:Interaction.Behaviors>
-                                            <misc:ComboBoxBehavior CommandBinding="{Binding Path=DataContext.ChangeOperatorCommand, ElementName=userControl}"
-                                                                    OnlyUserTriggered="True" CommandParameter="{Binding}" />
-                                        </i:Interaction.Behaviors>-->
-                                    </ComboBox>
+                                              ItemsSource="{Binding Source={misc:EnumBindingSource {x:Type autoloot:AutolootOperator}}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

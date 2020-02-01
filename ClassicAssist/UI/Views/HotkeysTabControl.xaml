@@ -17,6 +17,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/DarkTheme.xaml" />
                 <ResourceDictionary Source="../../Resources/Icons.xaml" />
                 <ResourceDictionary Source="../../Resources/ResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -31,11 +32,6 @@
             <i:Interaction.Behaviors>
                 <misc:BindableSelectedItemBehavior SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
             </i:Interaction.Behaviors>
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="TreeViewItem">
-                    <Setter Property="IsExpanded" Value="false" />
-                </Style>
-            </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <ContentControl>
