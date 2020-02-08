@@ -1075,6 +1075,6 @@
     <value>경고</value>
   </data>
   <data name="Overwrite existing hotkey '{0}' ?" xml:space="preserve">
-    <value>기존 단축키 '{0}'을 덮어쓰기?</value>
+    <value>기존 단축키 {0} 해제됩니다</value>
   </data>
 </root>
