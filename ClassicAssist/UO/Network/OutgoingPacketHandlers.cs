@@ -28,10 +28,17 @@ namespace ClassicAssist.UO.Network
 
             Register( 0x02, 7, OnMoveRequested );
             Register( 0x06, 5, OnUseRequest );
+            Register( 0x13, 10, OnEquipRequest );
             Register( 0x6C, 19, OnTargetSent );
             Register( 0xB1, 0, OnGumpButtonPressed );
-            Register( 0xEF, 31, OnNewClientVersion );
             Register( 0xD7, 0, OnEncodedCommand );
+            Register( 0xEF, 31, OnNewClientVersion );
+        }
+
+        private static void OnEquipRequest( PacketReader reader )
+        {
+            AbilitiesManager manager = AbilitiesManager.GetInstance();
+            manager.ResendGump( manager.Enabled );
         }
 
         private static void OnEncodedCommand( PacketReader reader )

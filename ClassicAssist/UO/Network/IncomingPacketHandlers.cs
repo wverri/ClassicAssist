@@ -1134,6 +1134,11 @@ namespace ClassicAssist.UO.Network
             {
                 Engine.Mobiles.Add( mobile );
             }
+            else
+            {
+                AbilitiesManager manager = AbilitiesManager.GetInstance();
+                manager.ResendGump( manager.Enabled );
+            }
 
             MobileIncomingEvent?.Invoke( mobile, container );
         }
