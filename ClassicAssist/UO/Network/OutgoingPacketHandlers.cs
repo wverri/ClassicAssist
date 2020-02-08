@@ -1,5 +1,6 @@
 ﻿using System;
 using Assistant;
+using ClassicAssist.Data.Abilities;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Data.Targeting;
 using ClassicAssist.UO.Data;
@@ -30,6 +31,28 @@ namespace ClassicAssist.UO.Network
             Register( 0x6C, 19, OnTargetSent );
             Register( 0xB1, 0, OnGumpButtonPressed );
             Register( 0xEF, 31, OnNewClientVersion );
+            Register( 0xD7, 0, OnEncodedCommand );
+        }
+
+        private static void OnEncodedCommand( PacketReader reader )
+        {
+            int serial = reader.ReadInt32();
+
+            int command = reader.ReadInt16();
+
+            switch ( command )
+            {
+                case 0x19:
+                {
+                    reader.ReadByte();
+
+                    int abilityIndex = reader.ReadInt32();
+
+                    AbilitiesManager.GetInstance().CheckAbility( abilityIndex );
+
+                    break;
+                }
+            }
         }
 
         private static void OnUseRequest( PacketReader reader )

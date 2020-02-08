@@ -1077,4 +1077,13 @@
   <data name="Overwrite existing hotkey '{0}' ?" xml:space="preserve">
     <value>Il Tasto Rapido '{0}' è gia assegnato. Vuoi cambiarlo?</value>
   </data>
+  <data name="Abilities Gump" xml:space="preserve">
+    <value>Abilità Gump</value>
+  </data>
+  <data name="X:" xml:space="preserve">
+    <value>X:</value>
+  </data>
+  <data name="Y:" xml:space="preserve">
+    <value>Y:</value>
+  </data>
 </root>
