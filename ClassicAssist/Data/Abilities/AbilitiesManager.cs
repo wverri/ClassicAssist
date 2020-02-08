@@ -98,6 +98,11 @@ namespace ClassicAssist.Data.Abilities
 
         public void ResendGump( AbilityType abilityType )
         {
+            if ( Engine.Player == null )
+            {
+                return;
+            }
+
             int twoHandSerial = Engine.Player.GetLayer( Layer.TwoHanded );
 
             Item twoHandItem = Engine.Items.GetItem( twoHandSerial );
