@@ -616,6 +616,7 @@ namespace ClassicAssist.Tests.MacroCommands
             Options.CurrentOptions.Friends.Clear();
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -646,6 +647,7 @@ namespace ClassicAssist.Tests.MacroCommands
             Options.CurrentOptions.Friends.Clear();
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -676,6 +678,7 @@ namespace ClassicAssist.Tests.MacroCommands
             Options.CurrentOptions.Friends.Clear();
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -703,6 +706,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -730,6 +734,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -757,6 +762,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -867,6 +873,7 @@ namespace ClassicAssist.Tests.MacroCommands
             ObjectCommands.ClearIgnoreList();
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -893,6 +900,7 @@ namespace ClassicAssist.Tests.MacroCommands
             ObjectCommands.ClearIgnoreList();
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -921,6 +929,7 @@ namespace ClassicAssist.Tests.MacroCommands
             ObjectCommands.ClearIgnoreList();
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -949,6 +958,7 @@ namespace ClassicAssist.Tests.MacroCommands
             ObjectCommands.ClearIgnoreList();
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -977,6 +987,7 @@ namespace ClassicAssist.Tests.MacroCommands
             ObjectCommands.ClearIgnoreList();
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -1004,6 +1015,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
 
         [TestMethod]
@@ -1024,7 +1036,7 @@ namespace ClassicAssist.Tests.MacroCommands
             }
 
             Engine.Mobiles.GetMobile( 7 ).Hits = 0;
-            Engine.Mobiles.GetMobile( 7 ).ID = 0x0192;
+            Engine.Mobiles.GetMobile( 7 ).ID = 0x192;
 
             TargetCommands.GetFriend( new[] { "Friend" }, "Any", "Closest", "Lowest" );
 
@@ -1032,6 +1044,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             Engine.Mobiles.Clear();
             Engine.Player = null;
+            AliasCommands.SetAlias( "friend", -1 );
         }
     }
 }
