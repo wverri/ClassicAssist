@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Assistant;
 using ClassicAssist.Annotations;
 using ClassicAssist.Data.Friends;
+using ClassicAssist.Data.Hotkeys;
+using ClassicAssist.Data.Macros;
+using ClassicAssist.Data.Macros.Commands;
+using ClassicAssist.Data.Scavenger;
 using ClassicAssist.Misc;
-using ClassicAssist.UI.Misc;
 using ClassicAssist.UI.ViewModels;
 using Newtonsoft.Json.Linq;
 
@@ -19,6 +21,9 @@ namespace ClassicAssist.Data
     {
         public const string DEFAULT_SETTINGS_FILENAME = "settings.json";
         private static string _profilePath;
+        private bool _abilitiesGump = true;
+        private int _abilitiesGumpX = 100;
+        private int _abilitiesGumpY = 100;
         private bool _actionDelay;
         private int _actionDelayMs;
         private bool _alwaysOnTop;
@@ -26,8 +31,13 @@ namespace ClassicAssist.Data
         private bool _autoAcceptPartyOnlyFromFriends;
         private char _commandPrefix = '+';
         private bool _debug;
+        private bool _defaultMacroQuietMode;
+        private string _enemyTargetMessage;
         private ObservableCollection<FriendEntry> _friends = new ObservableCollection<FriendEntry>();
+        private string _friendTargetMessage;
+        private bool _getFriendEnemyUsesIgnoreList;
         private bool _includePartyMembersInFriends;
+        private string _lastTargetMessage;
         private int _lightLevel;
         private bool _limitMouseWheelTrigger;
         private int _limitMouseWheelTriggerMS;
@@ -45,6 +55,24 @@ namespace ClassicAssist.Data
         private bool _useExperimentalFizzleDetection;
         private bool _useObjectQueue;
         private int _useObjectQueueAmount = 5;
+
+        public bool AbilitiesGump
+        {
+            get => _abilitiesGump;
+            set => SetProperty( ref _abilitiesGump, value );
+        }
+
+        public int AbilitiesGumpX
+        {
+            get => _abilitiesGumpX;
+            set => SetProperty( ref _abilitiesGumpX, value );
+        }
+
+        public int AbilitiesGumpY
+        {
+            get => _abilitiesGumpY;
+            set => SetProperty( ref _abilitiesGumpY, value );
+        }
 
         public bool ActionDelay
         {
@@ -90,10 +118,34 @@ namespace ClassicAssist.Data
             set => SetProperty( ref _debug, value );
         }
 
+        public bool DefaultMacroQuietMode
+        {
+            get => _defaultMacroQuietMode;
+            set => SetProperty( ref _defaultMacroQuietMode, value );
+        }
+
+        public string EnemyTargetMessage
+        {
+            get => _enemyTargetMessage;
+            set => SetProperty( ref _enemyTargetMessage, value );
+        }
+
         public ObservableCollection<FriendEntry> Friends
         {
             get => _friends;
             set => SetProperty( ref _friends, value );
+        }
+
+        public string FriendTargetMessage
+        {
+            get => _friendTargetMessage;
+            set => SetProperty( ref _friendTargetMessage, value );
+        }
+
+        public bool GetFriendEnemyUsesIgnoreList
+        {
+            get => _getFriendEnemyUsesIgnoreList;
+            set => SetProperty( ref _getFriendEnemyUsesIgnoreList, value );
         }
 
         public bool IncludePartyMembersInFriends
@@ -102,7 +154,11 @@ namespace ClassicAssist.Data
             set => SetProperty( ref _includePartyMembersInFriends, value );
         }
 
-        public static Language LanguageOverride { get; set; } = Language.Default;
+        public string LastTargetMessage
+        {
+            get => _lastTargetMessage;
+            set => SetProperty( ref _lastTargetMessage, value );
+        }
 
         public int LightLevel
         {
@@ -182,8 +238,6 @@ namespace ClassicAssist.Data
             set => SetProperty( ref _smartTargetOption, value );
         }
 
-        public Version UpdateGumpVersion { get; set; }
-
         public bool UseDeathScreenWhilstHidden
         {
             get => _useDeathScreenWhilstHidden;
@@ -240,8 +294,18 @@ namespace ClassicAssist.Data
             }
         }
 
+        public static void ClearOptions()
+        {
+            HotkeyManager.GetInstance().ClearAllHotkeys();
+            AliasCommands._aliases.Clear();
+            ScavengerManager.GetInstance().Items.Clear();
+            MacroManager.GetInstance().Items.Clear();
+        }
+
         public static void Load( string optionsFile, Options options )
         {
+            AssistantOptions.LastProfile = optionsFile;
+
             BaseViewModel[] instances = BaseViewModel.Instances;
 
             EnsureProfilePath( Engine.StartupPath ?? Environment.CurrentDirectory );
@@ -283,36 +347,6 @@ namespace ClassicAssist.Data
         {
             EnsureProfilePath( Engine.StartupPath ?? Environment.CurrentDirectory );
             return Directory.EnumerateFiles( _profilePath, "*.json" ).ToArray();
-        }
-
-        public static void SetLanguage( Language language )
-        {
-            CultureInfo locale = CultureInfo.CurrentCulture;
-
-            switch ( language )
-            {
-                case Language.English:
-                    locale = new CultureInfo( "en-US" );
-                    break;
-                case Language.Korean:
-                    locale = new CultureInfo( "ko-KR" );
-                    break;
-                case Language.Chinese:
-                    locale = new CultureInfo( "zh" );
-                    break;
-                case Language.Italian:
-                    locale = new CultureInfo( "it-IT" );
-                    break;
-                case Language.Default:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            CultureInfo.DefaultThreadCurrentUICulture = locale;
-            CultureInfo.DefaultThreadCurrentUICulture = locale;
-            CultureInfo.CurrentCulture = locale;
-            CultureInfo.CurrentUICulture = locale;
         }
     }
 

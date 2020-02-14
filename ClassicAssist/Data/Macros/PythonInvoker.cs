@@ -55,7 +55,7 @@ namespace ClassicAssist.Data.Macros
                 Stop();
             }
 
-            MainCommands.SetQuietMode( false );
+            MainCommands.SetQuietMode( Options.CurrentOptions.DefaultMacroQuietMode );
 
             _cancellationToken = new CancellationTokenSource();
 
@@ -159,9 +159,16 @@ namespace ClassicAssist.Data.Macros
                 return;
             }
 
-            Thread?.Interrupt();
-            Thread?.Abort();
-            Thread?.Join();
+            try
+            {
+                Thread?.Interrupt();
+                Thread?.Abort();
+                Thread?.Join();
+            }
+            catch ( ThreadStateException e )
+            {
+                UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, e.Message ) );
+            }
         }
 
         public static PythonInvoker GetInstance()

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Assistant;
 using ClassicAssist.Data;
@@ -29,6 +30,8 @@ namespace ClassicAssist.UI.ViewModels.Agents
     public class AutolootViewModel : BaseViewModel, ISettingProvider
     {
         private readonly object _autolootLock = new object();
+        private ICommand _clipboardCopyCommand;
+        private ICommand _clipboardPasteCommand;
 
         private ObservableCollection<PropertyEntry>
             _constraints = new ObservableCollection<PropertyEntry>();
@@ -45,6 +48,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
         private ICommand _removeCommand;
         private ICommand _removeConstraintCommand;
         private AutolootEntry _selectedItem;
+        private AutolootConstraintEntry _selectedProperty;
         private ICommand _selectHueCommand;
         private ICommand _setContainerCommand;
 
@@ -75,6 +79,12 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
             IncomingPacketHandlers.CorpseContainerDisplayEvent += OnCorpseContainerDisplayEvent;
         }
+
+        public ICommand ClipboardCopyCommand =>
+            _clipboardCopyCommand ?? ( _clipboardCopyCommand = new RelayCommand( ClipboardCopy, o => true ) );
+
+        public ICommand ClipboardPasteCommand =>
+            _clipboardPasteCommand ?? ( _clipboardPasteCommand = new RelayCommand( ClipboardPaste, o => true ) );
 
         public ObservableCollection<PropertyEntry> Constraints
         {
@@ -126,7 +136,11 @@ namespace ClassicAssist.UI.ViewModels.Agents
             set => SetProperty( ref _selectedItem, value );
         }
 
-        public PropertyEntry SelectedProperty { get; set; }
+        public AutolootConstraintEntry SelectedProperty
+        {
+            get => _selectedProperty;
+            set => SetProperty( ref _selectedProperty, value );
+        }
 
         public ICommand SelectHueCommand =>
             _selectHueCommand ?? ( _selectHueCommand = new RelayCommand( SelectHue, o => SelectedItem != null ) );
@@ -158,7 +172,8 @@ namespace ClassicAssist.UI.ViewModels.Agents
                     { "ID", entry.ID },
                     { "Autoloot", entry.Autoloot },
                     { "Rehue", entry.Rehue },
-                    { "RehueHue", entry.RehueHue }
+                    { "RehueHue", entry.RehueHue },
+                    { "Enabled", entry.Enabled }
                 };
 
                 if ( entry.Constraints != null )
@@ -215,7 +230,8 @@ namespace ClassicAssist.UI.ViewModels.Agents
                         ID = token["ID"]?.ToObject<int>() ?? 0,
                         Autoloot = token["Autoloot"]?.ToObject<bool>() ?? false,
                         Rehue = token["Rehue"]?.ToObject<bool>() ?? false,
-                        RehueHue = token["RehueHue"]?.ToObject<int>() ?? 0
+                        RehueHue = token["RehueHue"]?.ToObject<int>() ?? 0,
+                        Enabled = token["Enabled"]?.ToObject<bool>() ?? true
                     };
 
                     if ( token["Properties"] != null )
@@ -251,6 +267,37 @@ namespace ClassicAssist.UI.ViewModels.Agents
                     Items.Add( entry );
                 }
             }
+        }
+
+        private void ClipboardPaste( object obj )
+        {
+            string text = Clipboard.GetText();
+
+            try
+            {
+                AutolootConstraintEntry entry = JsonConvert.DeserializeObject<AutolootConstraintEntry>( text );
+
+                if ( entry != null )
+                {
+                    SelectedItem?.Constraints.Add( entry );
+                }
+            }
+            catch ( Exception )
+            {
+                // ignored
+            }
+        }
+
+        private static void ClipboardCopy( object obj )
+        {
+            if ( !( obj is AutolootConstraintEntry entry ) )
+            {
+                return;
+            }
+
+            string text = JsonConvert.SerializeObject( entry );
+
+            Clipboard.SetText( text );
         }
 
         internal void OnCorpseContainerDisplayEvent( int serial )
@@ -291,6 +338,11 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
                 foreach ( AutolootEntry entry in Items )
                 {
+                    if ( !entry.Enabled )
+                    {
+                        continue;
+                    }
+
                     IEnumerable<Item> matchItems = AutolootFilter( items, entry );
 
                     if ( matchItems == null )

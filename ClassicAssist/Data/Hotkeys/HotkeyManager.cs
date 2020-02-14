@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -28,6 +29,8 @@ namespace ClassicAssist.Data.Hotkeys
         private HotkeyManager()
         {
         }
+
+        public Action ClearAllHotkeys { get; set; }
 
         public bool Enabled
         {
@@ -74,7 +77,7 @@ namespace ClassicAssist.Data.Hotkeys
                     continue;
                 }
 
-                foreach ( HotkeySettable hotkeyEntryChild in hotkeyEntry.Children )
+                foreach ( HotkeyEntry hotkeyEntryChild in hotkeyEntry.Children )
                 {
                     if ( Equals( hotkeyEntryChild.Hotkey, keys ) )
                     {
@@ -148,7 +151,7 @@ namespace ClassicAssist.Data.Hotkeys
                     continue;
                 }
 
-                foreach ( HotkeySettable hks in hke.Children )
+                foreach ( HotkeyEntry hks in hke.Children )
                 {
                     if ( hks.Hotkey.Key != keys || hks.Hotkey.Modifier != modifier )
                     {
@@ -181,7 +184,7 @@ namespace ClassicAssist.Data.Hotkeys
                     continue;
                 }
 
-                foreach ( HotkeySettable hks in hke.Children )
+                foreach ( HotkeyEntry hks in hke.Children )
                 {
                     if ( hks.Hotkey.Mouse != mouse )
                     {
@@ -206,6 +209,31 @@ namespace ClassicAssist.Data.Hotkeys
 
                     break;
                 }
+            }
+        }
+
+        public void ClearItems()
+        {
+            foreach ( HotkeyEntry entry in Items )
+            {
+                ClearHotkeys( entry );
+            }
+
+            Items.Clear();
+        }
+
+        private void ClearHotkeys( HotkeyEntry entry )
+        {
+            entry.Hotkey = ShortcutKeys.Default;
+
+            if ( !entry.IsCategory )
+            {
+                return;
+            }
+
+            foreach ( HotkeyEntry hotkeyEntry in entry.Children )
+            {
+                ClearHotkeys( hotkeyEntry );
             }
         }
     }

@@ -397,10 +397,10 @@
     <value>Tasti Rapidi</value>
   </data>
   <data name="Hotkeys disabled..." xml:space="preserve">
-    <value>Tasti di scelta rapida disabilitati...</value>
+    <value>Tasti Rapidi disabilitati...</value>
   </data>
   <data name="Hotkeys enabled..." xml:space="preserve">
-    <value>Tasti di scelta rapida abilitati...</value>
+    <value>Tasti Rapidi abilitati...</value>
   </data>
   <data name="Ignore ping packets" xml:space="preserve">
     <value>Ignora pacchetti ping</value>
@@ -538,7 +538,7 @@
     <value>Mobile non trovato...</value>
   </data>
   <data name="Mobiles:" xml:space="preserve">
-    <value>Cerca Aggiornamenti</value>
+    <value>Cerca Aggiornamenti:</value>
   </data>
   <data name="Move conflicting items" xml:space="preserve">
     <value>Sostituisci Equip</value>
@@ -988,7 +988,7 @@
     <value>Previeni attacco innocenti in zona guardie</value>
   </data>
   <data name="Applies to hotkeys / macros only." xml:space="preserve">
-    <value>Applica solo alle Hotkeys / Scripts</value>
+    <value>Applica solo ai Tasti Rapidi / Scripts.</value>
   </data>
   <data name="Hue Picker" xml:space="preserve">
     <value>Prendi colore</value>
@@ -1026,19 +1026,70 @@
   <data name="Project Homepage" xml:space="preserve">
     <value>Home page del progetto</value>
   </data>
-  <data name="Macro Format:" xml:space="preserve">
-    <value>Formato macro:</value>
+  <data name="Last target message:" xml:space="preserve">
+    <value>Notifica sul Last Target:</value>
   </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
+  <data name="Friend target message:" xml:space="preserve">
+    <value>Notifica sul Friend Target:</value>
   </data>
-  <data name="Steam" xml:space="preserve">
-    <value>Vapore</value>
+  <data name="Enemy target message:" xml:space="preserve">
+    <value>Notifica sul Enemy Target:</value>
   </data>
-  <data name="Required argument was missing." xml:space="preserve">
-    <value>Argomento obbligatorio mancante.</value>
+  <data name="Macro name must be unique." xml:space="preserve">
+    <value>I nomi degli Script devono essere unici.</value>
   </data>
-  <data name="Command currently not implemented." xml:space="preserve">
-    <value>Comando attualmente non implementato.</value>
+  <data name="Profile saved..." xml:space="preserve">
+    <value>Profilo salvato...</value>
+  </data>
+  <data name="Repeated Messages" xml:space="preserve">
+    <value>Messaggi ripetuti</value>
+  </data>
+  <data name="Cliloc Filter" xml:space="preserve">
+    <value>Filtro Cliloc</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Filter:" xml:space="preserve">
+    <value>Fltro:</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Originale</value>
+  </data>
+  <data name="Replacement" xml:space="preserve">
+    <value>Sostituzione</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Aggiungere</value>
+  </data>
+  <data name="Macros default to quiet mode" xml:space="preserve">
+    <value>Silenzia gli Scripts</value>
+  </data>
+  <data name="GetFriend/GetEnemy uses ignore list" xml:space="preserve">
+    <value>Applica IgnoreList a GetEnemy/GetFriend</value>
+  </data>
+  <data name="Ignore List" xml:space="preserve">
+    <value>Ignora elenco</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Attenzione</value>
+  </data>
+  <data name="Overwrite existing hotkey '{0}' ?" xml:space="preserve">
+    <value>Il Tasto Rapido '{0}' è gia assegnato. Vuoi cambiarlo?</value>
+  </data>
+  <data name="Abilities Gump" xml:space="preserve">
+    <value>Abilità Gump</value>
+  </data>
+  <data name="X:" xml:space="preserve">
+    <value>X:</value>
+  </data>
+  <data name="Y:" xml:space="preserve">
+    <value>Y:</value>
+  </data>
+  <data name="Saved Passwords:" xml:space="preserve">
+    <value>Password salvate:</value>
+  </data>
+  <data name="Only overwrite blank password" xml:space="preserve">
+    <value>Sovrascrivi solo password vuota</value>
   </data>
 </root>

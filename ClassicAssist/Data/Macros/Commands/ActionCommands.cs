@@ -162,7 +162,7 @@ namespace ClassicAssist.Data.Macros.Commands
         [CommandsDisplay( Category = "Actions",
             Description = "Move item to container (parameters can be serials or aliases).",
             InsertText = "MoveItem(\"source\", \"destination\")" )]
-        public static void MoveItem( object item, object destination, int amount = -1 )
+        public static void MoveItem( object item, object destination, int amount = -1, int x = -1, int y = -1 )
         {
             int itemSerial = AliasCommands.ResolveSerial( item );
 
@@ -194,7 +194,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return;
             }
 
-            UOC.DragDropAsync( itemSerial, amount, containerSerial ).Wait();
+            UOC.DragDropAsync( itemSerial, amount, containerSerial, x, y ).Wait();
         }
 
         [CommandsDisplay( Category = "Actions",
@@ -426,12 +426,13 @@ namespace ClassicAssist.Data.Macros.Commands
                 return false;
             }
 
+            AliasCommands.SetAlias( "found", layerSerial );
+
             if ( MacroManager.QuietMode )
             {
                 return true;
             }
 
-            AliasCommands.SetAlias( "found", layerSerial );
             UOC.SystemMessage( string.Format( Strings.Object___0___updated___, "found" ) );
 
             return true;

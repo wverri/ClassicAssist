@@ -1,14 +1,11 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using Assistant;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Misc;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ClassicAssist.UI.ViewModels
@@ -61,6 +58,14 @@ namespace ClassicAssist.UI.ViewModels
             options.Add( "AutoAcceptPartyOnlyFromFriends", CurrentOptions.AutoAcceptPartyOnlyFromFriends );
             options.Add( "PreventTargetingInnocentsInGuardzone", CurrentOptions.PreventTargetingInnocentsInGuardzone );
             options.Add( "PreventAttackingInnocentsInGuardzone", CurrentOptions.PreventAttackingInnocentsInGuardzone );
+            options.Add( "LastTargetMessage", CurrentOptions.LastTargetMessage );
+            options.Add( "FriendTargetMessage", CurrentOptions.FriendTargetMessage );
+            options.Add( "EnemyTargetMessage", CurrentOptions.EnemyTargetMessage );
+            options.Add( "DefaultMacroQuietMode", CurrentOptions.DefaultMacroQuietMode );
+            options.Add( "GetFriendEnemyUsesIgnoreList", CurrentOptions.GetFriendEnemyUsesIgnoreList );
+            options.Add( "AbilitiesGump", CurrentOptions.AbilitiesGump );
+            options.Add( "AbilitiesGumpX", CurrentOptions.AbilitiesGumpX );
+            options.Add( "AbilitiesGumpY", CurrentOptions.AbilitiesGumpY );
 
             json?.Add( "Options", options );
         }
@@ -111,6 +116,25 @@ namespace ClassicAssist.UI.ViewModels
                 config?["PreventTargetingInnocentsInGuardzone"]?.ToObject<bool>() ?? false;
             CurrentOptions.PreventAttackingInnocentsInGuardzone =
                 config?["PreventAttackingInnocentsInGuardzone"]?.ToObject<bool>() ?? false;
+            CurrentOptions.LastTargetMessage = config?["LastTargetMessage"]?.ToObject<string>() ?? "[Last Target]";
+            CurrentOptions.FriendTargetMessage = config?["FriendTargetMessage"]?.ToObject<string>() ?? "[Friend]";
+            CurrentOptions.EnemyTargetMessage = config?["EnemyTargetMessage"]?.ToObject<string>() ?? "[Enemy]";
+            CurrentOptions.DefaultMacroQuietMode = config?["DefaultMacroQuietMode"]?.ToObject<bool>() ?? false;
+            CurrentOptions.GetFriendEnemyUsesIgnoreList =
+                config?["GetFriendEnemyUsesIgnoreList"]?.ToObject<bool>() ?? false;
+            CurrentOptions.AbilitiesGump = config?["AbilitiesGump"]?.ToObject<bool>() ?? true;
+            CurrentOptions.AbilitiesGumpX = config?["AbilitiesGumpX"]?.ToObject<int>() ?? 100;
+            CurrentOptions.AbilitiesGumpY = config?["AbilitiesGumpY"]?.ToObject<int>() ?? 100;
+
+            if ( CurrentOptions.AbilitiesGumpX <= 1 )
+            {
+                CurrentOptions.AbilitiesGumpX = 100;
+            }
+
+            if ( CurrentOptions.AbilitiesGumpY <= 1 )
+            {
+                CurrentOptions.AbilitiesGumpY = 100;
+            }
         }
 
         // Replay CurrentOptions changes onto Options.CurrentOptions
@@ -146,11 +170,7 @@ namespace ClassicAssist.UI.ViewModels
                 return;
             }
 
-            string fullPath = Path.Combine( Engine.StartupPath, "Data", "languageOverride.json" );
-
-            JObject langObj = new JObject { { "Language", language.ToString() } };
-
-            File.WriteAllText( fullPath, langObj.ToString( Formatting.Indented ) );
+            AssistantOptions.LanguageOverride = language;
 
             MessageBox.Show( Strings.Restart_game_for_changes_to_take_effect___,
                 Strings.Restart_game_for_changes_to_take_effect___ );

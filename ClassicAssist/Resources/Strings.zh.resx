@@ -1026,31 +1026,70 @@
   <data name="Project Homepage" xml:space="preserve">
     <value>项目主页</value>
   </data>
-  <data name="Macro Format:" xml:space="preserve">
-    <value>宏格式：</value>
+  <data name="Last target message:" xml:space="preserve">
+    <value>最后一个目标消息：</value>
   </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
+  <data name="Friend target message:" xml:space="preserve">
+    <value>好友目标消息：</value>
   </data>
-  <data name="Steam" xml:space="preserve">
-    <value>蒸汽</value>
+  <data name="Enemy target message:" xml:space="preserve">
+    <value>敌人目标消息：</value>
   </data>
-  <data name="Required argument was missing." xml:space="preserve">
-    <value>缺少必需的参数。</value>
+  <data name="Macro name must be unique." xml:space="preserve">
+    <value>宏名称必须是唯一的。</value>
   </data>
-  <data name="Macro Format:_Duplicate[1]" xml:space="preserve">
-    <value>宏格式：</value>
+  <data name="Profile saved..." xml:space="preserve">
+    <value>配置文件已保存...</value>
   </data>
-  <data name="Python_Duplicate[1]" xml:space="preserve">
-    <value>Python</value>
+  <data name="Repeated Messages" xml:space="preserve">
+    <value>重复的消息</value>
   </data>
-  <data name="Steam_Duplicate[1]" xml:space="preserve">
-    <value>蒸汽</value>
+  <data name="Cliloc Filter" xml:space="preserve">
+    <value>克利洛克过滤器</value>
   </data>
-  <data name="Required argument was missing._Duplicate[1]" xml:space="preserve">
-    <value>缺少必需的参数。</value>
+  <data name="ID" xml:space="preserve">
+    <value>Id</value>
   </data>
-  <data name="Command currently not implemented." xml:space="preserve">
-    <value>命令当前未实现。</value>
+  <data name="Filter:" xml:space="preserve">
+    <value>滤波器：</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>源语言</value>
+  </data>
+  <data name="Replacement" xml:space="preserve">
+    <value>更换</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="Macros default to quiet mode" xml:space="preserve">
+    <value>宏默认为静音模式</value>
+  </data>
+  <data name="GetFriend/GetEnemy uses ignore list" xml:space="preserve">
+    <value>GetFriend/GetEnemy使用忽略列表</value>
+  </data>
+  <data name="Ignore List" xml:space="preserve">
+    <value>忽略列表</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="Overwrite existing hotkey '{0}' ?" xml:space="preserve">
+    <value>覆盖现有的热键"{0}"？</value>
+  </data>
+  <data name="Abilities Gump" xml:space="preserve">
+    <value>能力甘</value>
+  </data>
+  <data name="X:" xml:space="preserve">
+    <value>Ⅹ：</value>
+  </data>
+  <data name="Y:" xml:space="preserve">
+    <value>Y：</value>
+  </data>
+  <data name="Saved Passwords:" xml:space="preserve">
+    <value>保存的密码：</value>
+  </data>
+  <data name="Only overwrite blank password" xml:space="preserve">
+    <value>仅覆盖空白密码</value>
   </data>
 </root>

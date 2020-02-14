@@ -27,9 +27,7 @@ using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using CUO_API;
-using Newtonsoft.Json.Linq;
 using Octokit;
-using Language = ClassicAssist.UI.Misc.Language;
 
 [assembly: InternalsVisibleTo( "ClassicAssist.Tests" )]
 
@@ -88,6 +86,8 @@ namespace Assistant
         public static GumpCollection Gumps { get; set; } = new GumpCollection();
         public static ItemCollection Items { get; set; } = new ItemCollection( 0 );
         public static CircularBuffer<JournalEntry> Journal { get; set; } = new CircularBuffer<JournalEntry>( 1024 );
+        public static int LastPromptID { get; set; }
+        public static int LastPromptSerial { get; set; }
         public static Queue<object> LastTargetQueue { get; set; } = new Queue<object>();
         public static MobileCollection Mobiles { get; set; } = new MobileCollection( Items );
         public static PacketWaitEntries PacketWaitEntries { get; set; }
@@ -218,6 +218,7 @@ namespace Assistant
         private static void OnClientClosing()
         {
             Options.Save( Options.CurrentOptions );
+            AssistantOptions.Save();
         }
 
         private static void OnPlayerPositionChanged( int x, int y, int z )
@@ -268,34 +269,12 @@ namespace Assistant
             IncomingPacketHandlers.Initialize();
             OutgoingPacketHandlers.Initialize();
 
+            IncomingPacketFilters.Initialize();
             OutgoingPacketFilters.Initialize();
 
             CommandsManager.Initialize();
 
-            string langOverridePath = Path.Combine( StartupPath, "Data", "languageOverride.json" );
-
-            if ( !File.Exists( langOverridePath ) )
-            {
-                return;
-            }
-
-            string fileText = File.ReadAllText( langOverridePath );
-
-            JObject jsonObject = JObject.Parse( fileText );
-
-            if ( jsonObject?["Language"] == null )
-            {
-                return;
-            }
-
-            Language lang = (Language) jsonObject["Language"]?.ToObject<Language>();
-
-            if ( lang != Language.Default )
-            {
-                Options.SetLanguage( lang );
-            }
-
-            Options.LanguageOverride = lang;
+            AssistantOptions.Load();
         }
 
         private static void ProcessIncomingQueue( Packet packet )
@@ -411,12 +390,29 @@ namespace Assistant
                         return;
                     }
 
-                    if ( latestVersion > localVersion && Options.CurrentOptions.UpdateGumpVersion < latestVersion )
+                    if ( latestVersion > localVersion && AssistantOptions.UpdateGumpVersion < latestVersion )
                     {
+                        IReadOnlyList<GitHubCommit> commits =
+                            await client.Repository.Commit.GetAll( "Reetus", "ClassicAssist" );
+
+                        IEnumerable<GitHubCommit> latestCommits =
+                            commits.OrderByDescending( c => c.Commit.Author.Date ).Take( 7 );
+
+                        StringBuilder commitMessage = new StringBuilder();
+
+                        foreach ( GitHubCommit gitHubCommit in latestCommits )
+                        {
+                            commitMessage.AppendLine( $"{gitHubCommit.Commit.Author.Date.Date.ToShortDateString()}:" );
+                            commitMessage.AppendLine();
+                            commitMessage.AppendLine( gitHubCommit.Commit.Message );
+                            commitMessage.AppendLine();
+                        }
+
                         StringBuilder message = new StringBuilder();
                         message.AppendLine( Strings.ProductName );
                         message.AppendLine( $"{Strings.New_version_available_} {latestVersion}" );
                         message.AppendLine();
+                        message.AppendLine( commitMessage.ToString() );
 
                         UpdateMessageGump gump = new UpdateMessageGump( message.ToString(), latestVersion );
                         byte[] packet = gump.Compile();
@@ -431,6 +427,7 @@ namespace Assistant
             } );
 
             AbilitiesManager.GetInstance().Enabled = AbilityType.None;
+            AbilitiesManager.GetInstance().ResendGump( AbilityType.None );
         }
 
         public static void SendPacketToServer( byte[] packet, int length )
@@ -538,7 +535,7 @@ namespace Assistant
                 return false;
             }
 
-            if ( OutgoingPacketFilters.CheckPacket( data, data.Length ) )
+            if ( OutgoingPacketFilters.CheckPacket( ref data, ref length ) )
             {
                 SentPacketFilteredEvent?.Invoke( data, data.Length );
 
@@ -559,6 +556,13 @@ namespace Assistant
                     pfi.Action?.Invoke( data, pfi );
                 }
 
+                ReceivedPacketFilteredEvent?.Invoke( data, data.Length );
+
+                return false;
+            }
+
+            if ( IncomingPacketFilters.CheckPacket( data, data.Length ) )
+            {
                 ReceivedPacketFilteredEvent?.Invoke( data, data.Length );
 
                 return false;

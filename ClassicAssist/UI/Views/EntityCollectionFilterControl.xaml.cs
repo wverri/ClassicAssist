@@ -40,7 +40,6 @@ namespace ClassicAssist.UI.Views
             _items = new ObservableCollection<EntityCollectionFilter>();
 
         private ICommand _loadFilterCommand;
-
         private ICommand _removeCommand;
         private ICommand _resetCommand;
         private ICommand _saveFilterCommand;
@@ -50,7 +49,7 @@ namespace ClassicAssist.UI.Views
             InitializeComponent();
 
             string constraintsFile = Path.Combine( Engine.StartupPath ?? Environment.CurrentDirectory, "Data",
-                "Autoloot.json" );
+                "Properties.json" );
 
             if ( !File.Exists( constraintsFile ) )
             {

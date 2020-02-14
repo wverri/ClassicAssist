@@ -10,17 +10,23 @@
              xmlns:misc="clr-namespace:ClassicAssist.UI.Misc"
              xmlns:viewModels="clr-namespace:ClassicAssist.UI.ViewModels"
              xmlns:resources="clr-namespace:ClassicAssist.Resources"
-             xmlns:valueConverters1="clr-namespace:ClassicAssist.UI.Misc.ValueConverters"
+             xmlns:valueConverters="clr-namespace:ClassicAssist.UI.Misc.ValueConverters"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="500" Padding="5">
     <d:DesignerProperties.DesignStyle>
         <Style TargetType="UserControl">
-            <Setter Property="Background" Value="White" />
+            <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
         </Style>
     </d:DesignerProperties.DesignStyle>
     <UserControl.Resources>
-        <valueConverters1:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-        <valueConverters1:CellWidthValueConverter x:Key="CellWidthValueConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/DarkTheme.xaml" />
+                <ResourceDictionary Source="../../Resources/ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <valueConverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <valueConverters:CellWidthValueConverter x:Key="CellWidthValueConverter" />
+        </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:MacrosTabViewModel />
@@ -44,11 +50,11 @@
                 <ListBox Grid.Row="0" ItemsSource="{Binding Items}" x:Name="ListBox"
                          SelectedItem="{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          MinHeight="40"
-                         IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBooleanConverter}}">
+                         IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBooleanConverter}}"
+                         misc:ListBoxBehavior.ScrollOnNewItem="True">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <controls:EditTextBlock Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                    MinWidth="40"
                                                     Width="{Binding ActualWidth, ConverterParameter=20, Converter={StaticResource CellWidthValueConverter}, ElementName=ListBox, Mode=OneWay}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -57,17 +63,19 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.Resources>
-                        <Style TargetType="Button">
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                             <Setter Property="Margin" Value="0" />
+                            <Setter Property="FontSize" Value="10" />
                         </Style>
                     </Grid.Resources>
                     <Button Content="{x:Static resources:Strings.Remove}" Grid.Column="0" Margin="0,0,2.5,0"
                             Command="{Binding RemoveMacroCommand, Mode=OneWay}"
                             CommandParameter="{Binding SelectedItem, ElementName=ListBox}">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=SelectedItem, ElementName=ListBox}"
                                                  Value="{x:Null}">
@@ -79,13 +87,15 @@
                     </Button>
                     <Button Content="{x:Static resources:Strings.New}" Grid.Column="1" Margin="2.5,0"
                             Command="{Binding NewMacroCommand, Mode=OneWay}" />
+                    <Button Content="{x:Static resources:Strings.Save}" Grid.Column="2" Margin="2.5,0"
+                            Command="{Binding SaveMacroCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem}" />
                 </Grid>
                 <Grid Grid.Row="2" Margin="2,5,2,5">
                     <Button Content="{Binding RecordLabel}" Command="{Binding RecordCommand}" />
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,15,0,0">
                     <Grid.Resources>
-                        <valueConverters1:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+                        <valueConverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -103,6 +113,16 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedItem, ElementName=ListBox}"
+                                             Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Resources>
                     <CheckBox Content="{x:Static resources:Strings.Loop}" Grid.Row="0" Margin="0,5,0,0"
                               IsChecked="{Binding SelectedItem.Loop, ElementName=ListBox}" />
                     <CheckBox Content="{x:Static resources:Strings.Do_not_auto_interupt}" Grid.Row="1" Margin="0,5,0,0"
@@ -115,7 +135,7 @@
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <controls:TextBoxKey Shortcut="{Binding SelectedItem.Hotkey}" Grid.Row="0" />
+                        <controls:TextBoxKey Shortcut="{Binding Hotkey}" Grid.Row="0" />
                         <CheckBox Content="{x:Static resources:Strings.Pass_to_UO}" Grid.Row="1" Padding="4,-1,0,0"
                                   Margin="0,5,0,0" IsChecked="{Binding SelectedItem.PassToUO}" />
                         <Button Content="{x:Static resources:Strings.Clear}" Grid.Row="2" Padding="1,0,1,1"
@@ -134,11 +154,15 @@
             </Grid.RowDefinitions>
             <avalon:TextEditor ShowLineNumbers="True" x:Name="CodeTextEditor" Grid.Row="0"
                                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                               IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBooleanConverter}}">
+                               FontFamily="Consolas">
                 <avalon:TextEditor.Style>
-                    <Style TargetType="avalon:TextEditor">
+                    <Style TargetType="{x:Type avalon:TextEditor}"
+                           BasedOn="{StaticResource {x:Type avalon:TextEditor}}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding SelectedItem, ElementName=ListBox}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsRecording}" Value="True">
                                 <Setter Property="IsEnabled" Value="False" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -163,7 +187,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
                 <StackPanel.Resources>
-                    <Style TargetType="Button">
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Margin" Value="10,10,10,0" />
                         <Setter Property="Padding" Value="10,0,10,0" />
                         <Setter Property="Height" Value="25" />

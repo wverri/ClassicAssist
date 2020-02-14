@@ -47,6 +47,8 @@ namespace ClassicAssist.UO.Network
 
         public delegate void dVendorSellDisplay( int serial, SellListEntry[] entries );
 
+        private const int HUE_RED = 36;
+
         private static PacketHandler[] _handlers;
         private static PacketHandler[] _extendedHandlers;
 
@@ -92,6 +94,8 @@ namespace ClassicAssist.UO.Network
             Register( 0xB9, 5, OnSupportedFeatures );
             Register( 0xBF, 0, OnExtendedCommand );
             Register( 0xC1, 0, OnLocalizedText );
+            Register( 0xC2, 0, OnUnicodePrompt );
+            Register( 0xCC, 0, OnLocalizedTextAffix );
             Register( 0xD6, 0, OnProperties );
             Register( 0xDD, 0, OnCompressedGump );
             Register( 0xDF, 0, OnBuffAndAttributes );
@@ -102,6 +106,15 @@ namespace ClassicAssist.UO.Network
             RegisterExtended( 0x08, 0, OnMapChange );
             RegisterExtended( 0x21, 0, OnClearWeaponAbility );
             RegisterExtended( 0x25, 0, OnToggleSpecialMoves );
+        }
+
+        private static void OnUnicodePrompt( PacketReader reader )
+        {
+            int senderSerial = reader.ReadInt32();
+            int promptId = reader.ReadInt32();
+
+            Engine.LastPromptSerial = senderSerial;
+            Engine.LastPromptID = promptId;
         }
 
         private static void OnShopSell( PacketReader reader )
@@ -169,10 +182,11 @@ namespace ClassicAssist.UO.Network
 
             if ( manager.Enabled != AbilityType.None )
             {
-                Commands.SystemMessage( Strings.Current_Ability_Cleared );
+                Commands.SystemMessage( Strings.Current_Ability_Cleared, HUE_RED );
             }
 
             manager.Enabled = AbilityType.None;
+            manager.ResendGump( AbilityType.None );
         }
 
         private static void OnShopList( PacketReader reader )
@@ -258,7 +272,8 @@ namespace ClassicAssist.UO.Network
                 SpeechFont = reader.ReadInt16(),
                 Cliloc = reader.ReadInt32(),
                 Name = reader.ReadString( 30 ),
-                Arguments = reader.ReadUnicodeString( (int) reader.Size - 50 ).Split( '\t' )
+                Arguments = reader.ReadUnicodeString( (int) reader.Size - 50 )
+                    .Split( new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries )
             };
 
             journalEntry.Text = Cliloc.GetLocalString( journalEntry.Cliloc, journalEntry.Arguments );
@@ -267,18 +282,59 @@ namespace ClassicAssist.UO.Network
             {
                 if ( Engine.Player?.LastTargetSerial == journalEntry.Serial )
                 {
-                    MsgCommands.HeadMsg( "[Last Target]", journalEntry.Serial );
+                    MsgCommands.HeadMsg( Options.CurrentOptions.LastTargetMessage, journalEntry.Serial );
                 }
 
                 if ( Engine.Player?.EnemyTargetSerial == journalEntry.Serial )
                 {
-                    MsgCommands.HeadMsg( "[Enemy]", journalEntry.Serial );
+                    MsgCommands.HeadMsg( Options.CurrentOptions.EnemyTargetMessage, journalEntry.Serial );
                 }
 
                 if ( Engine.Player?.FriendTargetSerial == journalEntry.Serial )
                 {
-                    MsgCommands.HeadMsg( "[Friend]", journalEntry.Serial );
+                    MsgCommands.HeadMsg( Options.CurrentOptions.FriendTargetMessage, journalEntry.Serial );
                 }
+            }
+
+            Engine.Journal.Write( journalEntry );
+            JournalEntryAddedEvent?.Invoke( journalEntry );
+        }
+
+        private static void OnLocalizedTextAffix( PacketReader reader )
+        {
+            int serial = reader.ReadInt32();
+            int graphic = reader.ReadInt16();
+            JournalSpeech messageType = (JournalSpeech) reader.ReadByte();
+            int hue = reader.ReadInt16();
+            int font = reader.ReadInt16();
+            int cliloc = reader.ReadInt32();
+            MessageAffixType affixType = (MessageAffixType) reader.ReadByte();
+            string name = reader.ReadString( 30 );
+            string affix = reader.ReadString();
+            string[] arguments = reader.ReadUnicodeString()
+                .Split( new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries );
+
+            JournalEntry journalEntry = new JournalEntry
+            {
+                Serial = serial,
+                ID = graphic,
+                SpeechType = messageType,
+                SpeechHue = hue,
+                SpeechFont = font,
+                Cliloc = cliloc,
+                Name = name,
+                Arguments = arguments
+            };
+
+            string text = Cliloc.GetLocalString( journalEntry.Cliloc, journalEntry.Arguments );
+
+            if ( affixType.HasFlag( MessageAffixType.Prepend ) )
+            {
+                journalEntry.Text = $"{affix}{text}";
+            }
+            else if ( affixType.HasFlag( MessageAffixType.Append ) )
+            {
+                journalEntry.Text = $"{text}{affix}";
             }
 
             Engine.Journal.Write( journalEntry );
@@ -949,7 +1005,7 @@ namespace ClassicAssist.UO.Network
             bool allowNameChange = reader.ReadBoolean(); // Allow Name Change
             byte features = reader.ReadByte();
 
-            Mobile mobile = serial == Engine.Player.Serial ? Engine.Player : Engine.GetOrCreateMobile( serial );
+            Mobile mobile = serial == Engine.Player?.Serial ? Engine.Player : Engine.GetOrCreateMobile( serial );
             mobile.Name = name;
             mobile.Hits = hits;
             mobile.HitsMax = hitsMax;
@@ -1087,6 +1143,11 @@ namespace ClassicAssist.UO.Network
             if ( !( mobile is PlayerMobile ) )
             {
                 Engine.Mobiles.Add( mobile );
+            }
+            else
+            {
+                AbilitiesManager manager = AbilitiesManager.GetInstance();
+                manager.ResendGump( manager.Enabled );
             }
 
             MobileIncomingEvent?.Invoke( mobile, container );

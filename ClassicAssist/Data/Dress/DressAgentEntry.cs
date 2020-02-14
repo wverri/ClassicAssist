@@ -10,7 +10,7 @@ using UOC = ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Dress
 {
-    public class DressAgentEntry : HotkeySettable
+    public class DressAgentEntry : HotkeyEntry
     {
         private IEnumerable<DressAgentItem> _items;
         private int _undressContainer;
@@ -82,12 +82,21 @@ namespace ClassicAssist.Data.Dress
                         continue;
                     }
 
+                    int attempts;
+
                     if ( currentInLayer != 0 && moveConflicting && container != -1 )
                     {
+                        attempts = 0;
+
+                        do
+                        {
+                            await UOC.DragDropAsync( currentInLayer, 1, container );
+                            await Task.Delay( Options.CurrentOptions.ActionDelayMS );
+                        }
+                        while ( Engine.Player?.GetLayer( dai.Layer ) != 0 && attempts++ < 10 );
+
                         Engine.Player?.SetLayer( dai.Layer, 0 );
 
-                        await UOC.DragDropAsync( currentInLayer, 1, container );
-                        await Task.Delay( Options.CurrentOptions.ActionDelayMS );
                         currentInLayer = 0;
                     }
 
@@ -96,9 +105,15 @@ namespace ClassicAssist.Data.Dress
                         continue;
                     }
 
-                    UOC.EquipItem( item, dai.Layer );
+                    attempts = 0;
 
-                    await Task.Delay( Options.CurrentOptions.ActionDelayMS );
+                    do
+                    {
+                        UOC.EquipItem( item, dai.Layer );
+
+                        await Task.Delay( Options.CurrentOptions.ActionDelayMS );
+                    }
+                    while ( Engine.Player?.GetLayer( dai.Layer ) == 0 && attempts++ < 10 );
                 }
             } );
         }

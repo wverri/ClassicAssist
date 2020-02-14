@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Input;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Hotkeys;
@@ -19,14 +20,14 @@ namespace ClassicAssist.UI.ViewModels
         private readonly HotkeyManager _hotkeyManager;
         private readonly List<HotkeyEntry> _serializeCategories = new List<HotkeyEntry>();
         private ICommand _clearHotkeyCommand;
-        private HotkeyEntry _commandsCategory;
         private ICommand _executeCommand;
-        private HotkeySettable _selectedItem;
+        private HotkeyEntry _selectedItem;
         private HotkeyEntry _spellsCategory;
 
         public HotkeysTabViewModel()
         {
             _hotkeyManager = HotkeyManager.GetInstance();
+            _hotkeyManager.ClearAllHotkeys = ClearAllHotkeys;
         }
 
         public ICommand ClearHotkeyCommand =>
@@ -35,16 +36,26 @@ namespace ClassicAssist.UI.ViewModels
         public ICommand ExecuteCommand =>
             _executeCommand ?? ( _executeCommand = new RelayCommand( ExecuteHotkey, o => SelectedItem != null ) );
 
+        public ShortcutKeys Hotkey
+        {
+            get => SelectedItem?.Hotkey;
+            set => CheckOverwriteHotkey( SelectedItem, value );
+        }
+
         public ObservableCollectionEx<HotkeyEntry> Items
         {
             get => _hotkeyManager.Items;
             set => _hotkeyManager.Items = value;
         }
 
-        public HotkeySettable SelectedItem
+        public HotkeyEntry SelectedItem
         {
             get => _selectedItem;
-            set => SetProperty( ref _selectedItem, value );
+            set
+            {
+                SetProperty( ref _selectedItem, value );
+                NotifyPropertyChanged( nameof( Hotkey ) );
+            }
         }
 
         public void Serialize( JObject json )
@@ -55,7 +66,7 @@ namespace ClassicAssist.UI.ViewModels
 
             foreach ( HotkeyEntry category in _serializeCategories )
             {
-                foreach ( HotkeySettable categoryChild in category.Children )
+                foreach ( HotkeyEntry categoryChild in category.Children )
                 {
                     if ( Equals( categoryChild.Hotkey, ShortcutKeys.Default ) )
                     {
@@ -77,7 +88,7 @@ namespace ClassicAssist.UI.ViewModels
 
             JArray spellsArray = new JArray();
 
-            foreach ( HotkeySettable spellsCategoryChild in _spellsCategory.Children )
+            foreach ( HotkeyEntry spellsCategoryChild in _spellsCategory.Children )
             {
                 if ( Equals( spellsCategoryChild.Hotkey, ShortcutKeys.Default ) )
                 {
@@ -104,57 +115,47 @@ namespace ClassicAssist.UI.ViewModels
             IEnumerable<Type> hotkeyCommands = Assembly.GetExecutingAssembly().GetTypes()
                 .Where( i => i.IsSubclassOf( typeof( HotkeyCommand ) ) );
 
-            _commandsCategory = new HotkeyEntry( Strings.Commands, true );
-            ObservableCollectionEx<HotkeySettable> children = new ObservableCollectionEx<HotkeySettable>();
-
             foreach ( Type hotkeyCommand in hotkeyCommands )
             {
                 HotkeyCommand hkc = (HotkeyCommand) Activator.CreateInstance( hotkeyCommand );
 
                 HotkeyCommandAttribute attr = hkc.GetType().GetCustomAttribute<HotkeyCommandAttribute>();
 
-                if ( attr == null || string.IsNullOrEmpty( attr.Category ) )
+                string categoryName = Strings.Commands;
+
+                if ( attr != null && !string.IsNullOrEmpty( attr.Category ) )
                 {
-                    children.Add( hkc );
+                    categoryName = Strings.ResourceManager.GetString( attr.Category );
+                }
+
+                HotkeyEntry category = Items.FirstOrDefault( hke => hke.Name == categoryName && hke.IsCategory );
+
+                if ( category != null )
+                {
+                    if ( category.Children == null )
+                    {
+                        category.Children = new ObservableCollectionEx<HotkeyEntry>();
+                    }
+
+                    if ( category.Children.Contains( hkc ) )
+                    {
+                        category.Children.Remove( hkc );
+                    }
+
+                    category.Children.Add( hkc );
                 }
                 else
                 {
-                    string categoryName = Strings.ResourceManager.GetString( attr.Category );
-
-                    HotkeyEntry category = Items.FirstOrDefault( hke => hke.Name == categoryName && hke.IsCategory );
-
-                    if ( category != null )
+                    category = new HotkeyEntry
                     {
-                        if ( category.Children == null )
-                        {
-                            category.Children = new ObservableCollectionEx<HotkeySettable>();
-                        }
+                        Name = categoryName, IsCategory = true, Children = new ObservableCollectionEx<HotkeyEntry>()
+                    };
 
-                        if ( category.Children.Contains( hkc ) )
-                        {
-                            category.Children.Remove( hkc );
-                        }
-
-                        category.Children.Add( hkc );
-                    }
-                    else
-                    {
-                        category = new HotkeyEntry( categoryName, true )
-                        {
-                            Children = new ObservableCollectionEx<HotkeySettable>()
-                        };
-
-                        category.Children.Add( hkc );
-                        _hotkeyManager.AddCategory( category );
-                        _serializeCategories.Add( category );
-                    }
+                    category.Children.Add( hkc );
+                    _hotkeyManager.AddCategory( category );
+                    _serializeCategories.Add( category );
                 }
             }
-
-            _commandsCategory.Children = children;
-
-            _hotkeyManager.AddCategory( _commandsCategory );
-            _serializeCategories.Add( _commandsCategory );
 
             JToken hotkeys = json?["Hotkeys"];
 
@@ -166,7 +167,7 @@ namespace ClassicAssist.UI.ViewModels
 
                     foreach ( HotkeyEntry category in _serializeCategories )
                     {
-                        HotkeySettable entry =
+                        HotkeyEntry entry =
                             category.Children.FirstOrDefault(
                                 o => o.GetType().FullName == type.ToObject<string>() );
 
@@ -183,13 +184,18 @@ namespace ClassicAssist.UI.ViewModels
                 }
             }
 
-            _spellsCategory = new HotkeyEntry( Strings.Spells, true );
+            if ( _spellsCategory != null )
+            {
+                _hotkeyManager.Items.Remove( _spellsCategory );
+            }
+
+            _spellsCategory = new HotkeyEntry { Name = Strings.Spells, IsCategory = true };
 
             SpellManager spellManager = SpellManager.GetInstance();
 
             SpellData[] spells = spellManager.GetSpellData();
 
-            children = new ObservableCollectionEx<HotkeySettable>();
+            ObservableCollectionEx<HotkeyEntry> children = new ObservableCollectionEx<HotkeyEntry>();
 
             foreach ( SpellData spell in spells )
             {
@@ -216,7 +222,7 @@ namespace ClassicAssist.UI.ViewModels
                 {
                     JToken name = token["Name"];
 
-                    HotkeySettable entry =
+                    HotkeyEntry entry =
                         _spellsCategory.Children.FirstOrDefault( s => s.Name == name.ToObject<string>() );
 
                     if ( entry == null )
@@ -230,9 +236,55 @@ namespace ClassicAssist.UI.ViewModels
             }
         }
 
+        private void CheckOverwriteHotkey( HotkeyEntry selectedItem, ShortcutKeys hotkey )
+        {
+            HotkeyEntry conflict = null;
+
+            foreach ( HotkeyEntry hotkeyEntry in Items )
+            {
+                foreach ( HotkeyEntry entry in hotkeyEntry.Children )
+                {
+                    if ( entry.Hotkey.Equals( hotkey ) )
+                    {
+                        conflict = entry;
+                    }
+                }
+            }
+
+            if ( conflict != null && !ReferenceEquals( selectedItem, conflict ) )
+            {
+                MessageBoxResult result =
+                    MessageBox.Show( string.Format( Strings.Overwrite_existing_hotkey___0____, conflict ),
+                        Strings.Warning, MessageBoxButton.YesNo );
+
+                if ( result == MessageBoxResult.No )
+                {
+                    NotifyPropertyChanged( nameof( Hotkey ) );
+                    return;
+                }
+            }
+
+            SelectedItem.Hotkey = hotkey;
+            NotifyPropertyChanged( nameof( Hotkey ) );
+        }
+
+        private void ClearAllHotkeys()
+        {
+            foreach ( HotkeyEntry entryChild in _serializeCategories.SelectMany(
+                hotkeyEntry => hotkeyEntry.Children ) )
+            {
+                entryChild.Hotkey = ShortcutKeys.Default;
+            }
+
+            foreach ( HotkeyEntry spellEntry in _spellsCategory.Children )
+            {
+                spellEntry.Hotkey = ShortcutKeys.Default;
+            }
+        }
+
         private static void ClearHotkey( object obj )
         {
-            if ( obj is HotkeySettable cmd )
+            if ( obj is HotkeyEntry cmd )
             {
                 cmd.Hotkey = ShortcutKeys.Default;
             }
@@ -240,7 +292,7 @@ namespace ClassicAssist.UI.ViewModels
 
         private static void ExecuteHotkey( object obj )
         {
-            if ( obj is HotkeySettable cmd )
+            if ( obj is HotkeyEntry cmd )
             {
                 cmd.Action( cmd );
             }

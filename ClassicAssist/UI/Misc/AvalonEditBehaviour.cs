@@ -57,10 +57,17 @@ namespace ClassicAssist.UI.Misc
         {
             if ( !( sender is TextEditor textEditor ) )
             {
+                return;
             }
 
-            //if (textEditor.Document != null)
-            //    TextBinding = textEditor.Document.Text;
+            if ( textEditor.Document == null )
+            {
+                return;
+            }
+
+            int carot = textEditor.CaretOffset;
+            TextBinding = textEditor.Document.Text;
+            textEditor.CaretOffset = carot;
         }
 
         private static void PropertyChangedCallback(
@@ -81,7 +88,6 @@ namespace ClassicAssist.UI.Misc
                 return;
             }
 
-            int caretOffset = editor.CaretOffset;
             editor.Document.Text = dependencyPropertyChangedEventArgs.NewValue.ToString();
             editor.CaretOffset = 0;
         }

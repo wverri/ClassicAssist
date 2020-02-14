@@ -1007,7 +1007,7 @@
   </data>
   <data name="Operator" xml:space="preserve">
     <value>Operator</value>
-  </data>    
+  </data>
   <data name="Cannot find sound file..." xml:space="preserve">
     <value>Cannot find sound file...</value>
   </data>
@@ -1026,19 +1026,70 @@
   <data name="Project Homepage" xml:space="preserve">
     <value>Project Homepage</value>
   </data>
-  <data name="Macro Format:" xml:space="preserve">
-    <value>Macro Format:</value>
+  <data name="Last target message:" xml:space="preserve">
+    <value>Last target message:</value>
   </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
+  <data name="Friend target message:" xml:space="preserve">
+    <value>Friend target message:</value>
   </data>
-  <data name="Steam" xml:space="preserve">
-    <value>Steam</value>
+  <data name="Enemy target message:" xml:space="preserve">
+    <value>Enemy target message:</value>
   </data>
-  <data name="Required argument was missing." xml:space="preserve">
-    <value>Required argument was missing.</value>
+  <data name="Macro name must be unique." xml:space="preserve">
+    <value>Macro name must be unique.</value>
   </data>
-  <data name="Command currently not implemented." xml:space="preserve">
-    <value>Command currently not implemented.</value>
+  <data name="Profile saved..." xml:space="preserve">
+    <value>Profile saved...</value>
+  </data>
+  <data name="Repeated Messages" xml:space="preserve">
+    <value>Repeated Messages</value>
+  </data>
+  <data name="Cliloc Filter" xml:space="preserve">
+    <value>Cliloc Filter</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Filter:" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Replacement" xml:space="preserve">
+    <value>Replacement</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Macros default to quiet mode" xml:space="preserve">
+    <value>Macros default to quiet mode</value>
+  </data>
+  <data name="GetFriend/GetEnemy uses ignore list" xml:space="preserve">
+    <value>GetFriend/GetEnemy uses ignore list</value>
+  </data>
+  <data name="Ignore List" xml:space="preserve">
+    <value>Ignore List</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Overwrite existing hotkey '{0}' ?" xml:space="preserve">
+    <value>Overwrite existing hotkey '{0}' ?</value>
+  </data>
+  <data name="Abilities Gump" xml:space="preserve">
+    <value>Abilities Gump</value>
+  </data>
+  <data name="X:" xml:space="preserve">
+    <value>X:</value>
+  </data>
+  <data name="Y:" xml:space="preserve">
+    <value>Y:</value>
+  </data>
+  <data name="Saved Passwords:" xml:space="preserve">
+    <value>Saved Passwords:</value>
+  </data>
+  <data name="Only overwrite blank password" xml:space="preserve">
+    <value>Only overwrite blank password</value>
   </data>
 </root>
