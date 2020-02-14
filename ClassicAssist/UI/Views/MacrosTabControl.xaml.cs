@@ -64,15 +64,16 @@ namespace ClassicAssist.UI.Views
         private void OnTextEntered( object sender, TextCompositionEventArgs e )
         {
             DocumentLine line = CodeTextEditor.TextArea.Document.Lines[CodeTextEditor.TextArea.Caret.Line - 1];
-            string itemForCompletion = CodeTextEditor.TextArea.Document.GetText( line );
 
-            if ( line.Length < 3 || itemForCompletion.Contains( ' ' ) )
+            string trimmed = CodeTextEditor.TextArea.Document.GetText( line ).TrimStart( ' ', '\t' );
+
+            if ( trimmed.TrimStart( ' ', '\t' ).Length < 3 )
             {
                 return;
             }
 
             List<PythonCompletionData> data = _completionData.Where( m =>
-                    ( (string) m.Content ).StartsWith( itemForCompletion,
+                    ( (string) m.Content ).StartsWith( trimmed,
                         StringComparison.InvariantCultureIgnoreCase ) )
                 .ToList();
 
