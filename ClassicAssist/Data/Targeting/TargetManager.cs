@@ -380,7 +380,6 @@ namespace ClassicAssist.Data.Targeting
                     return mobiles.Where( m => m.IsFrozen ).ToArray();
                 case TargetInfliction.Dead:
                     return mobiles.Where( m => m.IsDead ).ToArray();
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException( nameof( inflictionType ), inflictionType, null );
             }
