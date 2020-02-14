@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ClassicAssist.Data;
@@ -17,44 +18,51 @@ namespace ClassicAssist.Tests
         [TestMethod]
         public void WontDuplicateSkillsCategory()
         {
-            const string localPath = @"C:\Users\johns\Desktop\KvG Client 2.0";
+            AppDomain appDomain = AppDomain.CreateDomain( "WontThrowExceptionOnDeserializeNullConfig",
+                AppDomain.CurrentDomain.Evidence,
+                AppDomain.CurrentDomain.SetupInformation );
 
-            if ( !Directory.Exists( localPath ) )
+            appDomain.DoCallBack( () =>
             {
-                Debug.WriteLine( "Not running test, requires Cliloc.enu" );
-                return;
-            }
+                const string localPath = @"C:\Users\johns\Desktop\KvG Client 2.0";
 
-            SkillsTabViewModel vm = new SkillsTabViewModel();
-
-            Options options = Options.CurrentOptions;
-
-            Skills.Initialize( localPath );
-
-            JObject json = new JObject
-            {
+                if ( !Directory.Exists( localPath ) )
                 {
-                    "Skills",
-                    new JArray
+                    Debug.WriteLine( "Not running test, requires Cliloc.enu" );
+                    return;
+                }
+
+                SkillsTabViewModel vm = new SkillsTabViewModel();
+
+                Options options = Options.CurrentOptions;
+
+                Skills.Initialize( localPath );
+
+                JObject json = new JObject
+                {
                     {
-                        new JObject
+                        "Skills",
+                        new JArray
                         {
-                            { "Name", "Hiding" },
-                            { "Keys", new JObject { { "Keys", 94 }, { "Modifier", 0 }, { "Mouse", 7 } } },
-                            { "PassToUO", false }
+                            new JObject
+                            {
+                                { "Name", "Hiding" },
+                                { "Keys", new JObject { { "Keys", 94 }, { "Modifier", 0 }, { "Mouse", 7 } } },
+                                { "PassToUO", false }
+                            }
                         }
                     }
-                }
-            };
+                };
 
-            vm.Deserialize( json, options );
-            vm.Deserialize( json, options );
+                vm.Deserialize( json, options );
+                vm.Deserialize( json, options );
 
-            HotkeyManager hotkeys = HotkeyManager.GetInstance();
+                HotkeyManager hotkeys = HotkeyManager.GetInstance();
 
-            int count = hotkeys.Items.Count( hk => hk.IsCategory && hk.Name == Strings.Skills );
+                int count = hotkeys.Items.Count( hk => hk.IsCategory && hk.Name == Strings.Skills );
 
-            Assert.AreEqual( 1, count );
+                Assert.AreEqual( 1, count );
+            } );
         }
     }
 }
