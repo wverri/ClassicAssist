@@ -547,6 +547,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Command currently not implemented..
+        /// </summary>
+        public static string Command_currently_not_implemented_ {
+            get {
+                return ResourceManager.GetString("Command currently not implemented.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command Prefix:.
         /// </summary>
         public static string Command_Prefix_ {
@@ -1429,6 +1438,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Macro Format:.
+        /// </summary>
+        public static string Macro_Format_ {
+            get {
+                return ResourceManager.GetString("Macro Format:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Macro name must be unique..
         /// </summary>
         public static string Macro_name_must_be_unique_ {
@@ -1951,6 +1969,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Python.
+        /// </summary>
+        public static string Python {
+            get {
+                return ResourceManager.GetString("Python", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Queue Last Target / Target Self.
         /// </summary>
         public static string Queue_Last_Target___Target_Self {
@@ -2397,6 +2424,15 @@ namespace ClassicAssist.Resources {
         public static string Status_ {
             get {
                 return ResourceManager.GetString("Status:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steam.
+        /// </summary>
+        public static string Steam {
+            get {
+                return ResourceManager.GetString("Steam", resourceCulture);
             }
         }
         

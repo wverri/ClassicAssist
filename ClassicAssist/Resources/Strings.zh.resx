@@ -1092,4 +1092,16 @@
   <data name="Only overwrite blank password" xml:space="preserve">
     <value>仅覆盖空白密码</value>
   </data>
+  <data name="Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Macro Format:" xml:space="preserve">
+    <value>宏格式：</value>
+  </data>
+  <data name="Command currently not implemented." xml:space="preserve">
+    <value>命令当前未实现。</value>
+  </data>
 </root>
