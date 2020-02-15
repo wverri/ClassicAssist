@@ -161,8 +161,7 @@ namespace ClassicAssist.UI.ViewModels
                         LastStream = null;
                     }
 
-                    LastStream = new MemoryStream();
-                    ms.WriteTo( LastStream );
+                    LastStream = ms;
                 } );
             }
         }
