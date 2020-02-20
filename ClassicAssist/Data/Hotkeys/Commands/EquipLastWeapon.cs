@@ -1,5 +1,4 @@
 ﻿using ClassicAssist.Data.Macros.Commands;
-using ClassicAssist.Resources;
 
 namespace ClassicAssist.Data.Hotkeys.Commands
 {
