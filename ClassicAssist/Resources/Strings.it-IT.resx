@@ -1098,4 +1098,7 @@
   <data name="Requires Server Support" xml:space="preserve">
     <value>Richiede il supporto del server</value>
   </data>
+  <data name="Run in background" xml:space="preserve">
+    <value>Esegui in background</value>
+  </data>
 </root>

@@ -21,8 +21,6 @@ namespace ClassicAssist.Data.Macros
 
         private static readonly ScriptEngine _engine = Python.CreateEngine();
         private static Dictionary<string, object> _importCache;
-        private static MacroInvoker _instance;
-        private static readonly object _lock = new object();
         private readonly Stopwatch _stopWatch = new Stopwatch();
         private CancellationTokenSource _cancellationToken;
         private MacroEntry _macro;
@@ -44,26 +42,6 @@ namespace ClassicAssist.Data.Macros
         public bool IsRunning => Thread.IsAlive;
 
         public Thread Thread { get; set; }
-
-        public static MacroInvoker GetInstance()
-        {
-            // ReSharper disable once InvertIf
-            if ( _instance == null )
-            {
-                lock ( _lock )
-                {
-                    if ( _instance != null )
-                    {
-                        return _instance;
-                    }
-
-                    _instance = new MacroInvoker();
-                    return _instance;
-                }
-            }
-
-            return _instance;
-        }
 
         public event dMacroStartStop StartedEvent;
         public event dMacroStartStop StoppedEvent;

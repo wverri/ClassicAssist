@@ -2122,6 +2122,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run in background.
+        /// </summary>
+        public static string Run_in_background {
+            get {
+                return ResourceManager.GetString("Run in background", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Save {

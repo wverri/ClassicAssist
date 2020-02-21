@@ -142,7 +142,8 @@ namespace ClassicAssist.UI.ViewModels
                     { "DoNotAutoInterrupt", macroEntry.DoNotAutoInterrupt },
                     { "Macro", macroEntry.Macro },
                     { "PassToUO", macroEntry.PassToUO },
-                    { "Keys", macroEntry.Hotkey.ToJObject() }
+                    { "Keys", macroEntry.Hotkey.ToJObject() },
+                    { "IsBackground", macroEntry.IsBackground }
                 };
 
                 macroArray.Add( entry );
@@ -185,7 +186,8 @@ namespace ClassicAssist.UI.ViewModels
                         DoNotAutoInterrupt = GetJsonValue( token, "DoNotAutoInterrupt", false ),
                         Macro = GetJsonValue( token, "Macro", string.Empty ),
                         PassToUO = GetJsonValue( token, "PassToUO", true ),
-                        Hotkey = new ShortcutKeys( token["Keys"] )
+                        Hotkey = new ShortcutKeys( token["Keys"] ),
+                        IsBackground = GetJsonValue( token, "IsBackground", false )
                     };
 
                     entry.Action = async hks => await Execute( entry );

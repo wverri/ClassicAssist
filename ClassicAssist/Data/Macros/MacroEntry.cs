@@ -9,14 +9,22 @@ namespace ClassicAssist.Data.Macros
     public class MacroEntry : HotkeyEntry, IComparable<MacroEntry>
     {
         private bool _doNotAutoInterrupt;
+        private bool _isBackground;
         private bool _loop;
         private string _macro = string.Empty;
+        private MacroInvoker _macroInvoker;
         private string _name;
 
         public bool DoNotAutoInterrupt
         {
             get => _doNotAutoInterrupt;
             set => SetProperty( ref _doNotAutoInterrupt, value );
+        }
+
+        public bool IsBackground
+        {
+            get => _isBackground;
+            set => SetProperty( ref _isBackground, value );
         }
 
         public bool Loop
@@ -29,6 +37,12 @@ namespace ClassicAssist.Data.Macros
         {
             get => _macro;
             set => SetProperty( ref _macro, value );
+        }
+
+        public MacroInvoker MacroInvoker
+        {
+            get => _macroInvoker;
+            set => SetProperty( ref _macroInvoker, value );
         }
 
         public override string Name
