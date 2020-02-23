@@ -47,27 +47,30 @@
                     <GridViewColumn Header="{x:Static properties:Resources.Shard}" Width="150" x:Name="NameColumn">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <controls:EditTextBlock Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                        CanEdit="{Binding IsPreset, Converter={StaticResource InverseBooleanConverter}}"
-                                                        Width="{Binding ActualWidth, ElementName=NameColumn, Converter={StaticResource CellWidthValueConverter}}" />
+                                <controls:EditTextBlock
+                                    Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                    CanEdit="{Binding IsPreset, Converter={StaticResource InverseBooleanConverter}}"
+                                    Width="{Binding ActualWidth, ElementName=NameColumn, Converter={StaticResource CellWidthValueConverter}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="{x:Static properties:Resources.Address}" Width="150" x:Name="AddressColumn">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <controls:EditTextBlock Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                        CanEdit="{Binding IsPreset, Converter={StaticResource InverseBooleanConverter}}"
-                                                        Width="{Binding ActualWidth, ElementName=AddressColumn, Converter={StaticResource CellWidthValueConverter}}" />
+                                <controls:EditTextBlock
+                                    Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                    CanEdit="{Binding IsPreset, Converter={StaticResource InverseBooleanConverter}}"
+                                    Width="{Binding ActualWidth, ElementName=AddressColumn, Converter={StaticResource CellWidthValueConverter}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="{x:Static properties:Resources.Port}" Width="50" x:Name="PortColumn">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <controls:EditTextBlock Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                        CanEdit="{Binding IsPreset, Converter={StaticResource InverseBooleanConverter}}"
-                                                        Width="{Binding ActualWidth, ElementName=PortColumn, Converter={StaticResource CellWidthValueConverter}}" />
+                                <controls:EditTextBlock
+                                    Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                    CanEdit="{Binding IsPreset, Converter={StaticResource InverseBooleanConverter}}"
+                                    Width="{Binding ActualWidth, ElementName=PortColumn, Converter={StaticResource CellWidthValueConverter}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

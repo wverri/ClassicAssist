@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -20,6 +21,7 @@ namespace ClassicAssist.Launcher
     public class MainViewModel : BaseViewModel
     {
         private const string CONFIG_FILENAME = "Launcher.json";
+        private readonly ShardManager _manager;
         private ICommand _checkforUpdateCommand;
         private ObservableCollection<string> _clientPaths = new ObservableCollection<string>();
         private ICommand _closingCommand;
@@ -35,11 +37,11 @@ namespace ClassicAssist.Launcher
 
         public MainViewModel()
         {
-            ShardManager manager = ShardManager.GetInstance();
+            _manager = ShardManager.GetInstance();
 
-            manager.Shards.CollectionChanged += ( sender, args ) => { ShardEntries = manager.Shards; };
+            _manager.Shards.CollectionChanged += ( sender, args ) => { ShardEntries = _manager.Shards; };
 
-            ShardEntries = manager.Shards;
+            ShardEntries = _manager.Shards;
 
             string fullPath = Path.Combine( Environment.CurrentDirectory, CONFIG_FILENAME );
 
@@ -92,9 +94,25 @@ namespace ClassicAssist.Launcher
                     SelectedDataPath = Directory.Exists( path ) ? path : DataPaths.FirstOrDefault();
                 }
 
+                if ( config["Shards"] != null )
+                {
+                    foreach ( JToken token in config["Shards"] )
+                    {
+                        ShardEntry shard = new ShardEntry
+                        {
+                            Name = token["Name"]?.ToObject<string>() ?? "Unknown",
+                            Address = token["Address"]?.ToObject<string>() ?? "localhost",
+                            Port = token["Port"]?.ToObject<int>() ?? 2593,
+                            HasStatusProtocol = token["HasStatusProtocol"]?.ToObject<bool>() ?? true
+                        };
+
+                        ShardEntries.Add( shard );
+                    }
+                }
+
                 if ( config["SelectedShard"] != null )
                 {
-                    ShardEntry match = manager.Shards.FirstOrDefault(
+                    ShardEntry match = _manager.Shards.FirstOrDefault(
                         s => s.Name == config["SelectedShard"].ToObject<string>() );
 
                     if ( match != null )
@@ -304,6 +322,25 @@ namespace ClassicAssist.Launcher
             config.Add( "SelectedDataPath", SelectedDataPath ?? string.Empty );
 
             config.Add( "SelectedShard", SelectedShard.Name );
+
+            IEnumerable<ShardEntry> shards = _manager.Shards.Where( s => !s.IsPreset );
+
+            JArray shardArray = new JArray();
+
+            foreach ( ShardEntry shard in shards )
+            {
+                JObject shardObj = new JObject
+                {
+                    { "Name", shard.Name },
+                    { "Address", shard.Address },
+                    { "Port", shard.Port },
+                    { "HasStatusProtocol", shard.HasStatusProtocol }
+                };
+
+                shardArray.Add( shardObj );
+            }
+
+            config.Add( "Shards", shardArray );
 
             using ( JsonTextWriter jtw =
                 new JsonTextWriter( new StreamWriter( Path.Combine( Environment.CurrentDirectory, CONFIG_FILENAME ) ) )
