@@ -165,4 +165,16 @@
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Cannot remove preset shard" xml:space="preserve">
+    <value>Cannot remove preset shard</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
 </root>

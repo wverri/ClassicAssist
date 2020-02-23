@@ -2,12 +2,16 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using ClassicAssist.Launcher.Properties;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Application = System.Windows.Application;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
@@ -15,8 +19,10 @@ namespace ClassicAssist.Launcher
 {
     public class MainViewModel : BaseViewModel
     {
+        private const string CONFIG_FILENAME = "Launcher.json";
         private ICommand _checkforUpdateCommand;
         private ObservableCollection<string> _clientPaths = new ObservableCollection<string>();
+        private ICommand _closingCommand;
         private ObservableCollection<string> _dataPaths = new ObservableCollection<string>();
         private ICommand _selectClientPathCommand;
         private ICommand _selectDataPathCommand;
@@ -34,6 +40,69 @@ namespace ClassicAssist.Launcher
             manager.Shards.CollectionChanged += ( sender, args ) => { ShardEntries = manager.Shards; };
 
             ShardEntries = manager.Shards;
+
+            string fullPath = Path.Combine( Environment.CurrentDirectory, CONFIG_FILENAME );
+
+            if ( !File.Exists( fullPath ) )
+            {
+                return;
+            }
+
+            using ( JsonTextReader jtr = new JsonTextReader( new StreamReader( fullPath ) ) )
+            {
+                JObject config = (JObject) JToken.ReadFrom( jtr );
+
+                if ( config["ClientPaths"] != null )
+                {
+                    foreach ( JToken token in config["ClientPaths"] )
+                    {
+                        string path = token.ToObject<string>();
+
+                        if ( File.Exists( path ) )
+                        {
+                            ClientPaths.Add( path );
+                        }
+                    }
+                }
+
+                if ( config["SelectedClientPath"] != null )
+                {
+                    string path = config["SelectedClientPath"].ToObject<string>();
+
+                    SelectedClientPath = File.Exists( path ) ? path : ClientPaths.FirstOrDefault();
+                }
+
+                if ( config["DataPaths"] != null )
+                {
+                    foreach ( JToken token in config["DataPaths"] )
+                    {
+                        string path = token.ToObject<string>();
+
+                        if ( Directory.Exists( path ) )
+                        {
+                            DataPaths.Add( path );
+                        }
+                    }
+                }
+
+                if ( config["SelectedDataPath"] != null )
+                {
+                    string path = config["SelectedDataPath"].ToObject<string>();
+
+                    SelectedDataPath = Directory.Exists( path ) ? path : DataPaths.FirstOrDefault();
+                }
+
+                if ( config["SelectedShard"] != null )
+                {
+                    ShardEntry match = manager.Shards.FirstOrDefault(
+                        s => s.Name == config["SelectedShard"].ToObject<string>() );
+
+                    if ( match != null )
+                    {
+                        SelectedShard = match;
+                    }
+                }
+            }
         }
 
         public ICommand CheckForUpdateCommand =>
@@ -44,6 +113,9 @@ namespace ClassicAssist.Launcher
             get => _clientPaths;
             set => SetProperty( ref _clientPaths, value );
         }
+
+        public ICommand ClosingCommand =>
+            _closingCommand ?? ( _closingCommand = new RelayCommand( Closing, o => true ) );
 
         public ObservableCollection<string> DataPaths
         {
@@ -183,7 +255,7 @@ namespace ClassicAssist.Launcher
 
             Process p = Process.Start( psi );
 
-            if ( !p.HasExited )
+            if ( p != null && !p.HasExited )
             {
                 Application.Current.Shutdown( 0 );
             }
@@ -193,7 +265,7 @@ namespace ClassicAssist.Launcher
         {
             IPHostEntry hostentry = await Dns.GetHostEntryAsync( hostname );
 
-            return hostentry?.AddressList[0];
+            return hostentry?.AddressList.FirstOrDefault( i => i.AddressFamily == AddressFamily.InterNetwork );
         }
 
         private void ShowShardsWindow( object obj )
@@ -204,6 +276,41 @@ namespace ClassicAssist.Launcher
             if ( window.DataContext is ShardsViewModel vm && vm.DialogResult == DialogResult.OK )
             {
                 SelectedShard = vm.SelectedShard;
+            }
+        }
+
+        private void Closing( object obj )
+        {
+            JObject config = new JObject();
+
+            JArray clientPathArray = new JArray();
+
+            foreach ( string clientPath in ClientPaths )
+            {
+                clientPathArray.Add( clientPath );
+            }
+
+            config.Add( "ClientPaths", clientPathArray );
+            config.Add( "SelectedClientPath", SelectedClientPath ?? string.Empty );
+
+            JArray dataPathArray = new JArray();
+
+            foreach ( string dataPath in DataPaths )
+            {
+                dataPathArray.Add( dataPath );
+            }
+
+            config.Add( "DataPaths", dataPathArray );
+            config.Add( "SelectedDataPath", SelectedDataPath ?? string.Empty );
+
+            config.Add( "SelectedShard", SelectedShard.Name );
+
+            using ( JsonTextWriter jtw =
+                new JsonTextWriter( new StreamWriter( Path.Combine( Environment.CurrentDirectory, CONFIG_FILENAME ) ) )
+            )
+            {
+                jtw.Formatting = Formatting.Indented;
+                config.WriteTo( jtw );
             }
         }
     }

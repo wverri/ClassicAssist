@@ -7,6 +7,8 @@ namespace ClassicAssist.Launcher
 {
     public class ShardEntry : INotifyPropertyChanged
     {
+        private const string RUNUO_REGEX = @".*Clients=(\d+),.*";
+
         private string _status;
         public string Address { get; set; }
         public bool HasStatusProtocol { get; set; } = true;
@@ -20,7 +22,7 @@ namespace ClassicAssist.Launcher
             set => SetProperty( ref _status, value );
         }
 
-        public string StatusRegex { get; set; }
+        public string StatusRegex { get; set; } = RUNUO_REGEX;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

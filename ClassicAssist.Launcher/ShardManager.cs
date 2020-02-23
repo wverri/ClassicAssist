@@ -1,5 +1,4 @@
-﻿using System.CodeDom;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace ClassicAssist.Launcher
 {
@@ -7,45 +6,27 @@ namespace ClassicAssist.Launcher
     {
         private static ShardManager _instance;
         private static readonly object _lock = new object();
-        public ObservableCollection<ShardEntry> Shards { get; set; } = new ObservableCollection<ShardEntry>();
 
-        private const string RUNUO_REGEX = @".*Clients=(\d+),.*";
         private ShardManager()
         {
             Shards.Add( new ShardEntry
             {
-                Name = "UOGamers: Demise",
-                Address = "login.uodemise.com",
-                Port = 2593,
-                IsPreset = true,
-                StatusRegex = RUNUO_REGEX
+                Name = "UOGamers: Demise", Address = "login.uodemise.com", Port = 2593, IsPreset = true
             } );
 
             Shards.Add( new ShardEntry
             {
-                Name = "UOGamers: Hybrid",
-                Address = "login.uohybrid.com",
-                Port = 2593,
-                IsPreset = true,
-                StatusRegex = RUNUO_REGEX
+                Name = "UOGamers: Hybrid", Address = "login.uohybrid.com", Port = 2593, IsPreset = true
             } );
 
             Shards.Add( new ShardEntry
             {
-                Name = "Heritage UO",
-                Address = "play.trueuo.com",
-                Port = 2593,
-                IsPreset = true,
-                StatusRegex = RUNUO_REGEX
+                Name = "Heritage UO", Address = "play.trueuo.com", Port = 2593, IsPreset = true
             } );
 
             Shards.Add( new ShardEntry
             {
-                Name = "UO Forever",
-                Address = "login.uoforever.com",
-                Port = 2599,
-                IsPreset = true,
-                StatusRegex = RUNUO_REGEX
+                Name = "UO Forever", Address = "login.uoforever.com", Port = 2599, IsPreset = true
             } );
 
             Shards.Add( new ShardEntry
@@ -57,6 +38,8 @@ namespace ClassicAssist.Launcher
                 HasStatusProtocol = false
             } );
         }
+
+        public ObservableCollection<ShardEntry> Shards { get; set; } = new ObservableCollection<ShardEntry>();
 
         public static ShardManager GetInstance()
         {

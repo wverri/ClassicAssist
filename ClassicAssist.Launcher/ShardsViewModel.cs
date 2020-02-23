@@ -1,18 +1,24 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using ClassicAssist.Launcher.Properties;
 
 namespace ClassicAssist.Launcher
 {
     public class ShardsViewModel : BaseViewModel
     {
         private readonly ShardManager _manager;
+        private ICommand _addCommand;
         private ICommand _cancelCommand;
+        private bool _isRefreshing;
         private ICommand _okCommand;
+        private ICommand _refreshCommand;
+        private ICommand _removeCommand;
         private ShardEntry _selectedShard;
         private ObservableCollection<ShardEntry> _shards;
 
@@ -21,40 +27,29 @@ namespace ClassicAssist.Launcher
             _manager = ShardManager.GetInstance();
             Shards = _manager.Shards;
 
-            foreach ( ShardEntry shard in Shards )
-            {
-                Task.Run( async () =>
-                {
-                    if ( !shard.HasStatusProtocol )
-                    {
-                        return "-";
-                    }
-
-                    string status = await GetStatus( shard );
-
-                    return status;
-                } ).ContinueWith( t =>
-                {
-                    if ( !string.IsNullOrEmpty( shard.StatusRegex ) )
-                    {
-                        Match matches = Regex.Match( t.Result, shard.StatusRegex );
-
-                        shard.Status = matches.Success ? matches.Groups[1].Value : "-";
-                    }
-                    else
-                    {
-                        shard.Status = t.Result;
-                    }
-
-                    NotifyPropertyChanged( nameof( Shards ) );
-                } );
-            }
+            Refresh( this );
         }
+
+        public ICommand AddCommand => _addCommand ?? ( _addCommand = new RelayCommand( Add, o => true ) );
 
         public ICommand CancelCommand => _cancelCommand ?? ( _cancelCommand = new RelayCommand( Cancel, o => true ) );
 
         public DialogResult DialogResult { get; set; }
+
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty( ref _isRefreshing, value );
+        }
+
         public ICommand OKCommand => _okCommand ?? ( _okCommand = new RelayCommand( OK, o => true ) );
+
+        public ICommand RefreshCommand =>
+            _refreshCommand ?? ( _refreshCommand = new RelayCommand( Refresh, o => !IsRefreshing ) );
+
+        public ICommand RemoveCommand =>
+            _removeCommand ?? ( _removeCommand =
+                new RelayCommand( Remove, o => SelectedShard != null && !SelectedShard.IsPreset ) );
 
         public ShardEntry SelectedShard
         {
@@ -66,6 +61,66 @@ namespace ClassicAssist.Launcher
         {
             get => _shards;
             set => SetProperty( ref _shards, value );
+        }
+
+        private void Remove( object obj )
+        {
+            if ( !( obj is ShardEntry entry ) )
+            {
+                return;
+            }
+
+            if ( entry.IsPreset )
+            {
+                MessageBox.Show( Resources.Cannot_remove_preset_shard, Resources.Error );
+                return;
+            }
+
+            Shards.Remove( entry );
+        }
+
+        private void Add( object obj )
+        {
+            Shards.Add( new ShardEntry { Name = "Shard Name", Address = "localhost", Port = 2593 } );
+        }
+
+        private void Refresh( object obj )
+        {
+            try
+            {
+                foreach ( ShardEntry shard in Shards )
+                {
+                    Task.Run( async () =>
+                    {
+                        if ( !shard.HasStatusProtocol )
+                        {
+                            return "-";
+                        }
+
+                        string status = await GetStatus( shard );
+
+                        return status;
+                    } ).ContinueWith( t =>
+                    {
+                        if ( !string.IsNullOrEmpty( shard.StatusRegex ) )
+                        {
+                            Match matches = Regex.Match( t.Result, shard.StatusRegex );
+
+                            shard.Status = matches.Success ? matches.Groups[1].Value : "-";
+                        }
+                        else
+                        {
+                            shard.Status = t.Result;
+                        }
+
+                        NotifyPropertyChanged( nameof( Shards ) );
+                    } );
+                }
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
         }
 
         private void OK( object obj )
@@ -81,7 +136,10 @@ namespace ClassicAssist.Launcher
             }
 
             TcpClient client = new TcpClient();
-            await client.ConnectAsync( shard.Address, shard.Port );
+
+            Task connectTask = client.ConnectAsync( shard.Address, shard.Port );
+
+            await Task.WhenAny( connectTask, Task.Delay( TimeSpan.FromSeconds( 5 ) ) );
 
             if ( !client.Connected )
             {

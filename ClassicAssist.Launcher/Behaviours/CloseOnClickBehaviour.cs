@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
 
-namespace ClassicAssist.Launcher
+namespace ClassicAssist.Launcher.Behaviours
 {
     public class CloseOnClickBehaviour : Behavior<Button>
     {
