@@ -8,13 +8,32 @@ namespace ClassicAssist.Launcher
     public class ShardEntry : INotifyPropertyChanged
     {
         private const string RUNUO_REGEX = @".*Clients=(\d+),.*";
+        private string _address;
+        private string _name;
+        private int _port;
 
         private string _status;
-        public string Address { get; set; }
+
+        public string Address
+        {
+            get => _address;
+            set => SetProperty( ref _address, value );
+        }
+
         public bool HasStatusProtocol { get; set; } = true;
         public bool IsPreset { get; set; } = false;
-        public string Name { get; set; }
-        public int Port { get; set; }
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty( ref _name, value );
+        }
+
+        public int Port
+        {
+            get => _port;
+            set => SetProperty( ref _port, value );
+        }
 
         public string Status
         {

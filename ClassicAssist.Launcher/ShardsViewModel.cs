@@ -60,7 +60,11 @@ namespace ClassicAssist.Launcher
         public ObservableCollection<ShardEntry> Shards
         {
             get => _shards;
-            set => SetProperty( ref _shards, value );
+            set
+            {
+                SetProperty( ref _shards, value );
+                _manager.Shards = value;
+            }
         }
 
         private void Remove( object obj )
