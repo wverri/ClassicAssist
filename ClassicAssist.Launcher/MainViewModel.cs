@@ -291,10 +291,13 @@ namespace ClassicAssist.Launcher
             ShardsWindow window = new ShardsWindow();
             window.ShowDialog();
 
-            if ( window.DataContext is ShardsViewModel vm && vm.DialogResult == DialogResult.OK )
+            if ( !( window.DataContext is ShardsViewModel vm ) || vm.DialogResult != DialogResult.OK ||
+                 vm.SelectedShard == null )
             {
-                SelectedShard = vm.SelectedShard;
+                return;
             }
+
+            SelectedShard = vm.SelectedShard;
         }
 
         private void Closing( object obj )
