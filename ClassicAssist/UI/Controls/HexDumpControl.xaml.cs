@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Text;
 using System.Windows;
 
@@ -44,12 +43,6 @@ namespace ClassicAssist.UI.Controls
                     binaryBuilder.Append( (char) ( b1 > 9 ? b1 + 0x37 : b1 + 0x30 ) );
                     binaryBuilder.Append( (char) ( b2 > 9 ? b2 + 0x37 : b2 + 0x30 ) );
                     binaryBuilder.Append( ' ' );
-                    b1 = Packet.Data[i];
-
-                    if ( b1 < 0x20 || b1 == 0xB7 || b1 == 0xFF )
-                    {
-                        b1 = (byte) '.';
-                    }
 
                     if ( ( i + 1 ) % 16 != 0 )
                     {
@@ -114,8 +107,6 @@ namespace ClassicAssist.UI.Controls
                 return textBuilder.ToString();
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void MenuItem_OnClick( object sender, RoutedEventArgs e )
         {
