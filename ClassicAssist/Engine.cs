@@ -430,11 +430,6 @@ namespace Assistant
 
         public static void SendPacketToServer( byte[] packet, int length )
         {
-            if ( !Connected )
-            {
-                return;
-            }
-
             lock ( _serverSendLock )
             {
                 while ( DateTime.Now < _nextPacketSendTime )
