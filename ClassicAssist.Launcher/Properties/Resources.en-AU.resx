@@ -118,63 +118,63 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ClassicAssist Launcher" xml:space="preserve">
-    <value>经典辅助启动器</value>
+    <value>ClassicAssist Launcher</value>
   </data>
   <data name="Client Options" xml:space="preserve">
-    <value>客户端选项</value>
+    <value>Client Options</value>
   </data>
   <data name="Ultima Online" xml:space="preserve">
     <value>Ultima Online</value>
   </data>
   <data name="Check for update" xml:space="preserve">
-    <value>检查更新</value>
+    <value>Check for update</value>
   </data>
   <data name="Shard" xml:space="preserve">
-    <value>碎片</value>
+    <value>Shard</value>
   </data>
   <data name="Port" xml:space="preserve">
-    <value>港口</value>
+    <value>Port</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>开始</value>
+    <value>Start</value>
   </data>
   <data name="Select a client" xml:space="preserve">
-    <value>选择客户端</value>
+    <value>Select a client</value>
   </data>
   <data name="Select your Ultima Online directory" xml:space="preserve">
-    <value>选择您的 Ultima 在线目录</value>
+    <value>Select your Ultima Online directory</value>
   </data>
   <data name="Unable to resolve shard hostname." xml:space="preserve">
-    <value>无法解析分片主机名。</value>
+    <value>Unable to resolve shard hostname.</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>错误</value>
+    <value>Error</value>
   </data>
   <data name="Shards" xml:space="preserve">
-    <value>碎片</value>
+    <value>Shards</value>
   </data>
   <data name="Address" xml:space="preserve">
-    <value>地址</value>
+    <value>Address</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>球员</value>
+    <value>Players</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>取消</value>
+    <value>Cancel</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>还行</value>
+    <value>OK</value>
   </data>
   <data name="Add" xml:space="preserve">
-    <value>添加</value>
+    <value>Add</value>
   </data>
   <data name="Cannot remove preset shard" xml:space="preserve">
-    <value>无法删除预设分片</value>
+    <value>Cannot remove preset shard</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>刷新</value>
+    <value>Refresh</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>删除</value>
+    <value>Remove</value>
   </data>
 </root>
