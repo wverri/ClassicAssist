@@ -3,6 +3,7 @@
     <TargetFramework>net48</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>..\Output\</OutputPath>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
@@ -119,6 +120,5 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG</DefineConstants>
-    <OutputPath>..\Output\</OutputPath>
   </PropertyGroup>
 </Project>
