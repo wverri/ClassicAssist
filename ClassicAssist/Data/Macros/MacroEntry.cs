@@ -126,11 +126,6 @@ namespace ClassicAssist.Data.Macros
 
         public void Execute()
         {
-            if ( _macroInvoker.IsRunning && DoNotAutoInterrupt && !IsBackground )
-            {
-                return;
-            }
-
             if ( _macroInvoker.IsRunning )
             {
                 _macroInvoker.Stop();
