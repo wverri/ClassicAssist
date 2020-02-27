@@ -281,6 +281,11 @@ namespace ClassicAssist.Launcher
 
         private static async Task<IPAddress> ResolveAddress( string hostname )
         {
+            if ( IPAddress.TryParse( hostname, out IPAddress address ) )
+            {
+                return address;
+            }
+
             IPHostEntry hostentry = await Dns.GetHostEntryAsync( hostname );
 
             return hostentry?.AddressList.FirstOrDefault( i => i.AddressFamily == AddressFamily.InterNetwork );
