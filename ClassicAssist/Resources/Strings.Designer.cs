@@ -2473,11 +2473,29 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stop All Macros.
+        /// </summary>
+        public static string Stop_All_Macros {
+            get {
+                return ResourceManager.GetString("Stop All Macros", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop Current Macro.
         /// </summary>
         public static string Stop_Current_Macro {
             get {
                 return ResourceManager.GetString("Stop Current Macro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stops all running macros including background and autostart macros..
+        /// </summary>
+        public static string Stops_all_running_macros_including_background_and_autostart_macros_ {
+            get {
+                return ResourceManager.GetString("Stops all running macros including background and autostart macros.", resourceCulture);
             }
         }
         

@@ -1116,4 +1116,10 @@
   <data name="When checked macro will execute automatically after login." xml:space="preserve">
     <value>Quando selezionata macro verrà eseguito automaticamente dopo l'accesso.</value>
   </data>
+  <data name="Stop All Macros" xml:space="preserve">
+    <value>Interrompi tutte le macro</value>
+  </data>
+  <data name="Stops all running macros including background and autostart macros." xml:space="preserve">
+    <value>Interrompe tutte le macro in esecuzione, incluse le macro in background e di avvio automatico.</value>
+  </data>
 </root>

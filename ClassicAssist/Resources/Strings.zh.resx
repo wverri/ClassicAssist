@@ -1116,4 +1116,10 @@
   <data name="When checked macro will execute automatically after login." xml:space="preserve">
     <value>选中宏后，宏将在登录后自动执行。</value>
   </data>
+  <data name="Stop All Macros" xml:space="preserve">
+    <value>停止所有宏</value>
+  </data>
+  <data name="Stops all running macros including background and autostart macros." xml:space="preserve">
+    <value>停止所有正在运行的宏，包括背景和自动启动宏。</value>
+  </data>
 </root>
