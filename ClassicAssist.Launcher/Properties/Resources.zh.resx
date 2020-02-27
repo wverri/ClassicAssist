@@ -177,4 +177,7 @@
   <data name="Remove" xml:space="preserve">
     <value>删除</value>
   </data>
+  <data name="Ping" xml:space="preserve">
+    <value>坪</value>
+  </data>
 </root>

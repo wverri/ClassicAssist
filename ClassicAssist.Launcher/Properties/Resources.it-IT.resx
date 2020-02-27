@@ -121,37 +121,37 @@
     <value>ClassicAssist Launcher</value>
   </data>
   <data name="Client Options" xml:space="preserve">
-    <value>Opzioni client</value>
+    <value>Seleziona Client</value>
   </data>
   <data name="Ultima Online" xml:space="preserve">
-    <value>Ultima Online</value>
+    <value>Cartella di Ultima Online</value>
   </data>
   <data name="Check for update" xml:space="preserve">
-    <value>Verificare la disponibilità di aggiornamenti</value>
+    <value>Verifica Aggiornamenti</value>
   </data>
   <data name="Shard" xml:space="preserve">
-    <value>Shard</value>
+    <value>Seleziona Shard</value>
   </data>
   <data name="Port" xml:space="preserve">
     <value>Porta</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Iniziare</value>
+    <value>Avvia</value>
   </data>
   <data name="Select a client" xml:space="preserve">
-    <value>Selezionare un client</value>
+    <value>Seleziona il client</value>
   </data>
   <data name="Select your Ultima Online directory" xml:space="preserve">
-    <value>Selezionare la directory Ultima Online</value>
+    <value>Seleziona la cartella di Ultima Online</value>
   </data>
   <data name="Unable to resolve shard hostname." xml:space="preserve">
-    <value>Impossibile risolvere il nome host della partizione.</value>
+    <value>Hostname/IP dello Shard non raggiunto.</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Errore</value>
   </data>
   <data name="Shards" xml:space="preserve">
-    <value>Frammenti</value>
+    <value>Shards</value>
   </data>
   <data name="Address" xml:space="preserve">
     <value>Indirizzo</value>
@@ -166,15 +166,18 @@
     <value>Ok</value>
   </data>
   <data name="Add" xml:space="preserve">
-    <value>Aggiungere</value>
+    <value>Aggiungi</value>
   </data>
   <data name="Cannot remove preset shard" xml:space="preserve">
-    <value>Impossibile rimuovere il partizione predefinito</value>
+    <value>Impossibile rimuovere lo Shard predefinito</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>aggiornare</value>
+    <value>Aggiorna</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Rimuovere</value>
+    <value>Rimuovi</value>
+  </data>
+  <data name="Ping" xml:space="preserve">
+    <value>Ping</value>
   </data>
 </root>

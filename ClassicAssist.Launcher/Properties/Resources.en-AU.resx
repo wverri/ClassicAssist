@@ -177,4 +177,7 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
 </root>

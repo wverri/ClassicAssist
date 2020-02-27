@@ -75,8 +75,10 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="{x:Static properties:Resources.Players}" Width="150"
+                    <GridViewColumn Header="{x:Static properties:Resources.Players}" Width="100"
                                     DisplayMemberBinding="{Binding Status}" />
+                    <GridViewColumn Header="{x:Static properties:Resources.Ping}" Width="100"
+                                    DisplayMemberBinding="{Binding Ping}" />
                 </GridView>
             </ListView.View>
         </ListView>
