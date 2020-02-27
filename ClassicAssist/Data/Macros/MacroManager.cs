@@ -139,7 +139,7 @@ namespace ClassicAssist.Data.Macros
         {
             foreach ( MacroEntry entry in Items )
             {
-                if ( entry.IsBackground && entry.IsAutostart )
+                if ( entry.IsAutostart )
                 {
                     Execute( entry );
                 }

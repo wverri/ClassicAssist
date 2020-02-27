@@ -175,7 +175,6 @@
                           IsChecked="{Binding SelectedItem.IsBackground, ElementName=ListBox}" />
                 <CheckBox Content="{x:Static resources:Strings.Autostart}" Margin="0,0,5,0"
                           IsChecked="{Binding SelectedItem.IsAutostart, ElementName=ListBox}"
-                          IsEnabled="{Binding SelectedItem.IsBackground}"
                           ToolTip="{x:Static resources:Strings.When_checked_macro_will_execute_automatically_after_login_}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">

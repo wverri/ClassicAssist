@@ -42,15 +42,7 @@ namespace ClassicAssist.Data.Macros
         public bool IsBackground
         {
             get => _isBackground;
-            set
-            {
-                SetProperty( ref _isBackground, value );
-
-                if ( !value )
-                {
-                    IsAutostart = false;
-                }
-            }
+            set => SetProperty( ref _isBackground, value );
         }
 
         public bool IsRunning
