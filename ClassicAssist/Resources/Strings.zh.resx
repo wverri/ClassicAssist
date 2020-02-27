@@ -1113,4 +1113,7 @@
   <data name="Autostart" xml:space="preserve">
     <value>自动启动</value>
   </data>
+  <data name="When checked macro will execute automatically after login." xml:space="preserve">
+    <value>选中宏后，宏将在登录后自动执行。</value>
+  </data>
 </root>

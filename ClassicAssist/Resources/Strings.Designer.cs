@@ -3022,6 +3022,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When checked macro will execute automatically after login..
+        /// </summary>
+        public static string When_checked_macro_will_execute_automatically_after_login_ {
+            get {
+                return ResourceManager.GetString("When checked macro will execute automatically after login.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to World Status.
         /// </summary>
         public static string World_Status {

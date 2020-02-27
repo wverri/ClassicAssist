@@ -1113,4 +1113,7 @@
   <data name="Autostart" xml:space="preserve">
     <value>Autostart</value>
   </data>
+  <data name="When checked macro will execute automatically after login." xml:space="preserve">
+    <value>When checked macro will execute automatically after login.</value>
+  </data>
 </root>
