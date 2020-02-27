@@ -25,7 +25,7 @@ namespace ClassicAssist.Data.Macros
         private CancellationTokenSource _cancellationToken;
         private MacroEntry _macro;
 
-        private MacroInvoker()
+        public MacroInvoker()
         {
             ScriptRuntime runtime = _engine.Runtime;
             runtime.LoadAssembly( Assembly.GetExecutingAssembly() );
@@ -39,7 +39,7 @@ namespace ClassicAssist.Data.Macros
         public Exception Exception { get; set; }
         public bool IsFaulted { get; set; }
 
-        public bool IsRunning => Thread.IsAlive;
+        public bool IsRunning => Thread?.IsAlive ?? false;
 
         public Thread Thread { get; set; }
 
@@ -167,7 +167,6 @@ namespace ClassicAssist.Data.Macros
             try
             {
                 Thread.Start();
-                Thread.Join();
             }
             catch ( ThreadStartException )
             {
@@ -188,7 +187,7 @@ namespace ClassicAssist.Data.Macros
             {
                 Thread?.Interrupt();
                 Thread?.Abort();
-                Thread?.Join();
+                Thread?.Join( 100 );
             }
             catch ( ThreadStateException e )
             {

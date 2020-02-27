@@ -1101,4 +1101,16 @@
   <data name="Run in background" xml:space="preserve">
     <value>Run in background</value>
   </data>
+  <data name="Background macro '{0}' started..." xml:space="preserve">
+    <value>Background macro '{0}' started...</value>
+  </data>
+  <data name="Background macro '{0}' stopped..." xml:space="preserve">
+    <value>Background macro '{0}' stopped...</value>
+  </data>
+  <data name="Cannot PlayMacro from background macro..." xml:space="preserve">
+    <value>Cannot PlayMacro from background macro...</value>
+  </data>
+  <data name="Autostart" xml:space="preserve">
+    <value>Autostart</value>
+  </data>
 </root>

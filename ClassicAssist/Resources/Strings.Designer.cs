@@ -313,6 +313,33 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Autostart.
+        /// </summary>
+        public static string Autostart {
+            get {
+                return ResourceManager.GetString("Autostart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background macro &apos;{0}&apos; started....
+        /// </summary>
+        public static string Background_macro___0___started___ {
+            get {
+                return ResourceManager.GetString("Background macro \'{0}\' started...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background macro &apos;{0}&apos; stopped....
+        /// </summary>
+        public static string Background_macro___0___stopped___ {
+            get {
+                return ResourceManager.GetString("Background macro \'{0}\' stopped...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bandage Self.
         /// </summary>
         public static string Bandage_Self {
@@ -435,6 +462,15 @@ namespace ClassicAssist.Resources {
         public static string Cannot_find_sound_file___ {
             get {
                 return ResourceManager.GetString("Cannot find sound file...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot PlayMacro from background macro....
+        /// </summary>
+        public static string Cannot_PlayMacro_from_background_macro___ {
+            get {
+                return ResourceManager.GetString("Cannot PlayMacro from background macro...", resourceCulture);
             }
         }
         
