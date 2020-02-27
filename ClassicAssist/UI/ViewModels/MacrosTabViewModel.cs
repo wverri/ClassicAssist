@@ -84,7 +84,8 @@ namespace ClassicAssist.UI.ViewModels
         }
 
         public RelayCommand NewMacroCommand =>
-            _newMacroCommand ?? ( _newMacroCommand = new RelayCommand( NewMacro, o => !SelectedItem?.IsRunning ?? true ) );
+            _newMacroCommand ??
+            ( _newMacroCommand = new RelayCommand( NewMacro, o => !SelectedItem?.IsRunning ?? true ) );
 
         public ICommand RecordCommand =>
             _recordCommand ?? ( _recordCommand = new RelayCommand( Record, o => SelectedItem != null ) );
@@ -115,7 +116,8 @@ namespace ClassicAssist.UI.ViewModels
         public ICommand ShowCommandsCommand =>
             _showCommandsCommand ?? ( _showCommandsCommand = new RelayCommand( ShowCommands, o => true ) );
 
-        public ICommand StopCommand => _stopCommand ?? ( _stopCommand = new RelayCommandAsync( Stop, o => SelectedItem?.IsRunning ?? false ) );
+        public ICommand StopCommand =>
+            _stopCommand ?? ( _stopCommand = new RelayCommandAsync( Stop, o => SelectedItem?.IsRunning ?? false ) );
 
         public void Serialize( JObject json )
         {
