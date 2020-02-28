@@ -86,6 +86,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( macro == null )
             {
+                SetAlias( aliasName, obj );
                 return;
             }
 
