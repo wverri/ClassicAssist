@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Assistant;
-using ClassicAssist.Resources;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
-using Microsoft.Scripting;
 
 namespace ClassicAssist.Data.Macros
 {
@@ -16,7 +15,6 @@ namespace ClassicAssist.Data.Macros
         private static readonly object _lock = new object();
         private static MacroManager _instance;
         private readonly List<IMacroCommandParser> _parsers = new List<IMacroCommandParser>();
-        private IMacroInvoker _invoker;
 
         private MacroManager()
         {
@@ -34,9 +32,8 @@ namespace ClassicAssist.Data.Macros
             }
         }
 
-        public Func<MacroEntry> CurrentMacro { get; set; }
+        public MacroEntry CurrentMacro { get; set; }
         public Action<string> InsertDocument { get; set; }
-        public Func<bool> IsPlaying { get; set; }
         public Func<bool> IsRecording { get; set; }
         public ObservableCollectionEx<MacroEntry> Items { get; set; }
         public static bool QuietMode { get; set; }
@@ -94,42 +91,66 @@ namespace ClassicAssist.Data.Macros
 
         public void Execute( MacroEntry macro )
         {
-            switch ( macro.MacroType )
+            if ( macro.IsBackground )
             {
-                case MacroType.Python:
+                if ( macro.IsRunning )
                 {
-                    _invoker = PythonInvoker.GetInstance();
-
-                    void OnException( Exception exception )
+                    macro.Stop();
+                }
+                else
+                {
+                    macro.Execute();
+                }
+            }
+            else
+            {
+                if ( CurrentMacro != null && CurrentMacro.IsRunning )
+                {
+                    if ( macro == CurrentMacro && macro.DoNotAutoInterrupt )
                     {
-                        UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
-
-                        if ( exception is SyntaxErrorException syntaxError )
-                        {
-                            UO.Commands.SystemMessage( $"{Strings.Line_Number}: {syntaxError.RawSpan.Start.Line}" );
-                        }
+                        return;
                     }
 
-                    _invoker.ExceptionEvent += OnException;
-                    _invoker.Execute( macro );
-                    _invoker.ExceptionEvent -= OnException;
+                    CurrentMacro.Stop();
+                }
 
-                    break;
-                }
-                case MacroType.Steam:
+                CurrentMacro = macro;
+                CurrentMacro.Execute();
+            }
+        }
+
+        public void StopAll()
+        {
+            foreach ( MacroEntry entry in Items )
+            {
+                if ( entry.IsRunning )
                 {
-                    _invoker = SteamEngineInvoker.GetInstance();
-                    _invoker.Execute( macro );
-                    break;
+                    entry.Stop();
                 }
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
         public void Stop()
         {
-            _invoker?.Stop();
+            CurrentMacro?.Stop();
+        }
+
+        public void Autostart()
+        {
+            foreach ( MacroEntry entry in Items )
+            {
+                if ( entry.IsAutostart )
+                {
+                    Execute( entry );
+                }
+            }
+        }
+
+        public MacroEntry GetCurrentMacro()
+        {
+            Thread currentThread = Thread.CurrentThread;
+
+            return Items.FirstOrDefault( m => m.MacroInvoker.Thread?.Equals( currentThread ) ?? false );
         }
     }
 }

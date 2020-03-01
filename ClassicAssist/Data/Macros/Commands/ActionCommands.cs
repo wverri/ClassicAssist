@@ -423,10 +423,11 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( layerSerial == 0 )
             {
+                AliasCommands.UnsetAlias( "found" );
                 return false;
             }
 
-            AliasCommands.SetAlias( "found", layerSerial );
+            AliasCommands.SetMacroAlias( "found", layerSerial );
 
             if ( MacroManager.QuietMode )
             {

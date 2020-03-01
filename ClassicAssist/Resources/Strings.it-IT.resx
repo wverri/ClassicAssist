@@ -322,7 +322,7 @@
     <value>Visualizzatore entità</value>
   </data>
   <data name="Equip Last Weapon (Quick Weapon Switch)" xml:space="preserve">
-    <value>Equipaggia l'ultima arma (Cambio Rapido Armi)</value>
+    <value>Equipaggia l'ultima arma (Cambio Rapido Armi) *</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Errore</value>
@@ -1092,16 +1092,40 @@
   <data name="Only overwrite blank password" xml:space="preserve">
     <value>Sovrascrivi solo password vuota</value>
   </data>
-  <data name="Steam" xml:space="preserve">
-    <value>Steam</value>
+  <data name="Show GIF Capture" xml:space="preserve">
+    <value>Mostra acquisizione GIF</value>
   </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
+  <data name="Requires Server Support" xml:space="preserve">
+    <value>Richiede il supporto del server</value>
   </data>
-  <data name="Macro Format:" xml:space="preserve">
-    <value>Formato macro:</value>
+  <data name="Run in background" xml:space="preserve">
+    <value>Esegui in background</value>
   </data>
-  <data name="Command currently not implemented." xml:space="preserve">
-    <value>Comando attualmente non implementato.</value>
+  <data name="Background macro '{0}' started..." xml:space="preserve">
+    <value>Avviata la macro di sfondo '{0}'...</value>
+  </data>
+  <data name="Background macro '{0}' stopped..." xml:space="preserve">
+    <value>La macro di sfondo '{0}' interrotta...</value>
+  </data>
+  <data name="Cannot PlayMacro from background macro..." xml:space="preserve">
+    <value>Impossibile riprodurreMacro dalla macro in background...</value>
+  </data>
+  <data name="Autostart" xml:space="preserve">
+    <value>Autostart</value>
+  </data>
+  <data name="When checked macro will execute automatically after login." xml:space="preserve">
+    <value>Quando selezionata macro verrà eseguito automaticamente dopo l'accesso.</value>
+  </data>
+  <data name="Stop All Macros" xml:space="preserve">
+    <value>Interrompi tutte le macro</value>
+  </data>
+  <data name="Stops all running macros including background and autostart macros." xml:space="preserve">
+    <value>Interrompe tutte le macro in esecuzione, incluse le macro in background e di avvio automatico.</value>
+  </data>
+  <data name="Instance" xml:space="preserve">
+    <value>Isolato</value>
+  </data>
+  <data name="Global" xml:space="preserve">
+    <value>Globale</value>
   </data>
 </root>

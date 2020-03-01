@@ -3,6 +3,7 @@
     <TargetFramework>net48</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>..\Output\</OutputPath>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
@@ -55,6 +56,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AnimatedGif" Version="1.0.5" />
     <PackageReference Include="AvalonEdit" Version="6.0.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="IronPython" Version="2.7.10-candidate1" />
@@ -74,6 +76,7 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>..\Output\net48\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -115,11 +118,10 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-    <BuildDate>$([System.DateTime]::op_Subtraction($([System.DateTime]::get_Now().get_Date()),$([System.DateTime]::new(2019,11,22))).get_TotalDays())</BuildDate>
-    <Version>0.1.$(BuildDate).0</Version>
+    <BuildDate>$([System.DateTime]::op_Subtraction($([System.DateTime]::get_Now().get_Date()),$([System.DateTime]::new(2020,2,27))).get_TotalDays())</BuildDate>
+    <Version>0.2.$(BuildDate).0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG</DefineConstants>
-    <OutputPath>..\Output\</OutputPath>
   </PropertyGroup>
 </Project>

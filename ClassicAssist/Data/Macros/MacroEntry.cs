@@ -1,23 +1,62 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Resources;
+using Microsoft.Scripting;
 
 namespace ClassicAssist.Data.Macros
 {
     public class MacroEntry : HotkeyEntry, IComparable<MacroEntry>
     {
+        private readonly Dispatcher _dispatcher;
+        private Dictionary<string, int> _aliases = new Dictionary<string, int>();
         private bool _doNotAutoInterrupt;
+        private bool _isAutostart;
+        private bool _isBackground;
+        private bool _isRunning;
         private bool _loop;
         private string _macro = string.Empty;
-        private MacroType _macroType;
+        private MacroInvoker _macroInvoker = new MacroInvoker();
         private string _name;
+
+        public MacroEntry()
+        {
+            _dispatcher = Dispatcher.CurrentDispatcher;
+            _macroInvoker.ExceptionEvent += OnExceptionEvent;
+            _macroInvoker.StoppedEvent += OnStoppedEvent;
+        }
+
+        public Dictionary<string, int> Aliases
+        {
+            get => _aliases;
+            set => SetProperty( ref _aliases, value );
+        }
 
         public bool DoNotAutoInterrupt
         {
             get => _doNotAutoInterrupt;
             set => SetProperty( ref _doNotAutoInterrupt, value );
+        }
+
+        public bool IsAutostart
+        {
+            get => _isAutostart;
+            set => SetProperty( ref _isAutostart, value );
+        }
+
+        public bool IsBackground
+        {
+            get => _isBackground;
+            set => SetProperty( ref _isBackground, value );
+        }
+
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set => SetProperty( ref _isRunning, value );
         }
 
         public bool Loop
@@ -32,10 +71,10 @@ namespace ClassicAssist.Data.Macros
             set => SetProperty( ref _macro, value );
         }
 
-        public MacroType MacroType
+        public MacroInvoker MacroInvoker
         {
-            get => _macroType;
-            set => SetProperty( ref _macroType, value );
+            get => _macroInvoker;
+            set => SetProperty( ref _macroInvoker, value );
         }
 
         public override string Name
@@ -44,11 +83,19 @@ namespace ClassicAssist.Data.Macros
             set => SetName( _name, value );
         }
 
-        public Action Stop { get; set; }
-
         public int CompareTo( MacroEntry other )
         {
             return string.Compare( Name, other.Name, StringComparison.OrdinalIgnoreCase );
+        }
+
+        private void OnStoppedEvent()
+        {
+            _dispatcher.Invoke( () => IsRunning = false );
+
+            if ( IsBackground )
+            {
+                UO.Commands.SystemMessage( string.Format( Strings.Background_macro___0___stopped___, Name ) );
+            }
         }
 
         public override string ToString()
@@ -75,6 +122,41 @@ namespace ClassicAssist.Data.Macros
             }
 
             SetProperty( ref _name, value );
+        }
+
+        public void Execute()
+        {
+            if ( _macroInvoker.IsRunning )
+            {
+                _macroInvoker.Stop();
+            }
+
+            _dispatcher.Invoke( () => IsRunning = true );
+
+            if ( IsBackground )
+            {
+                UO.Commands.SystemMessage( string.Format( Strings.Background_macro___0___started___, Name ) );
+            }
+
+            _macroInvoker.Execute( this );
+        }
+
+        public void Stop()
+        {
+            if ( _macroInvoker.IsRunning )
+            {
+                _macroInvoker.Stop();
+            }
+        }
+
+        private static void OnExceptionEvent( Exception exception )
+        {
+            UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
+
+            if ( exception is SyntaxErrorException syntaxError )
+            {
+                UO.Commands.SystemMessage( $"{Strings.Line_Number}: {syntaxError.RawSpan.Start.Line}" );
+            }
         }
     }
 }

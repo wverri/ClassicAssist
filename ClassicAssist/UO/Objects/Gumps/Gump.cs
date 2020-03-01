@@ -339,7 +339,7 @@ namespace ClassicAssist.UO.Objects.Gumps
 
         public override int GetHashCode()
         {
-            return ID.GetHashCode() ^ Layout.GetHashCode();
+            return ID.GetHashCode() ^ Layout?.GetHashCode() ?? 0;
         }
 
         public virtual void OnResponse( int buttonID, int[] switches )
@@ -690,7 +690,7 @@ namespace ClassicAssist.UO.Objects.Gumps
             return Encoding.ASCII.GetBytes( str );
         }
 
-        public byte[] Compile()
+        private byte[] Compile()
         {
             IGumpWriter disp = new GumpWriter( this );
 

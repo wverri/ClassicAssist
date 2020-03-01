@@ -349,7 +349,7 @@
     <value>实体查看器</value>
   </data>
   <data name="Equip Last Weapon (Quick Weapon Switch)" xml:space="preserve">
-    <value>装备最后武器（快速武器开关）</value>
+    <value>装备最后武器（快速武器开关）*</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>错误</value>
@@ -1092,16 +1092,40 @@
   <data name="Only overwrite blank password" xml:space="preserve">
     <value>仅覆盖空白密码</value>
   </data>
-  <data name="Steam" xml:space="preserve">
-    <value>Steam</value>
+  <data name="Show GIF Capture" xml:space="preserve">
+    <value>显示 GIF 捕获</value>
   </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
+  <data name="Requires Server Support" xml:space="preserve">
+    <value>需要服务器支持</value>
   </data>
-  <data name="Macro Format:" xml:space="preserve">
-    <value>宏格式：</value>
+  <data name="Run in background" xml:space="preserve">
+    <value>在后台运行</value>
   </data>
-  <data name="Command currently not implemented." xml:space="preserve">
-    <value>命令当前未实现。</value>
+  <data name="Background macro '{0}' started..." xml:space="preserve">
+    <value>后台宏"{0}"已启动...</value>
+  </data>
+  <data name="Background macro '{0}' stopped..." xml:space="preserve">
+    <value>后台宏"{0}"已停止...</value>
+  </data>
+  <data name="Cannot PlayMacro from background macro..." xml:space="preserve">
+    <value>无法从背景宏播放宏...</value>
+  </data>
+  <data name="Autostart" xml:space="preserve">
+    <value>自动启动</value>
+  </data>
+  <data name="When checked macro will execute automatically after login." xml:space="preserve">
+    <value>选中宏后，宏将在登录后自动执行。</value>
+  </data>
+  <data name="Stop All Macros" xml:space="preserve">
+    <value>停止所有宏</value>
+  </data>
+  <data name="Stops all running macros including background and autostart macros." xml:space="preserve">
+    <value>停止所有正在运行的宏，包括背景和自动启动宏。</value>
+  </data>
+  <data name="Global" xml:space="preserve">
+    <value>全球</value>
+  </data>
+  <data name="Instance" xml:space="preserve">
+    <value>全球</value>
   </data>
 </root>
