@@ -26,7 +26,7 @@ namespace ClassicAssist.Data.Macros.Commands
             SetAlias( "self", player.Serial );
         }
 
-        internal static int ResolveSerial( object obj )
+        internal static int ResolveSerial( object obj, bool quiet = false )
         {
             int serial;
 
@@ -35,7 +35,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 case string str:
                     serial = GetAlias( str.ToLower() );
 
-                    if ( serial == -1 && !MacroManager.QuietMode )
+                    if ( serial == -1 && !MacroManager.QuietMode && !quiet )
                     {
                         UOC.SystemMessage( string.Format( Strings.Unknown_alias___0___, str ) );
                     }
@@ -52,7 +52,11 @@ namespace ClassicAssist.Data.Macros.Commands
 
                     break;
                 default:
-                    UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                    if ( !quiet )
+                    {
+                        UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                    }
+
                     return -1;
             }
 

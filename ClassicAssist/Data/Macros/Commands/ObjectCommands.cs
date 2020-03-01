@@ -341,5 +341,32 @@ namespace ClassicAssist.Data.Macros.Commands
 
             return true;
         }
+
+        //TODO
+        public static void MoveType( int id, int sourceSerial, int destinationSerial )
+        {
+            Item sourceItem = Engine.Items.GetItem( sourceSerial );
+
+            if ( sourceItem == null )
+            {
+                UOC.SystemMessage( Strings.Cannot_find_item___ );
+                return;
+            }
+
+            if ( sourceItem.Container == null )
+            {
+                UOC.SystemMessage( Strings.Invalid_container___ );
+                return;
+            }
+
+            Item entity = sourceItem.Container.SelectEntities( i => i.ID == id ).FirstOrDefault();
+
+            if ( entity == null )
+            {
+                return;
+            }
+
+            UOC.DragDropAsync( entity.Serial, -1, destinationSerial ).Wait();
+        }
     }
 }

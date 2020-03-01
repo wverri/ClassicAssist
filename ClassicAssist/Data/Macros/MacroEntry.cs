@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Resources;
 using Microsoft.Scripting;
+using UOScript;
 
 namespace ClassicAssist.Data.Macros
 {
@@ -195,6 +196,16 @@ namespace ClassicAssist.Data.Macros
         private static void OnExceptionEvent( Exception exception )
         {
             UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
+
+            if ( exception is SyntaxError se )
+            {
+                UO.Commands.SystemMessage( se.Node.Lexeme );
+            }
+
+            if ( exception is RunTimeError re )
+            {
+                UO.Commands.SystemMessage( re.Node?.Lexeme );
+            }
 
             if ( exception is SyntaxErrorException syntaxError )
             {

@@ -333,7 +333,7 @@ namespace ClassicAssist.UI.ViewModels
         {
             int count = Items.Count;
 
-            MacroEntry macro = new MacroEntry (MacroType.Python) { Name = $"Macro-{count + 1}", Macro = string.Empty };
+            MacroEntry macro = new MacroEntry( MacroType.Python ) { Name = $"Macro-{count + 1}", Macro = string.Empty };
 
             macro.Action = async hks => await Execute( macro );
 

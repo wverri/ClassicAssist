@@ -40,39 +40,15 @@ namespace ClassicAssist.Data.Macros
         public bool IsFaulted { get; set; }
 
         public Thread Thread { get; set; }
+
         public bool IsRunning
         {
             get => Thread?.IsAlive ?? false;
             set => throw new InvalidOperationException();
         }
 
-        public event dMacroStartStop StartedEvent;
         public event dMacroStartStop StoppedEvent;
         public event dMacroException ExceptionEvent;
-
-        private static string GetScriptingImports()
-        {
-            string prepend = Assembly.GetExecutingAssembly().GetTypes()
-                .Where( t =>
-                    t.Namespace != null && t.IsPublic && t.IsClass && t.Namespace.EndsWith( "Macros.Commands" ) )
-                .Aggregate( string.Empty, ( current, t ) => current + $"from {t.FullName} import * \n" );
-
-            return prepend;
-        }
-
-        public static Dictionary<string, object> InitializeImports( ScriptEngine engine )
-        {
-            Dictionary<string, object> dictionary = new Dictionary<string, object>();
-
-            ScriptSource importSource =
-                engine.CreateScriptSourceFromString( GetScriptingImports(), SourceCodeKind.Statements );
-
-            CompiledCode importCompiled = importSource.Compile();
-            ScriptScope importScope = engine.CreateScope( dictionary );
-            importCompiled.Execute( importScope );
-
-            return dictionary;
-        }
 
         public void Execute( MacroEntry macro )
         {
@@ -196,6 +172,32 @@ namespace ClassicAssist.Data.Macros
             {
                 UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, e.Message ) );
             }
+        }
+
+        public event dMacroStartStop StartedEvent;
+
+        private static string GetScriptingImports()
+        {
+            string prepend = Assembly.GetExecutingAssembly().GetTypes()
+                .Where( t =>
+                    t.Namespace != null && t.IsPublic && t.IsClass && t.Namespace.EndsWith( "Macros.Commands" ) )
+                .Aggregate( string.Empty, ( current, t ) => current + $"from {t.FullName} import * \n" );
+
+            return prepend;
+        }
+
+        public static Dictionary<string, object> InitializeImports( ScriptEngine engine )
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+
+            ScriptSource importSource =
+                engine.CreateScriptSourceFromString( GetScriptingImports(), SourceCodeKind.Statements );
+
+            CompiledCode importCompiled = importSource.Compile();
+            ScriptScope importScope = engine.CreateScope( dictionary );
+            importCompiled.Execute( importScope );
+
+            return dictionary;
         }
     }
 }

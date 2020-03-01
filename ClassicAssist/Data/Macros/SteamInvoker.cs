@@ -36,6 +36,9 @@ namespace ClassicAssist.Data.Macros
 
         public void Stop()
         {
+            _cancellationToken.Cancel();
+            Thread.Interrupt();
+            Thread.Abort();
         }
 
         public void Execute( MacroEntry macro )
@@ -59,6 +62,8 @@ namespace ClassicAssist.Data.Macros
 
                 try
                 {
+                    Interpreter.StopScript();
+
                     StartedEvent?.Invoke();
 
                     AliasCommands.SetDefaultAliases();
@@ -97,31 +102,9 @@ namespace ClassicAssist.Data.Macros
                 {
                     StoppedEvent?.Invoke();
                 }
-            } );
+            } ) { IsBackground = true };
 
-            Thread.IsBackground = true;
             Thread.Start();
-
-            //ASTNode ast = Lexer.Lex( macro.Macro.Split( '\n' ) );
-
-            //Script script = new Script( ast );
-
-            //try
-            //{
-            //    Interpreter.StartScript( script );
-
-            //    while ( Interpreter.ExecuteScript() )
-            //    {
-            //    }
-            //}
-            //catch ( SyntaxError se )
-            //{
-            //    UO.Commands.SystemMessage( se.Message );
-            //}
-            //catch ( RunTimeError re )
-            //{
-            //    UO.Commands.SystemMessage( re.Message );
-            //}
         }
 
         public Thread Thread { get; set; }

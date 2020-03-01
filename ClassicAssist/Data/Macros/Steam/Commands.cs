@@ -1,4 +1,5 @@
-﻿using ClassicAssist.Data.Macros.Commands;
+﻿using System.Threading;
+using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
 using UOScript;
@@ -19,11 +20,13 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "clearbuy", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "clearhands", ClearHandsCommand );
             Interpreter.RegisterCommandHandler( "clearjournal", ClearJournalCommand );
+            Interpreter.RegisterCommandHandler( "clearignorelist", ClearIgnoreListCommand );
             Interpreter.RegisterCommandHandler( "clearlist", ClearListCommand );
             Interpreter.RegisterCommandHandler( "clearsell", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "clickobject", ClickObjectCommand );
             Interpreter.RegisterCommandHandler( "clickscreen", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "closegump", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "contextmenu", ContextMenuCommand );
             Interpreter.RegisterCommandHandler( "counter", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "createlist", CreateListCommand );
             Interpreter.RegisterCommandHandler( "dress", DressCommand );
@@ -37,28 +40,29 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "helpbutton", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "hotkeys", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "info", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "ignoreobject", IgnoreObjectCommand );
             Interpreter.RegisterCommandHandler( "land", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "logoutbutton", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "mapuo", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "messagebox", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "moveitem", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "moveitemoffset", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "movetype", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "movetype", MoveTypeCommand );
             Interpreter.RegisterCommandHandler( "movetypeoffset", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "msg", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "msg", MsgCommand );
             Interpreter.RegisterCommandHandler( "organizer", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "paperdoll", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "pause", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "pause", PauseCommand );
             Interpreter.RegisterCommandHandler( "ping", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "playmacro", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "playsound", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "poplist", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "promptalias", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "pushlist", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "pushlist", PushListCommand );
             Interpreter.RegisterCommandHandler( "questsbutton", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "removelist", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "rename", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "replygump", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "replygump", ReplyGumpCommand );
             Interpreter.RegisterCommandHandler( "resync", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "run", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "sell", NotImplementedCommand );
@@ -73,21 +77,202 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "togglescavenger", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "turn", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "undress", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "unsetalias", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "useobject", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "unsetalias", UnsetAliasCommand );
+            Interpreter.RegisterCommandHandler( "useobject", UseObjectCommand );
             Interpreter.RegisterCommandHandler( "useonce", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "useskill", UseSkillCommand );
             Interpreter.RegisterCommandHandler( "usetype", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "virtue", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "waitforgump", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "waitforgump", WaitForGumpCommand );
             Interpreter.RegisterCommandHandler( "waitforjournal", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "waitforproperties", WaitForPropertiesCommand );
             Interpreter.RegisterCommandHandler( "walk", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "where", NotImplementedCommand );
         }
 
+        private static bool MoveTypeCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length < 3 )
+            {
+                UOC.SystemMessage(
+                    "Usage: movetype (graphic) (source) (destination) [(x, y, z)] [color] [amount] [range or search level]" );
+                return true;
+            }
+
+            int id = args[0].AsInt();
+            int sourceSerial = args[1].ResolveSerial();
+            int destinationSerial = args[2].ResolveSerial();
+
+            ObjectCommands.MoveType( id, sourceSerial, destinationSerial );
+
+            return true;
+        }
+
+        private static bool ContextMenuCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length < 2 )
+            {
+                UOC.SystemMessage( "Usage: contextmenu (serial) (option)" );
+                return true;
+            }
+
+            int serial = args[0].ResolveSerial();
+            int option = args[1].ResolveSerial();
+
+            ActionCommands.ContextMenu( serial, option );
+
+            return true;
+        }
+
+        private static bool MsgCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length < 1 )
+            {
+                UOC.SystemMessage( "Usage: msg 'text' [hue]" );
+                return true;
+            }
+
+            string text = args[0].AsString();
+            int hue = args.Length > 1 ? args[1].AsInt() : 34;
+
+            MsgCommands.Msg( text, hue );
+
+            return true;
+        }
+
+        private static bool PauseCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: pause 'timeout'" );
+                return true;
+            }
+
+            int timeout = args[0].AsInt();
+
+            Thread.Sleep( timeout );
+            return true;
+        }
+
+        private static bool ReplyGumpCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length < 2 )
+            {
+                UOC.SystemMessage( "Usage: replygump (gump id/'any') (button) [option] [...]" );
+                return true;
+            }
+
+            uint id = args[0].AsUIntOrAny();
+            int button = args[1].AsInt();
+            //TODO options? are they switches?
+
+            GumpCommands.ReplyGump( id, button );
+            return true;
+        }
+
+        private static bool WaitForGumpCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length < 2 )
+            {
+                UOC.SystemMessage( "Usage: waitforgump 'id/any' (timeout)" );
+                return true;
+            }
+
+            uint id = args[0].AsUIntOrAny();
+            int timeout = args[1].AsInt();
+
+            GumpCommands.WaitForGump( id, timeout );
+
+            return true;
+        }
+
+        private static bool WaitForPropertiesCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length < 2 )
+            {
+                UOC.SystemMessage( "Usage: waitforproperties (serial) (timeout)" );
+                return true;
+            }
+
+            int serial = args[0].ResolveSerial();
+            int timeout = args[1].AsInt();
+
+            PropertiesCommands.WaitForProperties( serial, timeout );
+            return true;
+        }
+
+        private static bool IgnoreObjectCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: ignoreobject 'alias/serial'" );
+                return true;
+            }
+
+            int serial = args[0].ResolveSerial();
+
+            ObjectCommands.IgnoreObject( serial );
+
+            return true;
+        }
+
+        private static bool PushListCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length < 2 )
+            {
+                UOC.SystemMessage( "Usage: pushlist ('list name') ('element value') ['front'/'back']" );
+                return true;
+            }
+
+            string listName = args[0].AsString();
+            int val = args[1].AsInt();
+            //TODO front/back
+
+            ListCommands.PushList( listName, val );
+            Interpreter.PushList( listName, args[1], false, true );
+            return true;
+        }
+
+        private static bool ClearIgnoreListCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            ObjectCommands.ClearIgnoreList();
+
+            return true;
+        }
+
+        private static bool UseObjectCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: useobject 'serial/alias'" );
+                return true;
+            }
+
+            int serial = args[0].ResolveSerial();
+
+            ObjectCommands.UseObject( serial );
+
+            return true;
+        }
+
+        private static bool UnsetAliasCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: unsetalias 'alias'" );
+                return true;
+            }
+
+            string alias = args[0].AsString();
+
+            AliasCommands.UnsetAlias( alias );
+
+            return true;
+        }
+
         private static bool SetAbilityCommand( string command, Argument[] args, bool quiet, bool force )
         {
-            if (args.Length == 0)
+            if ( args.Length == 0 )
             {
                 UOC.SystemMessage( "Usage: setability 'primary/secondary'" );
                 return true;
@@ -126,7 +311,7 @@ namespace ClassicAssist.Data.Macros.Steam
             }
 
             string alias = args[0].AsString();
-            int serial = args[1].AsInt();
+            int serial = args[1].ResolveSerial();
 
             AliasCommands.SetAlias( alias, serial );
 
@@ -163,7 +348,7 @@ namespace ClassicAssist.Data.Macros.Steam
                 return true;
             }
 
-            uint serial = args[0].AsSerial();
+            int serial = args[0].ResolveSerial();
             string layer = ( (Layer) args[1].AsInt() ).ToString();
 
             ActionCommands.EquipItem( serial, layer );
@@ -198,6 +383,7 @@ namespace ClassicAssist.Data.Macros.Steam
             string listName = args[0].AsString();
 
             ListCommands.CreateList( listName );
+            Interpreter.CreateList( listName );
 
             return true;
         }
@@ -210,7 +396,7 @@ namespace ClassicAssist.Data.Macros.Steam
                 return true;
             }
 
-            uint serial = args[0].AsSerial();
+            int serial = args[0].ResolveSerial();
 
             ActionCommands.ClickObject( serial );
 
@@ -284,7 +470,7 @@ namespace ClassicAssist.Data.Macros.Steam
                 return true;
             }
 
-            uint serial = args[0].AsSerial();
+            int serial = args[0].ResolveSerial();
 
             ActionCommands.Attack( serial );
 

@@ -148,7 +148,7 @@ namespace ClassicAssist.Data.Macros
 
         public MacroEntry GetCurrentMacro()
         {
-            if (Items == null)
+            if ( Items == null )
             {
                 return null;
             }

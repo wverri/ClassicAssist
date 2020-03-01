@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ClassicAssist.Data.Macros.Commands
 {
@@ -76,6 +77,15 @@ namespace ClassicAssist.Data.Macros.Commands
             }
 
             _lists[listName].Clear();
+        }
+
+        [CommandsDisplay( Category = "Lists", Description = "Checks whether a list contains a given element.",
+            InsertText = "if InList(\"shmoo\", 1):" )]
+        public static bool InList( string listName, int value )
+        {
+            int[] list;
+
+            return ( list = GetList( listName ) ) != null && list.Contains( value );
         }
     }
 }

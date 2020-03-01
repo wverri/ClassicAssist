@@ -35,6 +35,11 @@ namespace ClassicAssist.Data.Macros.Commands
             InsertText = "if GumpExists(0xff):" )]
         public static bool GumpExists( uint gumpId )
         {
+            if ( gumpId == 0 )
+            {
+                return !Engine.GumpList.IsEmpty;
+            }
+
             return Engine.GumpList.ContainsKey( gumpId );
         }
 
@@ -42,6 +47,29 @@ namespace ClassicAssist.Data.Macros.Commands
             InsertText = "if InGump(0xf00f, \"lethal darts\"):" )]
         public static bool InGump( uint gumpId, string text )
         {
+            if ( gumpId == 0 )
+            {
+                if ( !Engine.Gumps.GetGumps( out Gump[] allGumps ) )
+                {
+                    return false;
+                }
+
+                foreach ( Gump g in allGumps )
+                {
+                    if ( g.GumpElements.Any( ge =>
+                        ge.Text != null && ge.Text.ToLower().Contains( text.ToLower() ) ) )
+                    {
+                        ;
+                    }
+
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             if ( Engine.Gumps.GetGump( gumpId, out Gump gump ) )
             {
                 return gump.GumpElements.Any( ge => ge.Text != null && ge.Text.ToLower().Contains( text.ToLower() ) );
