@@ -1,7 +1,7 @@
 ﻿using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
-using UOSteam;
+using UOScript;
 using UOC = ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Macros.Steam

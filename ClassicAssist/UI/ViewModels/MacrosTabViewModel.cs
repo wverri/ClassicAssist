@@ -136,7 +136,8 @@ namespace ClassicAssist.UI.ViewModels
                     { "PassToUO", macroEntry.PassToUO },
                     { "Keys", macroEntry.Hotkey.ToJObject() },
                     { "IsBackground", macroEntry.IsBackground },
-                    { "IsAutostart", macroEntry.IsAutostart }
+                    { "IsAutostart", macroEntry.IsAutostart },
+                    { "MacroType", (int) macroEntry.MacroType }
                 };
 
                 JArray aliasesArray = new JArray();
@@ -182,7 +183,9 @@ namespace ClassicAssist.UI.ViewModels
             {
                 foreach ( JToken token in config["Macros"] )
                 {
-                    MacroEntry entry = new MacroEntry
+                    MacroType macroType = GetJsonValue( token, "MacroType", MacroType.Python );
+
+                    MacroEntry entry = new MacroEntry( macroType )
                     {
                         Name = GetJsonValue( token, "Name", string.Empty ),
                         Loop = GetJsonValue( token, "Loop", false ),
@@ -330,7 +333,7 @@ namespace ClassicAssist.UI.ViewModels
         {
             int count = Items.Count;
 
-            MacroEntry macro = new MacroEntry { Name = $"Macro-{count + 1}", Macro = string.Empty };
+            MacroEntry macro = new MacroEntry (MacroType.Python) { Name = $"Macro-{count + 1}", Macro = string.Empty };
 
             macro.Action = async hks => await Execute( macro );
 

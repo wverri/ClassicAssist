@@ -148,6 +148,11 @@ namespace ClassicAssist.Data.Macros
 
         public MacroEntry GetCurrentMacro()
         {
+            if (Items == null)
+            {
+                return null;
+            }
+
             Thread currentThread = Thread.CurrentThread;
 
             return Items.FirstOrDefault( m => m.MacroInvoker.Thread?.Equals( currentThread ) ?? false );

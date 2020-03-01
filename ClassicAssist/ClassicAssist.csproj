@@ -67,7 +67,7 @@
     <PackageReference Include="WpfPlus.Plus" Version="1.2.8" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\steam-engine\Steam\UOSteam.csproj" />
+    <ProjectReference Include="..\steam-engine\UOScript\UOScript.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="cuoapi">

@@ -13,7 +13,7 @@ using Microsoft.Scripting.Hosting;
 
 namespace ClassicAssist.Data.Macros
 {
-    public class MacroInvoker
+    public class PythonInvoker : IMacroInvoker
     {
         public delegate void dMacroException( Exception e );
 
@@ -25,7 +25,7 @@ namespace ClassicAssist.Data.Macros
         private CancellationTokenSource _cancellationToken;
         private MacroEntry _macro;
 
-        public MacroInvoker()
+        public PythonInvoker()
         {
             ScriptRuntime runtime = _engine.Runtime;
             runtime.LoadAssembly( Assembly.GetExecutingAssembly() );
@@ -39,9 +39,12 @@ namespace ClassicAssist.Data.Macros
         public Exception Exception { get; set; }
         public bool IsFaulted { get; set; }
 
-        public bool IsRunning => Thread?.IsAlive ?? false;
-
         public Thread Thread { get; set; }
+        public bool IsRunning
+        {
+            get => Thread?.IsAlive ?? false;
+            set => throw new InvalidOperationException();
+        }
 
         public event dMacroStartStop StartedEvent;
         public event dMacroStartStop StoppedEvent;

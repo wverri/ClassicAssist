@@ -14,14 +14,14 @@ namespace ClassicAssist.Tests
     [TestClass]
     public class SteamCommandTests
     {
-        private SteamEngineInvoker _steamInvoker;
+        private SteamInvoker _steamInvoker;
 
         [TestInitialize]
         public void Initialize()
         {
             Aliases.Register();
             Commands.Register();
-            _steamInvoker = SteamEngineInvoker.GetInstance();
+            _steamInvoker = SteamInvoker.GetInstance();
 
             Engine.Player = new PlayerMobile( 0x01 );
             Item backpack = new Item( 0x40000000 ) { Container = new ItemCollection( 0x40000000 ) };
@@ -96,11 +96,11 @@ namespace ClassicAssist.Tests
         [TestMethod]
         public void ClearHandsTest()
         {
-            Item onehanded = new Item(0x40000002  );
+            Item onehanded = new Item( 0x40000002 );
             Engine.Items.Add( onehanded );
             Engine.Player.SetLayer( Layer.OneHanded, onehanded.Serial );
 
-            ExpectOutgoingPacket expect = new ExpectOutgoingPacket( p => p[ 0 ] == 0x07 || p[0] == 0x08, true );
+            ExpectOutgoingPacket expect = new ExpectOutgoingPacket( p => p[0] == 0x07 || p[0] == 0x08, true );
 
             _steamInvoker.Execute( CreateMacro( "clearhands 'left'" ) );
 
@@ -115,7 +115,7 @@ namespace ClassicAssist.Tests
         [TestMethod]
         public void ClickObjectTest()
         {
-            ExpectOutgoingPacket expect = new ExpectOutgoingPacket( p => p[ 0 ] == 0x09, true );
+            ExpectOutgoingPacket expect = new ExpectOutgoingPacket( p => p[0] == 0x09, true );
 
             _steamInvoker.Execute( CreateMacro( "clickobject 'backpack'" ) );
 
@@ -140,7 +140,7 @@ namespace ClassicAssist.Tests
             Item onehanded = new Item( 0x40000002, Engine.Player.Backpack.Serial );
             Engine.Player.Backpack.Container.Add( onehanded );
 
-            ExpectOutgoingPacket expect = new ExpectOutgoingPacket( p => p[ 0 ] == 0x07 || p[ 0 ] == 0x13, true );
+            ExpectOutgoingPacket expect = new ExpectOutgoingPacket( p => p[0] == 0x07 || p[0] == 0x13, true );
 
             _steamInvoker.Execute( CreateMacro( "equipitem 0x40000002 1" ) );
 
@@ -164,7 +164,7 @@ namespace ClassicAssist.Tests
 
         private static MacroEntry CreateMacro( string text )
         {
-            return new MacroEntry { Name = "Test", Macro = text };
+            return new MacroEntry( MacroType.Steam ) { Name = "Test", Macro = text };
         }
 
         public class ExpectOutgoingPacket
@@ -191,7 +191,7 @@ namespace ClassicAssist.Tests
                 {
                     if ( _failOnOther )
                     {
-                        Assert.Fail($"Unexpected packet 0x{data[0]:X}");
+                        Assert.Fail( $"Unexpected packet 0x{data[0]:X}" );
                     }
                 }
             }

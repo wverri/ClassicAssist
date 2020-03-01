@@ -15,7 +15,7 @@ namespace ClassicAssist.Tests
         [TestMethod]
         public void WillExecute()
         {
-            MacroEntry me = new MacroEntry();
+            MacroEntry me = new MacroEntry( MacroType.Python );
 
             MacroManager mi = MacroManager.GetInstance();
 

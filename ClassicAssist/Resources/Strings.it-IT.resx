@@ -1128,4 +1128,13 @@
   <data name="Global" xml:space="preserve">
     <value>Globale</value>
   </data>
+  <data name="Macro Type:" xml:space="preserve">
+    <value>Tipo macro:</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
 </root>

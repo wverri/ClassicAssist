@@ -1128,4 +1128,13 @@
   <data name="Instance" xml:space="preserve">
     <value>글로벌</value>
   </data>
+  <data name="Macro Type:" xml:space="preserve">
+    <value>매크로 유형:</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
 </root>

@@ -48,7 +48,8 @@ namespace ClassicAssist.Tests
                 File.Delete( Path.Combine( _profilePath, "settings.json" ) );
             }
 
-            IEnumerable<Type> allSettingProvider = Assembly.GetAssembly( typeof( Engine ) ).GetTypes().Where( t => typeof( ISettingProvider ).IsAssignableFrom( t ) && t.IsClass );
+            IEnumerable<Type> allSettingProvider = Assembly.GetAssembly( typeof( Engine ) ).GetTypes()
+                .Where( t => typeof( ISettingProvider ).IsAssignableFrom( t ) && t.IsClass );
 
             Options options = new Options();
 

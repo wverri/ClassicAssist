@@ -1,6 +1,6 @@
 ﻿using Assistant;
 using ClassicAssist.Data.Macros.Commands;
-using UOSteam;
+using UOScript;
 
 namespace ClassicAssist.Data.Macros.Steam
 {

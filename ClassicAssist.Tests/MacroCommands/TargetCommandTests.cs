@@ -978,7 +978,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             Assert.IsFalse( result );
 
-            result = TargetCommands.GetFriendListOnly( "Next" );
+            result = TargetCommands.GetFriendListOnly();
 
             Assert.IsTrue( result );
             Assert.AreEqual( mobile.Serial, AliasCommands.GetAlias( "friend" ) );
