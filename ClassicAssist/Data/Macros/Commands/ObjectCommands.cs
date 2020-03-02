@@ -161,7 +161,7 @@ namespace ClassicAssist.Data.Macros.Commands
             Description =
                 "Searches for entity by graphic ID and sets found alias, defaults to ground if no source given.",
             InsertText = "FindType(0xff)\r\nUseObject(\"found\")" )]
-        public static bool FindType( int graphic, int range = -1, object findLocation = null, int hue = -1 )
+        public static bool FindType( int graphic, int range = -1, object findLocation = null, int hue = -1, bool quiet = false )
         {
             int owner = 0;
 
@@ -199,7 +199,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             AliasCommands.SetMacroAlias( "found", entity.Serial );
 
-            if ( MacroManager.QuietMode )
+            if ( MacroManager.QuietMode || quiet )
             {
                 return true;
             }

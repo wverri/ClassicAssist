@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Assistant;
@@ -22,9 +23,10 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "bandageself", BandageSelfCommand );
             Interpreter.RegisterCommandHandler( "buy", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "cast", CastCommand );
-            Interpreter.RegisterCommandHandler( "cancelprompt", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "cancelprompt", CancelPromptCommand );
             Interpreter.RegisterCommandHandler( "chatmsg", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "clearusequeue", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "clearuseonce", ClearUseOnceCommand );
             Interpreter.RegisterCommandHandler( "clearbuy", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "clearhands", ClearHandsCommand );
             Interpreter.RegisterCommandHandler( "clearjournal", ClearJournalCommand );
@@ -36,6 +38,7 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "closegump", CloseGumpCommand );
             Interpreter.RegisterCommandHandler( "contextmenu", ContextMenuCommand );
             Interpreter.RegisterCommandHandler( "createlist", CreateListCommand );
+            Interpreter.RegisterCommandHandler( "createtimer", CreateTimerCommand );
             Interpreter.RegisterCommandHandler( "dress", DressCommand );
             Interpreter.RegisterCommandHandler( "dressconfig", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "emotemsg",
@@ -44,12 +47,13 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "equipwand", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "feed", FeedCommand );
             Interpreter.RegisterCommandHandler( "fly", FlyCommand );
+            Interpreter.RegisterCommandHandler( "getenemy", GetEnemyCommand );
             Interpreter.RegisterCommandHandler( "guildbutton", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "guildmsg",
                 ( c, a, q, f ) => MsgCommandNoHue( c, a, q, f, MsgCommands.GuildMsg ) );
             Interpreter.RegisterCommandHandler( "headmsg", HeadMsgCommand );
             Interpreter.RegisterCommandHandler( "helpbutton", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "hotkeys", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "hotkeys", HotkeysCommand );
             Interpreter.RegisterCommandHandler( "info", InfoCommand );
             Interpreter.RegisterCommandHandler( "ignoreobject", IgnoreObjectCommand );
             Interpreter.RegisterCommandHandler( "land", LandCommand );
@@ -68,7 +72,7 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "pause", PauseCommand );
             Interpreter.RegisterCommandHandler( "ping", PingCommand );
             Interpreter.RegisterCommandHandler( "playmacro", NotImplementedCommand );
-            Interpreter.RegisterCommandHandler( "playsound", NotImplementedCommand );
+            Interpreter.RegisterCommandHandler( "playsound", PlaySoundCommand );
             Interpreter.RegisterCommandHandler( "poplist", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "promptalias", PromptAliasCommand );
             Interpreter.RegisterCommandHandler( "promptmsg",
@@ -83,9 +87,11 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "sell", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "setability", SetAbilityCommand );
             Interpreter.RegisterCommandHandler( "setalias", SetAliasCommand );
+            Interpreter.RegisterCommandHandler( "settimer", SetTimerCommand );
             Interpreter.RegisterCommandHandler( "shownames", ShowNamesCommand );
             Interpreter.RegisterCommandHandler( "snapshot", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "sysmsg", SysMsgCommand );
+            Interpreter.RegisterCommandHandler( "target", TargetCommand );
             Interpreter.RegisterCommandHandler( "toggleautoloot", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "togglehands", NotImplementedCommand );
             Interpreter.RegisterCommandHandler( "togglemounted", ToggleMountedCommand );
@@ -102,12 +108,152 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterCommandHandler( "waitforjournal", WaitForJournalCommand );
             Interpreter.RegisterCommandHandler( "waitforproperties", WaitForPropertiesCommand );
             Interpreter.RegisterCommandHandler( "waitforprompt", WaitForPromptCommand );
+            Interpreter.RegisterCommandHandler( "waitfortarget", WaitForTargetCommand );
             Interpreter.RegisterCommandHandler( "walk", WalkCommand );
             Interpreter.RegisterCommandHandler( "whispermsg",
                 ( c, a, q, f ) => MsgCommandNoHue( c, a, q, f, MsgCommands.WhisperMsg ) );
             Interpreter.RegisterCommandHandler( "where", WhereCommand );
             Interpreter.RegisterCommandHandler( "yellmsg",
                 ( c, a, q, f ) => MsgCommandNoHue( c, a, q, f, MsgCommands.YellMsg ) );
+        }
+
+        private static bool TargetCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                return DisplayUsage( "target (serial) [timeout]" );
+            }
+
+            int serial = args[0].ResolveSerial();
+
+            TargetCommands.Target( serial );
+
+            return true;
+        }
+
+        private static bool WaitForTargetCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                return DisplayUsage( "waitfortarget (timeout)" );
+            }
+
+            int timeout = args[0].AsInt();
+
+            TargetCommands.WaitForTarget( timeout );
+
+            return true;
+        }
+
+        private static bool GetEnemyCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                return DisplayUsage( "getenemy ('notoriety') ['filter']" );
+            }
+
+            string[] validNotorieties = { "any", "friend", "innocent", "murderer", "enemy", "criminal", "gray" };
+            string[] validFilters = { "humanoid", "transformation", "both" };
+
+            List<string> notorities = new List<string>();
+            List<string> filters = new List<string>();
+
+            string distance = "Next";
+
+            foreach ( Argument arg in args )
+            {
+                string val = arg.AsString().ToLower();
+
+                if ( validNotorieties.Contains( val ) )
+                {
+                    notorities.Add( val );
+                    continue;
+                }
+
+                if ( validFilters.Contains( val ) )
+                {
+                    filters.Add( val );
+                }
+
+                if ( val.Equals( "closest" ) )
+                {
+                    distance = "Closest";
+                }
+            }
+
+            TargetCommands.GetEnemy( notorities, filters.Count == 0 ? "Any" : filters[0], distance );
+
+            return true;
+        }
+
+        private static bool SetTimerCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length < 2 )
+            {
+                return DisplayUsage( "settimer ('timer name') (value)" );
+            }
+
+            string timer = args[0].AsString();
+            int val = args[1].AsInt();
+
+            TimerCommands.SetTimer( timer, val );
+
+            return true;
+        }
+
+        private static bool CreateTimerCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                return DisplayUsage( "createtimer ('timer name')" );
+            }
+
+            string timer = args[0].AsString();
+
+            TimerCommands.CreateTimer( timer );
+
+            return true;
+        }
+
+        private static bool ClearUseOnceCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            ActionCommands.ClearUseOnce();
+
+            return true;
+        }
+
+        private static bool HotkeysCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            MainCommands.Hotkeys();
+
+            return true;
+        }
+
+        private static bool PlaySoundCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            if ( args.Length == 0 )
+            {
+                return DisplayUsage( "playsound (sound id/'file name')" );
+            }
+
+            string sound = args[0].AsString();
+
+            if ( int.TryParse( sound, out int id ) )
+            {
+                MainCommands.PlaySound( id );
+                return true;
+            }
+
+            MainCommands.PlaySound( sound );
+
+            return true;
+        }
+
+        private static bool CancelPromptCommand( string command, Argument[] args, bool quiet, bool force )
+        {
+            MsgCommands.CancelPrompt();
+
+            return true;
         }
 
         private static bool OrganizerCommand( string command, Argument[] args, bool quiet, bool force )
@@ -256,6 +402,7 @@ namespace ClassicAssist.Data.Macros.Steam
             string listName = args[0].AsString();
 
             ListCommands.ClearList( listName );
+            Interpreter.ClearList( listName );
 
             return true;
         }
@@ -432,7 +579,7 @@ namespace ClassicAssist.Data.Macros.Steam
             int destination = args[1].ResolveSerial();
             int x = args.Length > 2 ? args[2].AsInt() : -1;
             int y = args.Length > 3 ? args[3].AsInt() : -1;
-            int z = args.Length > 4 ? args[4].AsInt() : -1;
+            //int z = args.Length > 4 ? args[4].AsInt() : -1;
             int amount = args.Length > 5 ? args[5].AsInt() : -1;
 
             ActionCommands.MoveItem( serial, destination, amount, x, y );

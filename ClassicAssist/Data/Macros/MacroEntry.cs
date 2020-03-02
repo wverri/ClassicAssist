@@ -199,7 +199,7 @@ namespace ClassicAssist.Data.Macros
 
             if ( exception is SyntaxError se )
             {
-                UO.Commands.SystemMessage( se.Node.Lexeme );
+                UO.Commands.SystemMessage( se.Node?.Lexeme );
             }
 
             if ( exception is RunTimeError re )

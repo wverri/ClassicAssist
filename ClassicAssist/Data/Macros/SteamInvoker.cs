@@ -62,22 +62,26 @@ namespace ClassicAssist.Data.Macros
 
                 try
                 {
-                    Interpreter.StopScript();
-
-                    StartedEvent?.Invoke();
-
-                    AliasCommands.SetDefaultAliases();
-
-                    ASTNode ast = Lexer.Lex( macro.Macro.Split( '\n' ) );
-
-                    Script script = new Script( ast );
-
-                    Interpreter.StartScript( script );
-
-                    while ( Interpreter.ExecuteScript() )
+                    do
                     {
-                        _cancellationToken.Token.ThrowIfCancellationRequested();
+                        Interpreter.StopScript();
+
+                        StartedEvent?.Invoke();
+
+                        AliasCommands.SetDefaultAliases();
+
+                        ASTNode ast = Lexer.Lex( macro.Macro.Split( '\n' ) );
+
+                        Script script = new Script( ast );
+
+                        Interpreter.StartScript( script );
+
+                        while ( Interpreter.ExecuteScript() )
+                        {
+                            _cancellationToken.Token.ThrowIfCancellationRequested();
+                        }
                     }
+                    while ( _macro.Loop && !IsFaulted );
                 }
                 catch ( TaskCanceledException )
                 {

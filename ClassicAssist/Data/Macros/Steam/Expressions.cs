@@ -84,6 +84,8 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterExpressionHandler( "maxfollowers", ( e, a, q ) => MobileCommands.MaxFollowers() );
 
             // Mobile attributes
+            Interpreter.RegisterExpressionHandler( "graphic",
+                ( e, a, q ) => MobileAtrribute<int>( e, a, q, nameof( Mobile.ID ) ) );
             Interpreter.RegisterExpressionHandler( "x",
                 ( e, a, q ) => MobileAtrribute<int>( e, a, q, nameof( Mobile.X ) ) );
             Interpreter.RegisterExpressionHandler( "y",
@@ -234,7 +236,9 @@ namespace ClassicAssist.Data.Macros.Steam
 
             string timerName = args[0].AsString();
 
-            return TimerCommands.Timer( timerName );
+            long val = TimerCommands.Timer( timerName );
+
+            return Convert.ToDouble( val );
         }
 
         private static double SkillStateExpression( string expression, Argument[] args, bool quiet )
@@ -422,7 +426,7 @@ namespace ClassicAssist.Data.Macros.Steam
             int amount = args.Length > 3 ? args[3].AsIntOrAny() : -1;
             int range = args.Length > 4 ? args[4].AsIntOrAny() : -1;
 
-            return ObjectCommands.FindType( id, range, source, hue ) ? 1 : 0;
+            return ObjectCommands.FindType( id, range, source, hue, quiet ) ? 1 : 0;
         }
 
         [SuppressMessage( "ReSharper", "UnusedVariable" )]
@@ -434,15 +438,15 @@ namespace ClassicAssist.Data.Macros.Steam
                 return 0;
             }
 
+            string sourceName = args[0].AsString(); 
+
             int serial = args[0].ResolveSerial();
             //TODO
             int hue = args.Length > 1 ? args[1].AsIntOrAny() : -1;
-            object source = args.Length > 2 ? (object) args[2].ResolveSerial() : null;
+            object source = args.Length > 2 ? (object) args[2].ResolveSerial(true) : null;
 
-            if ( source != null && int.Parse( source.ToString() ) == -1 )
-            {
+            if ( source != null && int.Parse(source?.ToString()) == -1 )
                 source = null;
-            }
 
             //TODO
             int amount = args.Length > 3 ? args[3].AsIntOrAny() : -1;

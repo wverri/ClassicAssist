@@ -529,4 +529,5 @@
         <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
     </Style>
     <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ScrollBarStyle}" />
+    <Style x:Key="{x:Type RadioButton}" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource RadioButtonStyle}"/>
 </ResourceDictionary>
