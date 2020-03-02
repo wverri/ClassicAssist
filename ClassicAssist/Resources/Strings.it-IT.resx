@@ -1137,4 +1137,13 @@
   <data name="Steam" xml:space="preserve">
     <value>Steam</value>
   </data>
+  <data name="Command &quot;{0}&quot; currently not implemented..." xml:space="preserve">
+    <value>Comando "{0}" attualmente non implementato...</value>
+  </data>
+  <data name="Usage: {0}" xml:space="preserve">
+    <value>Utilizzo: {0}</value>
+  </data>
+  <data name="Min {0}, Max {1}, Average {2}" xml:space="preserve">
+    <value>Min {0}, Max {1}, {2} medio</value>
+  </data>
 </root>

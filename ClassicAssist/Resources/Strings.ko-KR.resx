@@ -1137,4 +1137,13 @@
   <data name="Steam" xml:space="preserve">
     <value>Steam</value>
   </data>
+  <data name="Command &quot;{0}&quot; currently not implemented..." xml:space="preserve">
+    <value>명령 "{0}"현재 구현되지 ...</value>
+  </data>
+  <data name="Usage: {0}" xml:space="preserve">
+    <value>용도: {0}</value>
+  </data>
+  <data name="Min {0}, Max {1}, Average {2}" xml:space="preserve">
+    <value>최소 {0}, 최대 {1}, 평균 {2}</value>
+  </data>
 </root>

@@ -342,8 +342,10 @@ namespace ClassicAssist.Data.Macros.Commands
             return true;
         }
 
-        //TODO
-        public static void MoveType( int id, int sourceSerial, int destinationSerial )
+        [CommandsDisplay( Category = "Entity", Description = "Move a type from source to destintion.",
+            InsertText = "MoveType(0xff, \"backpack\", \"bank\")" )]
+        public static void MoveType( int id, int sourceSerial, int destinationSerial, int x = -1, int y = -1, int z = 0,
+            int hue = -1, int amount = -1 )
         {
             Item sourceItem = Engine.Items.GetItem( sourceSerial );
 
@@ -359,14 +361,25 @@ namespace ClassicAssist.Data.Macros.Commands
                 return;
             }
 
-            Item entity = sourceItem.Container.SelectEntities( i => i.ID == id ).FirstOrDefault();
+            Item entity = sourceItem.Container.SelectEntities( i => i.ID == id && ( hue == -1 || i.Hue == hue ) )
+                .FirstOrDefault();
 
             if ( entity == null )
             {
                 return;
             }
 
-            UOC.DragDropAsync( entity.Serial, -1, destinationSerial ).Wait();
+            if ( amount == -1 )
+            {
+                amount = entity.Count;
+            }
+
+            if ( amount > entity.Count )
+            {
+                amount = entity.Count;
+            }
+
+            UOC.DragDropAsync( entity.Serial, amount, destinationSerial, x, y, z ).Wait();
         }
     }
 }

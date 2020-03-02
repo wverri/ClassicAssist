@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Assistant;
@@ -37,14 +38,17 @@ namespace ClassicAssist.Data.Macros.Steam
         {
             Interpreter.RegisterExpressionHandler( "buffexists", BuffExistsExpression );
             Interpreter.RegisterExpressionHandler( "contents", ContentsExpression );
+            Interpreter.RegisterExpressionHandler( "counter", CounterExpression );
             Interpreter.RegisterExpressionHandler( "counttype", CountTypeExpression );
             Interpreter.RegisterExpressionHandler( "counttypeground", CountTypeGroundExpression );
             Interpreter.RegisterExpressionHandler( "distance", DistanceExpression );
+            Interpreter.RegisterExpressionHandler( "dressing", DressingExpression );
             Interpreter.RegisterExpressionHandler( "findalias", FindAliasExpression );
             Interpreter.RegisterExpressionHandler( "findlayer", FindLayerExpression );
             Interpreter.RegisterExpressionHandler( "findobject", FindObjectExpression );
             Interpreter.RegisterExpressionHandler( "findtype", FindTypeExpression );
             Interpreter.RegisterExpressionHandler( "findwand", NotImplementedExpression );
+            Interpreter.RegisterExpressionHandler( "flying", FlyingExpression );
             Interpreter.RegisterExpressionHandler( "gumpexists", GumpExistsExpression );
             Interpreter.RegisterExpressionHandler( "infriendslist", InFriendsListExpression );
             Interpreter.RegisterExpressionHandler( "ingump", InGumpExpression );
@@ -55,6 +59,7 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterExpressionHandler( "inregion", InRegionExpression );
             Interpreter.RegisterExpressionHandler( "list", ListLengthExpression );
             Interpreter.RegisterExpressionHandler( "listexists", ListExistsExpression );
+            Interpreter.RegisterExpressionHandler( "organizing", OrganizingExpression );
             Interpreter.RegisterExpressionHandler( "property", PropertyExpression );
             Interpreter.RegisterExpressionHandler( "skill", SkillExpression );
             Interpreter.RegisterExpressionHandler( "skillstate", SkillStateExpression );
@@ -63,21 +68,134 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterExpressionHandler( "war", WarExpression );
 
             // Player Attributes
-            Interpreter.RegisterExpressionHandler( "weight", Weight );
-            Interpreter.RegisterExpressionHandler( "mana", Mana );
-            Interpreter.RegisterExpressionHandler( "x", X );
-            Interpreter.RegisterExpressionHandler( "y", Y );
-            Interpreter.RegisterExpressionHandler( "z", Z );
+            Interpreter.RegisterExpressionHandler( "str", ( e, a, q ) => MobileCommands.Str() );
+            Interpreter.RegisterExpressionHandler( "int", ( e, a, q ) => MobileCommands.Int() );
+            Interpreter.RegisterExpressionHandler( "dex", ( e, a, q ) => MobileCommands.Dex() );
+            Interpreter.RegisterExpressionHandler( "mana", ( e, a, q ) => MobileCommands.Mana() );
+            Interpreter.RegisterExpressionHandler( "maxmana", ( e, a, q ) => MobileCommands.MaxMana() );
+            Interpreter.RegisterExpressionHandler( "stam", ( e, a, q ) => MobileCommands.Stam() );
+            Interpreter.RegisterExpressionHandler( "maxstam", ( e, a, q ) => MobileCommands.MaxStam() );
+            Interpreter.RegisterExpressionHandler( "weight", ( e, a, q ) => MobileCommands.Weight() );
+            Interpreter.RegisterExpressionHandler( "maxweight", ( e, a, q ) => MobileCommands.MaxWeight() );
+            Interpreter.RegisterExpressionHandler( "diffweight", ( e, a, q ) => MobileCommands.DiffWeight() );
+            Interpreter.RegisterExpressionHandler( "luck", ( e, a, q ) => MobileCommands.Luck() );
+            Interpreter.RegisterExpressionHandler( "tithingpoints", ( e, a, q ) => MobileCommands.TithingPoints() );
+            Interpreter.RegisterExpressionHandler( "followers", ( e, a, q ) => MobileCommands.Followers() );
+            Interpreter.RegisterExpressionHandler( "maxfollowers", ( e, a, q ) => MobileCommands.MaxFollowers() );
+
+            // Mobile attributes
+            Interpreter.RegisterExpressionHandler( "x",
+                ( e, a, q ) => MobileAtrribute<int>( e, a, q, nameof( Mobile.X ) ) );
+            Interpreter.RegisterExpressionHandler( "y",
+                ( e, a, q ) => MobileAtrribute<bool>( e, a, q, nameof( Mobile.Y ) ) );
+            Interpreter.RegisterExpressionHandler( "z",
+                ( e, a, q ) => MobileAtrribute<bool>( e, a, q, nameof( Mobile.Z ) ) );
+            Interpreter.RegisterExpressionHandler( "serial",
+                ( e, a, q ) => MobileAtrribute<int>( e, a, q, nameof( Mobile.Serial ) ) );
+            Interpreter.RegisterExpressionHandler( "dead",
+                ( e, a, q ) => MobileAtrribute<bool>( e, a, q, nameof( Mobile.IsDead ) ) );
+            Interpreter.RegisterExpressionHandler( "paralyzed",
+                ( e, a, q ) => MobileAtrribute<bool>( e, a, q, nameof( Mobile.IsFrozen ) ) );
+            Interpreter.RegisterExpressionHandler( "poisoned",
+                ( e, a, q ) => MobileAtrribute<bool>( e, a, q, nameof( Mobile.IsPoisoned ) ) );
+            Interpreter.RegisterExpressionHandler( "yellowhits",
+                ( e, a, q ) => MobileAtrribute<bool>( e, a, q, nameof( Mobile.IsYellowHits ) ) );
+            Interpreter.RegisterExpressionHandler( "hits",
+                ( e, a, q ) => MobileCommandResult( e, a, q, MobileCommands.Hits ) );
+            Interpreter.RegisterExpressionHandler( "maxhits",
+                ( e, a, q ) => MobileCommandResult( e, a, q, MobileCommands.MaxHits ) );
+            Interpreter.RegisterExpressionHandler( "diffhits",
+                ( e, a, q ) => MobileCommandResult( e, a, q, MobileCommands.DiffHits ) );
+            Interpreter.RegisterExpressionHandler( "criminal",
+                ( e, a, q ) => MobileCommandResult( e, a, q, NotorietyCommands.Criminal ) );
+            Interpreter.RegisterExpressionHandler( "enemy",
+                ( e, a, q ) => MobileCommandResult( e, a, q, NotorietyCommands.Enemy ) );
+            Interpreter.RegisterExpressionHandler( "friend",
+                ( e, a, q ) => MobileCommandResult( e, a, q, MobileCommands.InFriendList ) );
+            Interpreter.RegisterExpressionHandler( "gray",
+                ( e, a, q ) => MobileCommandResult( e, a, q, NotorietyCommands.Gray ) );
+            Interpreter.RegisterExpressionHandler( "innocent",
+                ( e, a, q ) => MobileCommandResult( e, a, q, NotorietyCommands.Innocent ) );
+            Interpreter.RegisterExpressionHandler( "invulnerable",
+                ( e, a, q ) => MobileCommandResult( e, a, q, NotorietyCommands.Invulnerable ) );
+            Interpreter.RegisterExpressionHandler( "murderer",
+                ( e, a, q ) => MobileCommandResult( e, a, q, NotorietyCommands.Murderer ) );
+
+            //TODO
+            Interpreter.RegisterExpressionHandler( "name", UnsupportedComparisonToString );
+            Interpreter.RegisterExpressionHandler( "direction", UnsupportedComparisonToString );
         }
 
-        private static double Weight( string expression, Argument[] args, bool quiet )
+        private static double MobileCommandResult<T>( string expression, Argument[] args, bool quiet,
+            Func<object, T> command )
         {
-            if ( Engine.Player != null )
+            // Optional parameter or will get PlayerMobile attribute
+            object serial = args.Length > 0 ? (object) args[0].ResolveSerial() : null;
+
+            T val = command.Invoke( serial );
+
+            if ( val is bool valBool )
             {
-                return Engine.Player.Weight;
+                return valBool ? 1 : 0;
             }
 
-            return 0;
+            int result = (int) Convert.ChangeType( val, typeof( int ) );
+
+            return result;
+        }
+
+        private static double MobileAtrribute<T>( string expression, IReadOnlyList<Argument> args, bool quiet,
+            string attribute )
+        {
+            // Optional parameter or will get PlayerMobile attribute
+            object serial = args.Count > 0 ? (object) args[0].ResolveSerial() : null;
+
+            T val = MobileCommands.GetMobileProperty<T>( serial, attribute );
+
+            if ( val is bool valBool )
+            {
+                return valBool ? 1 : 0;
+            }
+
+            int result = (int) Convert.ChangeType( val, typeof( int ) );
+
+            return result;
+        }
+
+        private static double DressingExpression( string expression, Argument[] args, bool quiet )
+        {
+            return AgentCommands.Dressing() ? 1 : 0;
+        }
+
+        private static double OrganizingExpression( string expression, Argument[] args, bool quiet )
+        {
+            return OrganizerCommands.Organizing() ? 1 : 0;
+        }
+
+        private static double FlyingExpression( string expression, Argument[] args, bool quiet )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: flying 'serial/alias'" );
+                return 0;
+            }
+
+            int serial = args[0].ResolveSerial();
+
+            return AbilitiesCommands.Flying( serial ) ? 1 : 0;
+        }
+
+        private static double CounterExpression( string expression, Argument[] args, bool quiet )
+        {
+            if ( args.Length == 0 )
+            {
+                UOC.SystemMessage( "Usage: counter ('format') (operator) (value)" );
+                return 0;
+            }
+
+            string counter = args[0].AsString();
+
+            return AgentCommands.Counter( counter );
         }
 
         private static double WarExpression( string expression, Argument[] args, bool quiet )
@@ -412,46 +530,6 @@ namespace ClassicAssist.Data.Macros.Steam
             return ActionCommands.Contents( args[0].ResolveSerial() );
         }
 
-        private static double Z( string expression, Argument[] args, bool quiet )
-        {
-            if ( Engine.Player != null )
-            {
-                return Engine.Player.Z;
-            }
-
-            return 0;
-        }
-
-        private static double Y( string expression, Argument[] args, bool quiet )
-        {
-            if ( Engine.Player != null )
-            {
-                return Engine.Player.Y;
-            }
-
-            return 0;
-        }
-
-        private static double X( string expression, Argument[] args, bool quiet )
-        {
-            if ( Engine.Player != null )
-            {
-                return Engine.Player.X;
-            }
-
-            return 0;
-        }
-
-        private static double Mana( string expression, Argument[] args, bool quiet )
-        {
-            if ( Engine.Player != null )
-            {
-                return Engine.Player.Mana;
-            }
-
-            return 0;
-        }
-
         private static double InListExpression( string expression, Argument[] args, bool quiet )
         {
             if ( args.Length < 2 )
@@ -529,14 +607,16 @@ namespace ClassicAssist.Data.Macros.Steam
             return AliasCommands.FindAlias( args[0].AsString() ) ? 1 : 0;
         }
 
-        private static double DummyExpression( string expression, Argument[] args, bool quiet )
+        private static double NotImplementedExpression( string expression, Argument[] args, bool quiet )
         {
+            UOC.SystemMessage( string.Format( Strings.Command___0___currently_not_implemented___, expression ) );
+
             return 0;
         }
 
-        private static double NotImplementedExpression( string expression, Argument[] args, bool quiet )
+        private static double UnsupportedComparisonToString( string expression, Argument[] args, bool quiet )
         {
-            UOC.SystemMessage( Strings.Command_currently_not_implemented_ );
+            UOC.SystemMessage( $"{expression}: UOScript doesn't currently support comparison to string." );
 
             return 0;
         }

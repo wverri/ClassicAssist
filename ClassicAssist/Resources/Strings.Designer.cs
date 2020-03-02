@@ -583,11 +583,11 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Command currently not implemented..
+        ///   Looks up a localized string similar to Command &quot;{0}&quot; currently not implemented....
         /// </summary>
-        public static string Command_currently_not_implemented_ {
+        public static string Command___0___currently_not_implemented___ {
             get {
-                return ResourceManager.GetString("Command currently not implemented.", resourceCulture);
+                return ResourceManager.GetString("Command \"{0}\" currently not implemented...", resourceCulture);
             }
         }
         
@@ -1492,20 +1492,20 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Macro Format:.
-        /// </summary>
-        public static string Macro_Format_ {
-            get {
-                return ResourceManager.GetString("Macro Format:", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Macro name must be unique..
         /// </summary>
         public static string Macro_name_must_be_unique_ {
             get {
                 return ResourceManager.GetString("Macro name must be unique.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Macro Type:.
+        /// </summary>
+        public static string Macro_Type_ {
+            get {
+                return ResourceManager.GetString("Macro Type:", resourceCulture);
             }
         }
         
@@ -1578,6 +1578,15 @@ namespace ClassicAssist.Resources {
         public static string Messages {
             get {
                 return ResourceManager.GetString("Messages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Min {0}, Max {1}, Average {2}.
+        /// </summary>
+        public static string Min__0___Max__1___Average__2_ {
+            get {
+                return ResourceManager.GetString("Min {0}, Max {1}, Average {2}", resourceCulture);
             }
         }
         
@@ -2910,6 +2919,15 @@ namespace ClassicAssist.Resources {
         public static string UO_LOCALE {
             get {
                 return ResourceManager.GetString("UO_LOCALE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage: {0}.
+        /// </summary>
+        public static string Usage___0_ {
+            get {
+                return ResourceManager.GetString("Usage: {0}", resourceCulture);
             }
         }
         
