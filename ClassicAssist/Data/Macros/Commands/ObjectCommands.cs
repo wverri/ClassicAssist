@@ -248,7 +248,7 @@ namespace ClassicAssist.Data.Macros.Commands
             {
                 entity =
                     (Entity) Engine.Mobiles.SelectEntities( Predicate )?.FirstOrDefault() ??
-                    Engine.Items.SelectEntities( i => Predicate( i ) && i.Owner == 0 )?.FirstOrDefault();
+                    Engine.Items.SelectEntities( Predicate )?.FirstOrDefault();
             }
 
             if ( entity == null )
