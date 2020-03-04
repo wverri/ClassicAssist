@@ -19,6 +19,7 @@ using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Data.Macros;
 using ClassicAssist.Data.Scavenger;
 using ClassicAssist.Misc;
+using ClassicAssist.Properties;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO;
@@ -128,6 +129,17 @@ namespace Assistant
 
             _mainThread.SetApartmentState( ApartmentState.STA );
             _mainThread.Start();
+
+            // Give some time for ClassicAssist to start incase of using Autologin.
+            Console.WriteLine( Resources.Waiting_for_ClassicAssist_to_initialize___ );
+
+            // A better way?
+            while ( _window == null )
+            {
+                Thread.Sleep( 10 );
+            }
+
+            _window.ResetEvent.WaitOne( 2500 );
         }
 
         private static void ProcessUseObjectQueue( int serial )
