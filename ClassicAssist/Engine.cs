@@ -131,7 +131,7 @@ namespace Assistant
             _mainThread.Start();
 
             // Give some time for ClassicAssist to start incase of using Autologin.
-            Console.WriteLine( Resources.Waiting_for_ClassicAssist_to_initialize___ );
+            Console.WriteLine( Strings.Waiting_for_ClassicAssist_to_initialize___ );
 
             // A better way?
             while ( _window == null )
