@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 
 namespace ClassicAssist.UI.Views
 {
@@ -11,10 +10,6 @@ namespace ClassicAssist.UI.Views
         public MainWindow()
         {
             InitializeComponent();
-
-            ResetEvent.Set();
         }
-
-        public ManualResetEvent ResetEvent { get; set; } = new ManualResetEvent( false );
     }
 }
