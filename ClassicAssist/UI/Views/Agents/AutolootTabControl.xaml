@@ -19,7 +19,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../../Resources/ResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <ValueConverters:CellWidthValueConverter x:Key="CellWidthValueConverter"/>
+            <ValueConverters:CellWidthValueConverter x:Key="CellWidthValueConverter" />
             <DrawingImage x:Key="ColorWheelIcon">
                 <DrawingImage.Drawing>
                     <DrawingGroup ClipGeometry="M0,0 V512 H512 V0 H0 Z">
@@ -137,7 +137,8 @@
                                 <DataTemplate>
                                     <controls:EditTextBlock
                                         Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                        MinWidth="40" ShowIcon="True" Width="{Binding Converter={StaticResource CellWidthValueConverter}, ConverterParameter=15, Path=Width, ElementName=ValueColumn, Mode=OneWay}"/>
+                                        MinWidth="40" ShowIcon="True"
+                                        Width="{Binding Converter={StaticResource CellWidthValueConverter}, ConverterParameter=15, Path=Width, ElementName=ValueColumn, Mode=OneWay}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

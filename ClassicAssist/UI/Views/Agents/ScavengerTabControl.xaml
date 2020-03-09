@@ -68,7 +68,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <controls:EditTextBlock Text="{Binding Hue}" TabIndex="0"
-                                         Width="{Binding Width, ConverterParameter=15, Converter={StaticResource CellWidthValueConverter}, ElementName=HueColumn}" ShowIcon="True" />
+                                                        Width="{Binding Width, ConverterParameter=15, Converter={StaticResource CellWidthValueConverter}, ElementName=HueColumn}"
+                                                        ShowIcon="True" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

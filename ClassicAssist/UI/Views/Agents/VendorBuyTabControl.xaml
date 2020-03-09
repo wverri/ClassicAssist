@@ -63,7 +63,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <controls:EditTextBlock Text="{Binding Hue}" TabIndex="0"
-                                         Width="{Binding Width, ConverterParameter=15, Converter={StaticResource CellWidthValueConverter}, ElementName=HueColumn}" ShowIcon="True" />
+                                                        Width="{Binding Width, ConverterParameter=15, Converter={StaticResource CellWidthValueConverter}, ElementName=HueColumn}"
+                                                        ShowIcon="True" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -71,7 +72,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <controls:EditTextBlock Text="{Binding Amount}" TabIndex="1"
-                                         Width="{Binding Width, ConverterParameter=15, Converter={StaticResource CellWidthValueConverter}, ElementName=AmountColumn}" ShowIcon="True" />
+                                                        Width="{Binding Width, ConverterParameter=15, Converter={StaticResource CellWidthValueConverter}, ElementName=AmountColumn}"
+                                                        ShowIcon="True" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -79,7 +81,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <controls:EditTextBlock Text="{Binding MaxPrice}" TabIndex="2"
-                                         Width="{Binding Width, ConverterParameter=15, Converter={StaticResource CellWidthValueConverter}, ElementName=MaxPriceColumn}" ShowIcon="True" />
+                                                        Width="{Binding Width, ConverterParameter=15, Converter={StaticResource CellWidthValueConverter}, ElementName=MaxPriceColumn}"
+                                                        ShowIcon="True" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
