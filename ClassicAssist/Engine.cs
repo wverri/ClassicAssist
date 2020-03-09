@@ -414,7 +414,7 @@ namespace Assistant
                         StringBuilder message = new StringBuilder();
                         message.AppendLine( Strings.ProductName );
                         message.AppendLine(
-                            $"{Strings.New_version_available_} <A HREF=\"https://github.com/Reetus/ClassicAssist/releases/tag/0.2.11.107{latestVersion}\">{latestVersion}</A>" );
+                            $"{Strings.New_version_available_} <A HREF=\"https://github.com/Reetus/ClassicAssist/releases/tag/{latestVersion}\">{latestVersion}</A>" );
                         message.AppendLine();
                         message.AppendLine( commitMessage.ToString() );
                         message.AppendLine(
