@@ -262,6 +262,7 @@ namespace ClassicAssist.Tests.Agents
         [TestCleanup]
         public void Cleanup()
         {
+            ActionPacketQueue.Clear();
             Engine.InternalPacketSentEvent -= OnInternalPacketSentEvent;
             Engine.Player = null;
             Engine.Items.Clear();

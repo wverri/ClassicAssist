@@ -54,19 +54,19 @@ namespace ClassicAssist.UO
             await Task.CompletedTask;
         }
 
-        public static void EquipType( int id, Layer layer )
+        public static Task EquipType( int id, Layer layer )
         {
             if ( id <= -1 )
             {
                 SystemMessage( Strings.Invalid_type___ );
-                return;
+                return Task.CompletedTask;
             }
 
             int containerSerial = Engine.Player?.Serial ?? 0;
 
             if ( containerSerial == 0 || containerSerial == -1 )
             {
-                return;
+                return Task.CompletedTask;
             }
 
             Item backpack = Engine.Player?.Backpack;
@@ -75,7 +75,7 @@ namespace ClassicAssist.UO
 
             if ( item == null )
             {
-                return;
+                return Task.CompletedTask;
             }
 
             if ( layer == Layer.Invalid )
@@ -89,20 +89,20 @@ namespace ClassicAssist.UO
                 throw new ArgumentException( "EquipItem: Layer is invalid" );
             }
 
-            ActionPacketQueue.EnqueueActionPackets(
+            return ActionPacketQueue.EnqueueActionPackets(
                 new BasePacket[]
                 {
                     new DragItem( item.Serial, 1 ), new EquipRequest( item.Serial, layer, containerSerial )
                 }, QueuePriority.Medium );
         }
 
-        public static void EquipItem( Item item, Layer layer )
+        public static Task EquipItem( Item item, Layer layer )
         {
             int containerSerial = Engine.Player?.Serial ?? 0;
 
             if ( containerSerial == 0 || containerSerial == -1 )
             {
-                return;
+                return Task.CompletedTask;
             }
 
             if ( layer == Layer.Invalid )
@@ -116,7 +116,7 @@ namespace ClassicAssist.UO
                 throw new ArgumentException( "EquipItem: Layer is invalid" );
             }
 
-            ActionPacketQueue.EnqueueActionPackets(
+            return ActionPacketQueue.EnqueueActionPackets(
                 new BasePacket[]
                 {
                     new DragItem( item.Serial, 1 ), new EquipRequest( item.Serial, layer, containerSerial )

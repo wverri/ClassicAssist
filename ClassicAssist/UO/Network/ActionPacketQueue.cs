@@ -37,22 +37,27 @@ namespace ClassicAssist.UO.Network
 
         private static void ProcessActionPacketQueue( ActionPacketQueueItem queueItem )
         {
-            if ( queueItem.DelaySend )
+            // Lock here so wait don't set the WaitHandle before we've called ToTask(?)
+            lock ( _actionPacketQueueLock )
             {
-                while ( Engine.LastActionPacket + TimeSpan.FromMilliseconds( Options.CurrentOptions.ActionDelayMS ) >
-                        DateTime.Now )
+                if ( queueItem.DelaySend )
                 {
-                    Thread.Sleep( 1 );
+                    while ( Engine.LastActionPacket +
+                            TimeSpan.FromMilliseconds( Options.CurrentOptions.ActionDelayMS ) >
+                            DateTime.Now )
+                    {
+                        Thread.Sleep( 1 );
+                    }
                 }
+
+                byte[] data = queueItem.Packet;
+                int length = queueItem.Length;
+
+                Engine.LastActionPacket = DateTime.Now;
+                Engine.SendPacketToServer( data, length );
+
+                queueItem.WaitHandle.Set();
             }
-
-            byte[] data = queueItem.Packet;
-            int length = queueItem.Length;
-
-            Engine.LastActionPacket = DateTime.Now;
-            Engine.SendPacketToServer( data, length );
-
-            queueItem.WaitHandle.Set();
         }
 
         // ReSharper disable once UnusedMember.Global

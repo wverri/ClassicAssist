@@ -102,10 +102,10 @@ namespace ClassicAssist.Data.Dress
                     switch ( dai.Type )
                     {
                         case DressAgentItemType.Serial:
-                            UOC.EquipItem( item, dai.Layer );
+                            await UOC.EquipItem( item, dai.Layer );
                             break;
                         case DressAgentItemType.ID:
-                            UOC.EquipType( dai.ID, dai.Layer );
+                            await UOC.EquipType( dai.ID, dai.Layer );
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
