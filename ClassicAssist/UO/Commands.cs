@@ -7,8 +7,10 @@ using Assistant;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Skills;
 using ClassicAssist.Data.Vendors;
+using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
@@ -87,9 +89,11 @@ namespace ClassicAssist.UO
                 throw new ArgumentException( "EquipItem: Layer is invalid" );
             }
 
-            DragItem( item.Serial, 1 );
-
-            Engine.SendPacketToServer( new EquipRequest( item.Serial, layer, containerSerial ) );
+            ActionPacketQueue.EnqueueActionPackets(
+                new BasePacket[]
+                {
+                    new DragItem( item.Serial, 1 ), new EquipRequest( item.Serial, layer, containerSerial )
+                }, QueuePriority.Medium );
         }
 
         public static void EquipItem( Item item, Layer layer )
@@ -112,9 +116,11 @@ namespace ClassicAssist.UO
                 throw new ArgumentException( "EquipItem: Layer is invalid" );
             }
 
-            DragItem( item.Serial, 1 );
-
-            Engine.SendPacketToServer( new EquipRequest( item.Serial, layer, containerSerial ) );
+            ActionPacketQueue.EnqueueActionPackets(
+                new BasePacket[]
+                {
+                    new DragItem( item.Serial, 1 ), new EquipRequest( item.Serial, layer, containerSerial )
+                }, QueuePriority.Medium );
         }
 
         public static void SystemMessage( string text, int hue = 0x03b2 )
