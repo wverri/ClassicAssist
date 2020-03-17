@@ -28,7 +28,6 @@ using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using CUO_API;
-using Exceptionless;
 using Octokit;
 
 [assembly: InternalsVisibleTo( "ClassicAssist.Tests" )]
@@ -125,11 +124,6 @@ namespace Assistant
 
             _mainThread = new Thread( () =>
             {
-                ExceptionlessClient.Default.Configuration.SetUserIdentity( AssistantOptions.UserId, AssistantOptions.UserId );
-                ExceptionlessClient.Default.Configuration.UseSessions( true );
-                ExceptionlessClient.Default.Configuration.DefaultData.Add( "Locale", Thread.CurrentThread.CurrentUICulture.Name );
-                ExceptionlessClient.Default.Startup( "T8v0i7nL90cVRc4sr2pgo5hviThMPRF3OtQ0bK60" );
-
                 _window = new MainWindow();
                 _window.ShowDialog();
             } ) { IsBackground = true };
@@ -223,7 +217,9 @@ namespace Assistant
         {
             Options.Save( Options.CurrentOptions );
             AssistantOptions.Save();
+#if !DEBUG
             ExceptionlessClient.Default.SubmitSessionEnd( AssistantOptions.UserId );
+#endif
         }
 
         private static void OnPlayerPositionChanged( int x, int y, int z )
