@@ -127,6 +127,7 @@ namespace Assistant
             {
                 ExceptionlessClient.Default.Configuration.SetUserIdentity( AssistantOptions.UserId, AssistantOptions.UserId );
                 ExceptionlessClient.Default.Configuration.UseSessions( true );
+                ExceptionlessClient.Default.Configuration.DefaultData.Add( "Locale", Thread.CurrentThread.CurrentUICulture.Name );
                 ExceptionlessClient.Default.Startup( "T8v0i7nL90cVRc4sr2pgo5hviThMPRF3OtQ0bK60" );
 
                 _window = new MainWindow();
@@ -222,6 +223,7 @@ namespace Assistant
         {
             Options.Save( Options.CurrentOptions );
             AssistantOptions.Save();
+            ExceptionlessClient.Default.SubmitSessionEnd( AssistantOptions.UserId );
         }
 
         private static void OnPlayerPositionChanged( int x, int y, int z )

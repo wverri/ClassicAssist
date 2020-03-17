@@ -7,6 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ExportCommands.Properties;
+
+// ReSharper disable LocalizableElement
 
 namespace ExportCommands
 {
@@ -82,7 +85,13 @@ namespace ExportCommands
                 FileVersionInfo fvi = FileVersionInfo.GetVersionInfo( assembly.Location );
 
                 string markDown =
-                    $"# ClassicAssist Macro Commands  \nGenerated on {DateTime.UtcNow}  \nVersion: {fvi.ProductVersion}  \n  \n";
+                    $"# {Resources.ClassicAssist_Macro_Commands}  \n{Resources.Generated_on} {DateTime.UtcNow}  \n{Resources.Version}: {fvi.ProductVersion}  \n  \n";
+
+                if ( !string.IsNullOrEmpty( Resources.TRANSLATE_CREDIT ) )
+                {
+                    markDown =
+                        $"# {Resources.ClassicAssist_Macro_Commands}  \n{Resources.Generated_on} {DateTime.UtcNow}  \n{Resources.Version}: {fvi.ProductVersion}  \n{Resources.TRANSLATE_CREDIT}  \n  \n";
+                }
 
                 foreach ( string category in categories )
                 {
@@ -101,9 +110,9 @@ namespace ExportCommands
                         }
 
                         markDown += $"### {command.Name}  \n  \n";
-                        markDown += $"Method Signature:  \n  \n**{command.Signature}**  \n  \n";
-                        markDown += $"Description:  \n  \n**{command.Description}**  \n  \n";
-                        markDown += $"Example:  \n  \n```python  \n{example}  \n```  \n  \n";
+                        markDown += $"{Resources.Method_Signature}:  \n  \n**{command.Signature}**  \n  \n";
+                        markDown += $"{Resources.Description}:  \n  \n**{command.Description}**  \n  \n";
+                        markDown += $"{Resources.Example}:  \n  \n```python  \n{example}  \n```  \n  \n";
                     }
 
                     markDown += "\n\n\n";
