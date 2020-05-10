@@ -582,7 +582,7 @@ namespace ClassicAssist.Data.Macros.Steam
             //int z = args.Length > 4 ? args[4].AsInt() : -1;
             int amount = args.Length > 5 ? args[5].AsInt() : -1;
 
-            ActionCommands.MoveItem( serial, destination, amount, x, y );
+            ObjectCommands.MoveItem( serial, destination, amount, x, y );
 
             return true;
         }
@@ -664,7 +664,7 @@ namespace ClassicAssist.Data.Macros.Steam
 
         private static bool NotImplementedCommand( string command, Argument[] args, bool quiet, bool force )
         {
-            UOC.SystemMessage( string.Format( Strings.Command___0___currently_not_implemented___, command ) );
+            UOC.SystemMessage( string.Format( Strings.Command___0___currently_not_implemented_, command ) );
 
             return true;
         }
@@ -697,7 +697,7 @@ namespace ClassicAssist.Data.Macros.Steam
             long max = results.Max();
             double avg = results.Average();
 
-            UOC.SystemMessage( string.Format( Strings.Min__0___Max__1___Average__2_, min, max, avg ) );
+            UOC.SystemMessage( string.Format( Strings.Min___0___Max___1___Average___2_, min, max, avg ) );
 
             return true;
         }
