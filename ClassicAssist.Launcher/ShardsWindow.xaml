@@ -12,7 +12,7 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     x:Class="ClassicAssist.Launcher.ShardsWindow"
     mc:Ignorable="d"
-    Title="{x:Static properties:Resources.Shards}" Height="350" Width="600" WindowStartupLocation="CenterScreen">
+    Title="{x:Static properties:Resources.Shards}" Height="350" Width="615" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ValueConverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <ValueConverters:BooleanToOpacityValueConverter x:Key="BooleanToOpacityValueConverter" />
@@ -75,9 +75,17 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="{x:Static properties:Resources.Players}" Width="100"
+                    <GridViewColumn Header="{x:Static properties:Resources.Encryption}" Width="75">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Encryption}"
+                                          IsEnabled="{Binding IsPreset, Converter={StaticResource InverseBooleanConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{x:Static properties:Resources.Players}" Width="75"
                                     DisplayMemberBinding="{Binding Status}" />
-                    <GridViewColumn Header="{x:Static properties:Resources.Ping}" Width="100"
+                    <GridViewColumn Header="{x:Static properties:Resources.Ping}" Width="75"
                                     DisplayMemberBinding="{Binding Ping}" />
                 </GridView>
             </ListView.View>

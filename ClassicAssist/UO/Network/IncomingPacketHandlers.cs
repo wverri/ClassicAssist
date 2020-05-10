@@ -15,6 +15,7 @@ using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using ClassicAssist.UO.Objects.Gumps;
+using Exceptionless;
 
 namespace ClassicAssist.UO.Network
 {
@@ -104,8 +105,86 @@ namespace ClassicAssist.UO.Network
             RegisterExtended( 0x04, 0, OnCloseGump );
             RegisterExtended( 0x06, 0, OnPartyCommand );
             RegisterExtended( 0x08, 0, OnMapChange );
+            RegisterExtended( 0x10, 0, OnDisplayEquipmentInfo );
             RegisterExtended( 0x21, 0, OnClearWeaponAbility );
             RegisterExtended( 0x25, 0, OnToggleSpecialMoves );
+        }
+
+        private static void OnDisplayEquipmentInfo( PacketReader reader )
+        {
+            int serial = reader.ReadInt32();
+            int cliloc = reader.ReadInt32();
+
+            uint next = reader.ReadUInt32();
+
+            List<Property> properties =
+                new List<Property> { new Property { Cliloc = cliloc, Text = Cliloc.GetProperty( cliloc ) } };
+
+            do
+            {
+                string attrName;
+
+                int charges;
+                uint number;
+
+                switch ( next )
+                {
+                    case 0xFFFFFFFF:
+                        break;
+                    case 0xFFFFFFFD:
+                    {
+                        int nameLen = reader.ReadUInt16();
+                        string craftedBy = reader.ReadString( nameLen );
+
+                        properties.Add( new Property { Cliloc = -3, Text = craftedBy } );
+
+                        break;
+                    }
+                    case 0xFFFFFFFC:
+                    {
+                        number = reader.ReadUInt32();
+                        charges = reader.ReadUInt16();
+
+                        attrName = Cliloc.GetProperty( (int) number );
+
+                        properties.Add( new Property
+                        {
+                            Cliloc = (int) number, Text = attrName, Arguments = new[] { charges.ToString() }
+                        } );
+
+                        break;
+                    }
+                    default:
+                    {
+                        number = next;
+                        charges = reader.ReadUInt16();
+
+                        attrName = Cliloc.GetProperty( (int) number );
+
+                        properties.Add( new Property
+                        {
+                            Cliloc = (int) number, Text = attrName, Arguments = new[] { charges.ToString() }
+                        } );
+
+                        break;
+                    }
+                }
+
+                if ( next == 0xFFFFFFFF )
+                {
+                    break;
+                }
+
+                next = reader.ReadUInt32();
+            }
+            while ( next != 0xFFFFFFFF );
+
+            Item item = Engine.Items.GetItem( serial );
+
+            if ( item != null )
+            {
+                item.Properties = properties.ToArray();
+            }
         }
 
         private static void OnUnicodePrompt( PacketReader reader )
@@ -558,6 +637,11 @@ namespace ClassicAssist.UO.Network
 
             string layout = Encoding.ASCII.GetString( decompressedBuffer );
 
+            if ( string.IsNullOrEmpty( layout ) )
+            {
+                return;
+            }
+
             int linesCount = reader.ReadInt32();
 
             compressedLength = reader.ReadInt32();
@@ -592,10 +676,21 @@ namespace ClassicAssist.UO.Network
                 }
             }
 
-            Gump gump = GumpParser.Parse( senderSerial, gumpId, x, y, layout, text );
-            Engine.Gumps.Add( gump );
+            try
+            {
+                Gump gump = GumpParser.Parse( senderSerial, gumpId, x, y, layout, text );
+                Engine.Gumps.Add( gump );
 
-            GumpEvent?.Invoke( gumpId, senderSerial, gump );
+                GumpEvent?.Invoke( gumpId, senderSerial, gump );
+            }
+            catch ( Exception e )
+            {
+                e.ToExceptionless().SetProperty( "Serial", senderSerial ).SetProperty( "GumpID", gumpId )
+                    .SetProperty( "Layout", layout ).SetProperty( "Text", text )
+                    .SetProperty( "Packet", reader.GetData() ).SetProperty( "Player", Engine.Player.ToString() )
+                    .SetProperty( "WorldItemCount", Engine.Items.Count() )
+                    .SetProperty( "WorldMobileCount", Engine.Mobiles.Count() ).Submit();
+            }
         }
 
         private static void OnMobileName( PacketReader reader )
@@ -833,8 +928,8 @@ namespace ClassicAssist.UO.Network
             if ( !UOMath.IsMobile( containerSerial ) )
             {
                 Layer layer = Engine.Player?.GetAllLayers().Select( ( s, i ) => new { i, s } )
-                                  .Where( t => t.s == serial )
-                                  .Select( t => (Layer) t.i ).FirstOrDefault() ?? Layer.Invalid;
+                                  .Where( t => t.s == serial ).Select( t => (Layer) t.i ).FirstOrDefault() ??
+                              Layer.Invalid;
 
                 if ( layer != Layer.Invalid )
                 {
@@ -844,8 +939,7 @@ namespace ClassicAssist.UO.Network
                 {
                     Mobile mobile = Engine.Mobiles.SelectEntity( m => m.GetAllLayers().Contains( serial ) );
 
-                    layer = mobile?.GetAllLayers().Select( ( s, i ) => new { i, s } )
-                                .Where( t => t.s == serial )
+                    layer = mobile?.GetAllLayers().Select( ( s, i ) => new { i, s } ).Where( t => t.s == serial )
                                 .Select( t => (Layer) t.i ).FirstOrDefault() ?? Layer.Invalid;
 
                     if ( layer != Layer.Invalid )
@@ -890,8 +984,7 @@ namespace ClassicAssist.UO.Network
         {
             int serial = reader.ReadInt32();
 
-            Mobile mobile = Engine.Mobiles
-                .FirstOrDefault( m => m.GetEquippedItems().Any( i => i.Serial == serial ) );
+            Mobile mobile = Engine.Mobiles.FirstOrDefault( m => m.GetEquippedItems().Any( i => i.Serial == serial ) );
 
             if ( mobile != null )
             {
@@ -977,6 +1070,7 @@ namespace ClassicAssist.UO.Network
             {
                 Engine.Player.Name = name;
                 Engine.Player.Properties = list.ToArray();
+                Engine.UpdateWindowTitle();
             }
             else if ( UOMath.IsMobile( serial ) )
             {
@@ -1080,6 +1174,8 @@ namespace ClassicAssist.UO.Network
                 player.FasterCasting = reader.ReadInt16();
                 player.LowerManaCost = reader.ReadInt16();
             }
+
+            Engine.UpdateWindowTitle();
         }
 
         private static void OnMobileIncoming( PacketReader reader )
@@ -1155,80 +1251,95 @@ namespace ClassicAssist.UO.Network
 
         private static void OnContainerContents( PacketReader reader )
         {
-            if ( reader.Size == 5 )
+            Item containerItem = null;
+            int count = 0;
+
+            try
             {
-                return;
-            }
-
-            bool oldStyle = false;
-
-            int count = reader.ReadInt16();
-
-            if ( ( reader.Size - 5 ) / 20 != count )
-            {
-                oldStyle = true;
-            }
-
-            ItemCollection container = null;
-
-            for ( int i = 0; i < count; i++ )
-            {
-                int serial = reader.ReadInt32();
-                int id = reader.ReadUInt16();
-                reader.ReadByte(); // Item ID Offset
-                int amount = reader.ReadUInt16();
-                int x = reader.ReadInt16();
-                int y = reader.ReadInt16();
-                int grid = 0;
-
-                if ( !oldStyle )
+                if ( reader.Size == 5 )
                 {
-                    grid = reader.ReadByte();
+                    return;
                 }
 
-                int containerSerial = reader.ReadInt32();
-                int hue = reader.ReadUInt16();
+                bool oldStyle = false;
+
+                count = reader.ReadInt16();
+
+                if ( ( reader.Size - 5 ) / 20 != count )
+                {
+                    oldStyle = true;
+                }
+
+                ItemCollection container = null;
+
+                for ( int i = 0; i < count; i++ )
+                {
+                    int serial = reader.ReadInt32();
+                    int id = reader.ReadUInt16();
+                    reader.ReadByte(); // Item ID Offset
+                    int amount = reader.ReadUInt16();
+                    int x = reader.ReadInt16();
+                    int y = reader.ReadInt16();
+                    int grid = 0;
+
+                    if ( !oldStyle )
+                    {
+                        grid = reader.ReadByte();
+                    }
+
+                    int containerSerial = reader.ReadInt32();
+                    int hue = reader.ReadUInt16();
+
+                    if ( container == null )
+                    {
+                        container = new ItemCollection( containerSerial );
+                    }
+
+                    Item item = Engine.GetOrCreateItem( serial, containerSerial );
+
+                    item.ID = id;
+                    item.Count = amount;
+                    item.Owner = containerSerial;
+                    item.Hue = hue;
+                    item.Grid = grid;
+                    item.X = x;
+                    item.Y = y;
+
+                    container.Add( item );
+                }
 
                 if ( container == null )
                 {
-                    container = new ItemCollection( containerSerial );
+                    return;
                 }
 
-                Item item = Engine.GetOrCreateItem( serial, containerSerial );
+                containerItem = Engine.GetOrCreateItem( container.Serial );
 
-                item.ID = id;
-                item.Count = amount;
-                item.Owner = containerSerial;
-                item.Hue = hue;
-                item.Grid = grid;
-                item.X = x;
-                item.Y = y;
+                if ( containerItem.Container == null )
+                {
+                    containerItem.Container = container;
+                }
+                else
+                {
+                    containerItem.Container.Clear();
+                    containerItem.Container.Add( container.GetItems() );
+                }
 
-                container.Add( item );
+                Engine.Items.Add( containerItem );
+
+                ContainerContentsEvent?.Invoke( container.Serial, container );
+
+                Engine.RehueList.CheckRehue( container );
             }
-
-            if ( container == null )
+            catch ( Exception e )
             {
-                return;
+                e.ToExceptionless().SetProperty( "ContainerSerial", containerItem?.Serial )
+                    .SetProperty( "Count", count ).SetProperty( "Packet", reader.GetData() )
+                    .SetProperty( "WorldContainsContainerSerial",
+                        Engine.Items.Any( i => containerItem != null && i.Serial == containerItem.Serial ) )
+                    .SetProperty( "WorldItemCount", Engine.Items.Count() )
+                    .SetProperty( "WorldMobileCount", Engine.Mobiles.Count() ).Submit();
             }
-
-            Item containerItem = Engine.Items.GetItem( container.Serial );
-
-            if ( containerItem.Container == null )
-            {
-                containerItem.Container = container;
-            }
-            else
-            {
-                containerItem.Container.Clear();
-                containerItem.Container.Add( container.GetItems() );
-            }
-
-            Engine.Items.Add( containerItem );
-
-            ContainerContentsEvent?.Invoke( container.Serial, container );
-
-            Engine.RehueList.CheckRehue( container );
         }
 
         private static void OnSAWorldItem( PacketReader reader )

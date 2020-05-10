@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
+using System.Threading;
 using System.Windows;
 using System.Windows.Interactivity;
 using ClassicAssist.Data;
+using Exceptionless;
 
 namespace ClassicAssist.UI.Misc
 {
@@ -23,6 +25,10 @@ namespace ClassicAssist.UI.Misc
         private static void OnLoaded( object sender, RoutedEventArgs e )
         {
             AssistantOptions.OnWindowLoaded();
+            ExceptionlessClient.Default.Configuration.SetUserIdentity( AssistantOptions.UserId, AssistantOptions.UserId );
+            ExceptionlessClient.Default.Configuration.UseSessions( true );
+            ExceptionlessClient.Default.Configuration.DefaultData.Add( "Locale", Thread.CurrentThread?.CurrentUICulture?.Name );
+            ExceptionlessClient.Default.Startup( "T8v0i7nL90cVRc4sr2pgo5hviThMPRF3OtQ0bK60" );
         }
 
         protected override void OnDetaching()

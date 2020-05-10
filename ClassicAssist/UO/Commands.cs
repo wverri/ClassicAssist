@@ -7,8 +7,10 @@ using Assistant;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Skills;
 using ClassicAssist.Data.Vendors;
+using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
@@ -52,13 +54,28 @@ namespace ClassicAssist.UO
             await Task.CompletedTask;
         }
 
-        public static void EquipItem( Item item, Layer layer )
+        public static Task EquipType( int id, Layer layer )
         {
+            if ( id <= -1 )
+            {
+                SystemMessage( Strings.Invalid_type___ );
+                return Task.CompletedTask;
+            }
+
             int containerSerial = Engine.Player?.Serial ?? 0;
 
             if ( containerSerial == 0 || containerSerial == -1 )
             {
-                return;
+                return Task.CompletedTask;
+            }
+
+            Item backpack = Engine.Player?.Backpack;
+
+            Item item = backpack?.Container?.SelectEntity( i => i.ID == id );
+
+            if ( item == null )
+            {
+                return Task.CompletedTask;
             }
 
             if ( layer == Layer.Invalid )
@@ -72,9 +89,38 @@ namespace ClassicAssist.UO
                 throw new ArgumentException( "EquipItem: Layer is invalid" );
             }
 
-            DragItem( item.Serial, 1 );
+            return ActionPacketQueue.EnqueueActionPackets(
+                new BasePacket[]
+                {
+                    new DragItem( item.Serial, 1 ), new EquipRequest( item.Serial, layer, containerSerial )
+                }, QueuePriority.Medium );
+        }
 
-            Engine.SendPacketToServer( new EquipRequest( item.Serial, layer, containerSerial ) );
+        public static Task EquipItem( Item item, Layer layer )
+        {
+            int containerSerial = Engine.Player?.Serial ?? 0;
+
+            if ( containerSerial == 0 || containerSerial == -1 )
+            {
+                return Task.CompletedTask;
+            }
+
+            if ( layer == Layer.Invalid )
+            {
+                StaticTile tileData = TileData.GetStaticTile( item.ID );
+                layer = (Layer) tileData.Quality;
+            }
+
+            if ( layer == Layer.Invalid )
+            {
+                throw new ArgumentException( "EquipItem: Layer is invalid" );
+            }
+
+            return ActionPacketQueue.EnqueueActionPackets(
+                new BasePacket[]
+                {
+                    new DragItem( item.Serial, 1 ), new EquipRequest( item.Serial, layer, containerSerial )
+                }, QueuePriority.Medium );
         }
 
         public static void SystemMessage( string text, int hue = 0x03b2 )
@@ -515,6 +561,34 @@ namespace ClassicAssist.UO
 
                 Engine.WaitingForTarget = false;
             }
+        }
+
+        public static async Task<bool> WaitForIncomingPacketFilterAsync( PacketFilterInfo pfi, int timeout, bool invokeHandler = true, bool fixedSize = false )
+        {
+            AutoResetEvent are = new AutoResetEvent( false );
+            byte[] packet = null;
+
+            Engine.AddReceiveFilter( new PacketFilterInfo( pfi.PacketID, pfi.GetConditions(), ( data, info ) =>
+            {
+                packet = data;
+                are.Set();
+            } ) );
+
+            Task filterTask = are.ToTask();
+
+            if ( await Task.WhenAny( filterTask, Task.Delay( timeout ) ) == filterTask )
+            {
+                if ( invokeHandler )
+                {
+                    PacketHandler handler = IncomingPacketHandlers.GetHandler( packet[0] );
+
+                    handler?.OnReceive( new PacketReader( packet, packet.Length, fixedSize ) );
+                }
+            }
+
+            Engine.RemoveReceiveFilter( pfi );
+
+            return packet != null;
         }
 
         public static void Resync()

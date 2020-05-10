@@ -9,6 +9,7 @@ using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
@@ -20,8 +21,7 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         internal static UseOnceList UseOnceList { get; set; } = new UseOnceList();
 
-        [CommandsDisplay( Category = "Actions", Description = "Wait for container contents for given container.",
-            InsertText = "WaitForContents(\"backpack\", 5000)" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static bool WaitForContents( object obj, int timeout = 5000 )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -35,8 +35,7 @@ namespace ClassicAssist.Data.Macros.Commands
             return UOC.WaitForContainerContents( serial, timeout );
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Returns the item count for given container.",
-            InsertText = "if Contents(\"backpack\") > 120:" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static int Contents( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -58,17 +57,13 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
-        [CommandsDisplay( Category = "Actions",
-            Description = "Send quick switch weapon packet (probably not supported on pre-AoS servers.",
-            InsertText = "EquipLastWeapon()" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void EquipLastWeapon()
         {
             Engine.SendPacketToServer( new EquipLastWeapon() );
         }
 
-        [CommandsDisplay( Category = "Actions",
-            Description = "Use a specific item type (graphic) from your backpack, only once",
-            InsertText = "UseOnce(0xff)" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static bool UseOnce( int graphic, int hue = -1 )
         {
             //TODO hue?
@@ -95,15 +90,14 @@ namespace ClassicAssist.Data.Macros.Commands
             return true;
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Clear UseOnce list.", InsertText = "ClearUseOnce()" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void ClearUseOnce()
         {
             UseOnceList?.Clear();
             UOC.SystemMessage( Strings.UseOnce_cleared___ );
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Attack mobile (parameter can be serial or alias).",
-            InsertText = "Attack(\"last\")" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void Attack( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -131,8 +125,7 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new AttackRequest( serial ) );
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Clear hands, \"left\", \"right\", or \"both\"",
-            InsertText = "ClearHands(\"both\")" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void ClearHands( string hand = "both" )
         {
             hand = hand.ToLower();
@@ -161,14 +154,11 @@ namespace ClassicAssist.Data.Macros.Commands
 
             foreach ( int serial in serials )
             {
-                UOC.DragDropAsync( serial, 1, player.Backpack?.Serial ?? 0 ).Wait();
-                Thread.Sleep( Options.CurrentOptions.ActionDelayMS );
+                ActionPacketQueue.EnqueueDragDrop( serial, 1, player.Backpack?.Serial ?? 0 );
             }
         }
 
-        [CommandsDisplay( Category = "Actions",
-            Description = "Single click object (parameter can be serial or alias).",
-            InsertText = "ClickObject(\"last\")" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void ClickObject( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -182,47 +172,7 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new LookRequest( serial ) );
         }
 
-        [CommandsDisplay( Category = "Actions",
-            Description = "Move item to container (parameters can be serials or aliases).",
-            InsertText = "MoveItem(\"source\", \"destination\")" )]
-        public static void MoveItem( object item, object destination, int amount = -1, int x = -1, int y = -1 )
-        {
-            int itemSerial = AliasCommands.ResolveSerial( item );
-
-            if ( itemSerial == 0 )
-            {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
-                return;
-            }
-
-            Item itemObj = Engine.Items.GetItem( itemSerial );
-
-            if ( itemObj == null )
-            {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
-                return;
-            }
-
-            if ( amount == -1 )
-            {
-                amount = itemObj.Count;
-            }
-
-            int containerSerial = AliasCommands.ResolveSerial( destination );
-
-            if ( containerSerial == 0 )
-            {
-                //TODO
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
-                return;
-            }
-
-            UOC.DragDropAsync( itemSerial, amount, containerSerial, x, y ).Wait();
-        }
-
-        [CommandsDisplay( Category = "Actions",
-            Description = "Unmounts if mounted, or mounts if unmounted, will prompt for mount if no \"mount\" alias.",
-            InsertText = "ToggleMounted()" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void ToggleMounted()
         {
             PlayerMobile player = Engine.Player;
@@ -256,8 +206,7 @@ namespace ClassicAssist.Data.Macros.Commands
             ObjectCommands.UseObject( mountSerial );
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Feed a given alias or serial with graphic.",
-            InsertText = "Feed(\"mount\", 0xff)" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void Feed( object obj, int graphic, int amount = 1, int hue = -1 )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -283,11 +232,10 @@ namespace ClassicAssist.Data.Macros.Commands
                 return;
             }
 
-            UOC.DragDropAsync( foodItem.Serial, amount, serial ).Wait();
+            ActionPacketQueue.EnqueueDragDrop( foodItem.Serial, amount, serial );
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Sends rename request.",
-            InsertText = "Rename(\"mount\", \"Snoopy\"" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void Rename( object obj, string name )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -301,9 +249,7 @@ namespace ClassicAssist.Data.Macros.Commands
             UOC.RenameRequest( serial, name );
         }
 
-        [CommandsDisplay( Category = "Actions",
-            Description = "Display corpses and/or mobiles names (parameter \"mobiles\" or \"corpses\".",
-            InsertText = "ShowNames(\"corpses\")" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void ShowNames( string showType )
         {
             const int MAX_DISTANCE = 32;
@@ -349,9 +295,34 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
-        [CommandsDisplay( Category = "Actions",
-            Description = "Equip a specific item into a given layer. Use object inspector to determine layer value.",
-            InsertText = "EquipItem(\"axe\", \"TwoHanded\")" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
+        public static void EquipType( int id, object layer )
+        {
+            Layer layerValue = Layer.Invalid;
+
+            switch ( layer )
+            {
+                case string s:
+                    layerValue = Utility.GetEnumValueByName<Layer>( s );
+                    break;
+                case int i:
+                    layerValue = (Layer) i;
+                    break;
+                case Layer l:
+                    layerValue = l;
+                    break;
+            }
+
+            if ( layerValue == Layer.Invalid )
+            {
+                UOC.SystemMessage( Strings.Invalid_layer_value___ );
+                return;
+            }
+
+            UOC.EquipType( id, layerValue );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void EquipItem( object obj, object layer )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -394,10 +365,7 @@ namespace ClassicAssist.Data.Macros.Commands
             UOC.EquipItem( item, layerValue );
         }
 
-        [CommandsDisplay( Category = "Actions",
-            Description =
-                "Returns true and updates found alias if an item exists in the specified layer, option serial/alias for mobile to check.",
-            InsertText = "if FindLayer(\"OneHanded\"):" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static bool FindLayer( object layer, object obj = null )
         {
             if ( obj == null )
@@ -462,8 +430,7 @@ namespace ClassicAssist.Data.Macros.Commands
             return true;
         }
 
-        [CommandsDisplay( Category = "Actions",
-            Description = "Retrieve an approximated ping with server. -1 on failure.", InsertText = "Ping()" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static long Ping()
         {
             Random random = new Random();
@@ -491,8 +458,7 @@ namespace ClassicAssist.Data.Macros.Commands
             return -1;
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Request a context menu option.",
-            InsertText = "ContextMenu(0x00aabbcc, 1)" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static void ContextMenu( int serial, int entry )
         {
             Engine.SendPacketToServer( new ContextMenuRequest( serial ) );
@@ -500,8 +466,7 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new ContextMenuClick( serial, entry ) );
         }
 
-        [CommandsDisplay( Category = "Actions", Description = "Request or wait for a context menu option.",
-            InsertText = "WaitForContext(0x00aabbcc, 1, 5000)" )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
         public static bool WaitForContext( object obj, int entry, int timeout )
         {
             int serial = AliasCommands.ResolveSerial( obj );

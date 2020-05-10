@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Assistant;
+using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network;
 
@@ -9,9 +10,8 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class JournalCommands
     {
-        [CommandsDisplay( Category = "Journal", Description = "Check for a text in journal, optional source name.",
-            InsertText = "if InJournal(\"town guards\", \"system\"):" )]
-        public static bool InJournal( string text, string author = "" )
+        [CommandsDisplay( Category = nameof( Strings.Journal ) )]
+        public static bool InJournal( string text, string author = "", int hue = -1 )
         {
             bool match;
 
@@ -19,28 +19,27 @@ namespace ClassicAssist.Data.Macros.Commands
             {
                 match = Engine.Journal.GetBuffer().Any( je =>
                     je.Text.ToLower().Contains( text.ToLower() ) &&
-                    ( je.SpeechType == JournalSpeech.System || je.Name == "System" ) );
+                    ( je.SpeechType == JournalSpeech.System || je.Name == "System" ) &&
+                    ( hue == -1 || je.SpeechHue == hue ) );
             }
             else
             {
-                match = Engine.Journal.GetBuffer()
-                    .Any( je => je.Text.ToLower().Contains( text.ToLower() ) &&
-                                ( string.IsNullOrEmpty( author ) || string.Equals( je.Name, author,
-                                      StringComparison.CurrentCultureIgnoreCase ) ) );
+                match = Engine.Journal.GetBuffer().Any( je =>
+                    je.Text.ToLower().Contains( text.ToLower() ) &&
+                    ( string.IsNullOrEmpty( author ) || string.Equals( je.Name, author,
+                          StringComparison.CurrentCultureIgnoreCase ) ) && ( hue == -1 || je.SpeechHue == hue ) );
             }
 
             return match;
         }
 
-        [CommandsDisplay( Category = "Journal", Description = "Clear all journal texts.",
-            InsertText = "ClearJournal()" )]
+        [CommandsDisplay( Category = nameof( Strings.Journal ) )]
         public static void ClearJournal()
         {
             Engine.Journal.Clear();
         }
 
-        [CommandsDisplay( Category = "Journal", Description = "Wait the given timeout for the journal text to appear.",
-            InsertText = "if WaitForJournal(\"town guards\", 5000, \"system\"):" )]
+        [CommandsDisplay( Category = nameof( Strings.Journal ) )]
         public static bool WaitForJournal( string text, int timeout, string author = "" )
         {
             AutoResetEvent are = new AutoResetEvent( false );

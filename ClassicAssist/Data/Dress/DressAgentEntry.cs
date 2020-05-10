@@ -1,21 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Assistant;
 using ClassicAssist.Data.Hotkeys;
+using ClassicAssist.Misc;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Dress
 {
+    /*
+     * Future tip to self, this is HotkeyEntry so it doesn't try to add it to hotkey commands
+     */
     public class DressAgentEntry : HotkeyEntry
     {
-        private IEnumerable<DressAgentItem> _items;
+        private List<DressAgentItem> _items;
         private int _undressContainer;
 
-        public IEnumerable<DressAgentItem> Items
+        public List<DressAgentItem> Items
         {
             get => _items;
             set => SetProperty( ref _items, value );
@@ -32,18 +37,21 @@ namespace ClassicAssist.Data.Dress
             return Name;
         }
 
-        public void AddOrReplaceDressItem( int itemSerial, Layer itemLayer )
+        public void AddOrReplaceDressItem( Item item )
         {
             List<DressAgentItem> list = Items.ToList();
 
-            DressAgentItem existingItem = Items.FirstOrDefault( i => i.Layer == itemLayer );
+            DressAgentItem existingItem = Items.FirstOrDefault( i => i.Layer == item.Layer );
 
             if ( existingItem != null )
             {
                 list.Remove( existingItem );
             }
 
-            list.Add( new DressAgentItem { Serial = itemSerial, Layer = itemLayer } );
+            list.Add( new DressAgentItem
+            {
+                Serial = item.Serial, Layer = item.Layer, Type = DressAgentItemType.Serial, ID = item.ID
+            } );
 
             Items = list;
         }
@@ -70,32 +78,21 @@ namespace ClassicAssist.Data.Dress
                 {
                     Item item = Engine.Items.GetItem( dai.Serial );
 
-                    if ( item == null )
+                    if ( item == null && dai.Type == DressAgentItemType.Serial )
                     {
                         continue;
                     }
 
                     int currentInLayer = Engine.Player?.GetLayer( dai.Layer ) ?? 0;
 
-                    if ( currentInLayer == item.Serial )
+                    if ( currentInLayer == item?.Serial )
                     {
                         continue;
                     }
 
-                    int attempts;
-
                     if ( currentInLayer != 0 && moveConflicting && container != -1 )
                     {
-                        attempts = 0;
-
-                        do
-                        {
-                            await UOC.DragDropAsync( currentInLayer, 1, container );
-                            await Task.Delay( Options.CurrentOptions.ActionDelayMS );
-                        }
-                        while ( Engine.Player?.GetLayer( dai.Layer ) != 0 && attempts++ < 10 );
-
-                        Engine.Player?.SetLayer( dai.Layer, 0 );
+                        await ActionPacketQueue.EnqueueDragDrop( currentInLayer, 1, container, QueuePriority.Medium );
 
                         currentInLayer = 0;
                     }
@@ -105,20 +102,22 @@ namespace ClassicAssist.Data.Dress
                         continue;
                     }
 
-                    attempts = 0;
-
-                    do
+                    switch ( dai.Type )
                     {
-                        UOC.EquipItem( item, dai.Layer );
-
-                        await Task.Delay( Options.CurrentOptions.ActionDelayMS );
+                        case DressAgentItemType.Serial:
+                            await UOC.EquipItem( item, dai.Layer );
+                            break;
+                        case DressAgentItemType.ID:
+                            await UOC.EquipType( dai.ID, dai.Layer );
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
-                    while ( Engine.Player?.GetLayer( dai.Layer ) == 0 && attempts++ < 10 );
                 }
             } );
         }
 
-        public void Undress()
+        public async Task Undress()
         {
             if ( Engine.Player == null )
             {
@@ -139,9 +138,7 @@ namespace ClassicAssist.Data.Dress
 
             foreach ( Item item in itemsToUnequip )
             {
-                UOC.DragDropAsync( item.Serial, 1, container ).Wait();
-                Engine.Player.SetLayer( item.Layer, 0 );
-                Thread.Sleep( Options.CurrentOptions.ActionDelayMS );
+                await ActionPacketQueue.EnqueueDragDrop( item.Serial, 1, container, QueuePriority.Medium );
             }
         }
     }

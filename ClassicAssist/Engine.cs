@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ReSharper disable once RedundantUsingDirective
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,6 +30,7 @@ using ClassicAssist.UO.Network.PacketFilter;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using CUO_API;
+using Exceptionless;
 using Octokit;
 
 [assembly: InternalsVisibleTo( "ClassicAssist.Tests" )]
@@ -44,6 +47,8 @@ namespace Assistant
         public delegate void dPlayerInitialized( PlayerMobile player );
 
         public delegate void dSendRecvPacket( byte[] data, int length );
+
+        public delegate void dUpdateWindowTitle();
 
         private const int MAX_DISTANCE = 32;
 
@@ -78,6 +83,7 @@ namespace Assistant
 
         private static readonly TimeSpan PACKET_SEND_DELAY = TimeSpan.FromMilliseconds( 5 );
         private static DateTime _nextPacketSendTime;
+        private static IntPtr _hWnd;
 
         public static string ClientPath { get; set; }
         public static Version ClientVersion { get; set; }
@@ -87,6 +93,8 @@ namespace Assistant
         public static GumpCollection Gumps { get; set; } = new GumpCollection();
         public static ItemCollection Items { get; set; } = new ItemCollection( 0 );
         public static CircularBuffer<JournalEntry> Journal { get; set; } = new CircularBuffer<JournalEntry>( 1024 );
+
+        public static DateTime LastActionPacket { get; set; }
         public static int LastPromptID { get; set; }
         public static int LastPromptSerial { get; set; }
         public static Queue<object> LastTargetQueue { get; set; } = new Queue<object>();
@@ -99,9 +107,10 @@ namespace Assistant
         public static TargetFlags TargetFlags { get; set; }
         public static int TargetSerial { get; set; }
         public static TargetType TargetType { get; set; }
-        public static ThreadQueue<int> UseObjectQueue { get; set; } = new ThreadQueue<int>( ProcessUseObjectQueue );
         public static bool WaitingForTarget { get; set; }
         internal static ConcurrentDictionary<uint, int> GumpList { get; set; } = new ConcurrentDictionary<uint, int>();
+
+        public static event dUpdateWindowTitle UpdateWindowTitleEvent;
 
         internal static event dSendRecvPacket InternalPacketSentEvent;
         internal static event dSendRecvPacket InternalPacketReceivedEvent;
@@ -130,12 +139,6 @@ namespace Assistant
             _mainThread.Start();
         }
 
-        private static void ProcessUseObjectQueue( int serial )
-        {
-            SendPacketToServer( new UseObject( serial ) );
-            Thread.Sleep( Options.CurrentOptions.ActionDelayMS );
-        }
-
         internal static unsafe void InitializePlugin( PluginHeader* plugin )
         {
             _onConnected = OnConnected;
@@ -146,6 +149,7 @@ namespace Assistant
             _onClientClosing = OnClientClosing;
             _onHotkeyPressed = OnHotkeyPressed;
             _onMouse = OnMouse;
+            _hWnd = plugin->HWND;
 
             plugin->OnConnected = Marshal.GetFunctionPointerForDelegate( _onConnected );
             plugin->OnDisconnected = Marshal.GetFunctionPointerForDelegate( _onDisconnected );
@@ -194,8 +198,7 @@ namespace Assistant
                 {
                     TimeSpan diff = DateTime.Now - _lastMouseAction[(int) mouse];
 
-                    if ( diff <
-                         TimeSpan.FromMilliseconds( Options.CurrentOptions.LimitMouseWheelTriggerMS ) )
+                    if ( diff < TimeSpan.FromMilliseconds( Options.CurrentOptions.LimitMouseWheelTriggerMS ) )
                     {
                         return;
                     }
@@ -220,6 +223,7 @@ namespace Assistant
         {
             Options.Save( Options.CurrentOptions );
             AssistantOptions.Save();
+            ExceptionlessClient.Default.SubmitSessionEnd( AssistantOptions.UserId );
         }
 
         private static void OnPlayerPositionChanged( int x, int y, int z )
@@ -280,28 +284,46 @@ namespace Assistant
 
         private static void ProcessIncomingQueue( Packet packet )
         {
-            PacketReceivedEvent?.Invoke( packet.GetPacket(), packet.GetLength() );
+            try
+            {
+                PacketReceivedEvent?.Invoke( packet.GetPacket(), packet.GetLength() );
 
-            PacketHandler handler = IncomingPacketHandlers.GetHandler( packet.GetPacketID() );
+                PacketHandler handler = IncomingPacketHandlers.GetHandler( packet.GetPacketID() );
 
-            int length = _getPacketLength( packet.GetPacketID() );
+                int length = _getPacketLength( packet.GetPacketID() );
 
-            handler?.OnReceive?.Invoke( new PacketReader( packet.GetPacket(), packet.GetLength(), length > 0 ) );
+                handler?.OnReceive?.Invoke( new PacketReader( packet.GetPacket(), packet.GetLength(), length > 0 ) );
 
-            PacketWaitEntries.CheckWait( packet.GetPacket(), PacketDirection.Incoming );
+                PacketWaitEntries.CheckWait( packet.GetPacket(), PacketDirection.Incoming );
+            }
+            catch ( Exception e )
+            {
+                e.ToExceptionless().SetProperty( "Packet", packet.GetPacket() )
+                    .SetProperty( "Player", Player.ToString() ).SetProperty( "WorldItemCount", Items.Count() )
+                    .SetProperty( "WorldMobileCount", Mobiles.Count() ).Submit();
+            }
         }
 
         private static void ProcessOutgoingQueue( Packet packet )
         {
-            PacketSentEvent?.Invoke( packet.GetPacket(), packet.GetLength() );
+            try
+            {
+                PacketSentEvent?.Invoke( packet.GetPacket(), packet.GetLength() );
 
-            PacketHandler handler = OutgoingPacketHandlers.GetHandler( packet.GetPacketID() );
+                PacketHandler handler = OutgoingPacketHandlers.GetHandler( packet.GetPacketID() );
 
-            int length = _getPacketLength( packet.GetPacketID() );
+                int length = _getPacketLength( packet.GetPacketID() );
 
-            handler?.OnReceive?.Invoke( new PacketReader( packet.GetPacket(), packet.GetLength(), length > 0 ) );
+                handler?.OnReceive?.Invoke( new PacketReader( packet.GetPacket(), packet.GetLength(), length > 0 ) );
 
-            PacketWaitEntries.CheckWait( packet.GetPacket(), PacketDirection.Outgoing );
+                PacketWaitEntries.CheckWait( packet.GetPacket(), PacketDirection.Outgoing );
+            }
+            catch ( Exception e )
+            {
+                e.ToExceptionless().SetProperty( "Packet", packet.GetPacket() )
+                    .SetProperty( "Player", Player.ToString() ).SetProperty( "WorldItemCount", Items.Count() )
+                    .SetProperty( "WorldMobileCount", Mobiles.Count() ).Submit();
+            }
         }
 
         private static Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
@@ -359,8 +381,7 @@ namespace Assistant
                 if ( newStatus.HasFlag( MobileStatus.Hidden ) )
                 {
                     SendPacketToClient( new MobileUpdate( mobile.Serial, mobile.ID == 0x191 ? 0x193 : 0x192, mobile.Hue,
-                        newStatus, mobile.X,
-                        mobile.Y, mobile.Z, mobile.Direction ) );
+                        newStatus, mobile.X, mobile.Y, mobile.Z, mobile.Direction ) );
                 }
             };
 
@@ -371,8 +392,7 @@ namespace Assistant
                     GitHubClient client = new GitHubClient( new ProductHeaderValue( "ClassicAssist" ) );
 
                     IReadOnlyList<Release> releases =
-                        await client.Repository.Release.GetAll( "Reetus",
-                            "ClassicAssist" );
+                        await client.Repository.Release.GetAll( "Reetus", "ClassicAssist" );
 
                     Release latestRelease = releases.FirstOrDefault();
 
@@ -385,8 +405,7 @@ namespace Assistant
 
                     if ( !Version.TryParse(
                         FileVersionInfo.GetVersionInfo( Path.Combine( StartupPath, "ClassicAssist.dll" ) )
-                            .ProductVersion,
-                        out Version localVersion ) )
+                            .ProductVersion, out Version localVersion ) )
                     {
                         return;
                     }
@@ -397,7 +416,7 @@ namespace Assistant
                             await client.Repository.Commit.GetAll( "Reetus", "ClassicAssist" );
 
                         IEnumerable<GitHubCommit> latestCommits =
-                            commits.OrderByDescending( c => c.Commit.Author.Date ).Take( 7 );
+                            commits.OrderByDescending( c => c.Commit.Author.Date ).Take( 15 );
 
                         StringBuilder commitMessage = new StringBuilder();
 
@@ -411,11 +430,14 @@ namespace Assistant
 
                         StringBuilder message = new StringBuilder();
                         message.AppendLine( Strings.ProductName );
-                        message.AppendLine( $"{Strings.New_version_available_} {latestVersion}" );
+                        message.AppendLine(
+                            $"{Strings.New_version_available_} <A HREF=\"https://github.com/Reetus/ClassicAssist/releases/tag/{latestVersion}\">{latestVersion}</A>" );
                         message.AppendLine();
                         message.AppendLine( commitMessage.ToString() );
+                        message.AppendLine(
+                            $"<A HREF=\"https://github.com/Reetus/ClassicAssist/commits/master\">{Strings.See_More}</A>" );
 
-                        UpdateMessageGump gump = new UpdateMessageGump( message.ToString(), latestVersion );
+                        UpdateMessageGump gump = new UpdateMessageGump( _hWnd, message.ToString(), latestVersion );
                         gump.SendGump();
                     }
                 }
@@ -454,18 +476,25 @@ namespace Assistant
 
         public static void SendPacketToClient( byte[] packet, int length )
         {
-            lock ( _clientSendLock )
+            try
             {
-                while ( DateTime.Now < _nextPacketRecvTime )
+                lock ( _clientSendLock )
                 {
-                    Thread.Sleep( 1 );
+                    while ( DateTime.Now < _nextPacketRecvTime )
+                    {
+                        Thread.Sleep( 1 );
+                    }
+
+                    InternalPacketReceivedEvent?.Invoke( packet, length );
+
+                    _sendToClient?.Invoke( ref packet, ref length );
+
+                    _nextPacketRecvTime = DateTime.Now + PACKET_RECV_DELAY;
                 }
-
-                InternalPacketReceivedEvent?.Invoke( packet, length );
-
-                _sendToClient?.Invoke( ref packet, ref length );
-
-                _nextPacketRecvTime = DateTime.Now + PACKET_RECV_DELAY;
+            }
+            catch ( ThreadInterruptedException )
+            {
+                // Macro was interupted whilst we were waiting...
             }
         }
 
@@ -515,6 +544,11 @@ namespace Assistant
         public static bool Move( Direction direction, bool run )
         {
             return _requestMove?.Invoke( (int) direction, run ) ?? false;
+        }
+
+        public static void UpdateWindowTitle()
+        {
+            UpdateWindowTitleEvent?.Invoke();
         }
 
         #region ClassicUO Events

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ClassicAssist.Data.Autoloot;
 using ClassicAssist.Data.Counters;
 using ClassicAssist.Data.Dress;
 using ClassicAssist.Resources;
@@ -8,13 +9,27 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class AgentCommands
     {
-        [CommandsDisplay( Category = "Agents", Description = "Dress all items in the specified dress agent.",
-            InsertText = "Dress(\"Dress-1\")" )]
-        public static void Dress( string name )
+        [CommandsDisplay( Category = nameof( Strings.Agents ) )]
+        public static void Dress( string name = null )
         {
             DressManager manager = DressManager.GetInstance();
 
-            DressAgentEntry dressAgentEntry = manager.Items.FirstOrDefault( dae => dae.Name == name );
+            DressAgentEntry dressAgentEntry;
+
+            if ( string.IsNullOrEmpty( name ) )
+            {
+                if ( manager.TemporaryDress == null )
+                {
+                    UOC.SystemMessage( Strings.No_temporary_dress_layout_configured___ );
+                    return;
+                }
+
+                dressAgentEntry = manager.TemporaryDress;
+            }
+            else
+            {
+                dressAgentEntry = manager.Items.FirstOrDefault( dae => dae.Name == name );
+            }
 
             if ( dressAgentEntry == null )
             {
@@ -25,8 +40,7 @@ namespace ClassicAssist.Data.Macros.Commands
             dressAgentEntry.Action( dressAgentEntry );
         }
 
-        [CommandsDisplay( Category = "Agents", Description = "Undress all items in the specified dress agent.",
-            InsertText = "Undress(\"Dress-1\")" )]
+        [CommandsDisplay( Category = nameof( Strings.Agents ) )]
         public static void Undress( string name )
         {
             DressManager manager = DressManager.GetInstance();
@@ -39,12 +53,10 @@ namespace ClassicAssist.Data.Macros.Commands
                 return;
             }
 
-            dressAgentEntry.Undress();
+            dressAgentEntry.Undress().Wait();
         }
 
-        [CommandsDisplay( Category = "Agents",
-            Description = "Returns true if the Dress agent is currently dressing or undressing.",
-            InsertText = "if Dressing():" )]
+        [CommandsDisplay( Category = nameof( Strings.Agents ) )]
         public static bool Dressing()
         {
             DressManager manager = DressManager.GetInstance();
@@ -52,8 +64,16 @@ namespace ClassicAssist.Data.Macros.Commands
             return manager.IsDressing;
         }
 
-        [CommandsDisplay( Category = "Agents", Description = "Returns the count of the given counter agent.",
-            InsertText = "Counter(\"bm\")" )]
+        [CommandsDisplay( Category = nameof( Strings.Agents ) )]
+        public static void DressConfig()
+        {
+            DressManager manager = DressManager.GetInstance();
+            manager.TemporaryDress = new DressAgentEntry();
+            manager.TemporaryDress.Action = async hks => await manager.DressAllItems( manager.TemporaryDress, false );
+            manager.ImportItems( manager.TemporaryDress );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Agents ) )]
         public static int Counter( string name )
         {
             CountersManager manager = CountersManager.GetInstance();
@@ -67,6 +87,14 @@ namespace ClassicAssist.Data.Macros.Commands
 
             UOC.SystemMessage( Strings.Invalid_counter_agent_name___ );
             return 0;
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Agents ) )]
+        public static void SetAutolootContainer( object obj )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            AutolootHelpers.SetAutolootContainer?.Invoke( serial );
         }
     }
 }

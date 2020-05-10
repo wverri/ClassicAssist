@@ -136,7 +136,7 @@ namespace ClassicAssist.Tests.Agents
 
             Assert.AreEqual( dressItem.Serial, _player.GetLayer( dressItem.Layer ) );
 
-            dae.Undress();
+            dae.Undress().Wait();
 
             Assert.AreEqual( 0, _player.GetLayer( dressItem.Layer ) );
             Assert.AreEqual( 1, _player.Backpack.Container.GetTotalItemCount() );
@@ -166,7 +166,7 @@ namespace ClassicAssist.Tests.Agents
 
             Assert.AreEqual( dressItem.Serial, _player.GetLayer( dressItem.Layer ) );
 
-            dae.Undress();
+            dae.Undress().Wait();
 
             Assert.AreEqual( 0, _player.GetLayer( dressItem.Layer ) );
             Assert.AreEqual( 1, undressContainer.Container.GetTotalItemCount() );
@@ -260,6 +260,7 @@ namespace ClassicAssist.Tests.Agents
         [TestCleanup]
         public void Cleanup()
         {
+            ActionPacketQueue.Clear();
             Engine.InternalPacketSentEvent -= OnInternalPacketSentEvent;
             Engine.Player = null;
             Engine.Items.Clear();

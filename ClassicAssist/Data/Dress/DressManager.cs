@@ -1,14 +1,16 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Assistant;
 using ClassicAssist.Annotations;
+using ClassicAssist.Misc;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Objects;
-using UOC = ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Dress
 {
@@ -25,6 +27,7 @@ namespace ClassicAssist.Data.Dress
         };
 
         private ObservableCollectionEx<DressAgentEntry> _items = new ObservableCollectionEx<DressAgentEntry>();
+        private DressAgentEntry _temporaryDress;
 
         private DressManager()
         {
@@ -37,6 +40,12 @@ namespace ClassicAssist.Data.Dress
         {
             get => _items;
             set => SetProperty( ref _items, value );
+        }
+
+        public DressAgentEntry TemporaryDress
+        {
+            get => _temporaryDress;
+            set => SetProperty( ref _temporaryDress, value );
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -103,8 +112,7 @@ namespace ClassicAssist.Data.Dress
                 {
                     Item itemObj = Engine.Items.GetItem( item );
 
-                    await UOC.DragDropAsync( item, 1, backpack );
-                    Engine.Player.SetLayer( itemObj?.Layer ?? Layer.Invalid, 0 );
+                    await ActionPacketQueue.EnqueueDragDrop( item, 1, backpack, QueuePriority.Medium );
                 }
             }
             finally
@@ -129,6 +137,33 @@ namespace ClassicAssist.Data.Dress
             }
 
             return container;
+        }
+
+        public void ImportItems( DressAgentEntry dae )
+        {
+            PlayerMobile player = Engine.Player;
+
+            List<DressAgentItem> items = player.GetEquippedItems().Where( i => IsValidLayer( i.Layer ) )
+                .Select( i => new DressAgentItem
+                {
+                    Serial = i.Serial, Layer = i.Layer, ID = i.ID, Type = DressAgentItemType.Serial
+                } ).ToList();
+
+            dae.Items = items;
+        }
+
+        public async Task DressAllItems( DressAgentEntry dae, bool moveConflictingItems )
+        {
+            try
+            {
+                IsDressing = true;
+
+                await dae.Dress( moveConflictingItems );
+            }
+            finally
+            {
+                IsDressing = false;
+            }
         }
     }
 }

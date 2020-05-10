@@ -1128,22 +1128,43 @@
   <data name="Instance" xml:space="preserve">
     <value>全球</value>
   </data>
-  <data name="Macro Type:" xml:space="preserve">
-    <value>宏类型：</value>
+  <data name="Waiting for ClassicAssist to initialize..." xml:space="preserve">
+    <value>正在等待经典辅助系统初始化...</value>
   </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
+  <data name="Masteries" xml:space="preserve">
+    <value>大师</value>
   </data>
-  <data name="Steam" xml:space="preserve">
-    <value>Steam</value>
+  <data name="Stun" xml:space="preserve">
+    <value>打 晕</value>
   </data>
-  <data name="Command &quot;{0}&quot; currently not implemented..." xml:space="preserve">
-    <value>命令"{0}"当前未实现...</value>
+  <data name="Disarm" xml:space="preserve">
+    <value>解除</value>
   </data>
-  <data name="Usage: {0}" xml:space="preserve">
-    <value>用途： {0}</value>
+  <data name="Clear Weapon Ability" xml:space="preserve">
+    <value>清除武器能力</value>
   </data>
-  <data name="Min {0}, Max {1}, Average {2}" xml:space="preserve">
-    <value>最小{0}，最大{1}，平均{2}</value>
+  <data name="Type" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="Dress Type" xml:space="preserve">
+    <value>着装类型</value>
+  </data>
+  <data name="Invalid type..." xml:space="preserve">
+    <value>无效类型...</value>
+  </data>
+  <data name="No temporary dress layout configured..." xml:space="preserve">
+    <value>未配置临时着装布局...</value>
+  </data>
+  <data name="See More" xml:space="preserve">
+    <value>See More</value>
+  </data>
+  <data name="Reset Container" xml:space="preserve">
+    <value>重置容器</value>
+  </data>
+  <data name="Context menu request" xml:space="preserve">
+    <value>上下文菜单请求</value>
+  </data>
+  <data name="Show Profile Name In Title" xml:space="preserve">
+    <value>在标题中显示配置文件名称</value>
   </data>
 </root>

@@ -2,6 +2,7 @@
 using ClassicAssist.Data.Abilities;
 using ClassicAssist.Resources;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
 
@@ -9,8 +10,7 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class AbilitiesCommands
     {
-        [CommandsDisplay( Category = "Abilities", Description = "Clear weapon ability.",
-            InsertText = "ClearAbility()" )]
+        [CommandsDisplay( Category = nameof( Strings.Abilities ) )]
         public static void ClearAbility()
         {
             AbilitiesManager manager = AbilitiesManager.GetInstance();
@@ -25,14 +25,23 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
-        [CommandsDisplay( Category = "Abilities",
-            Description = "Set weapon ability, parameter \"primary\" / \"secondary\".",
-            InsertText = "SetAbility(\"primary\")" )]
+        [CommandsDisplay( Category = nameof( Strings.Abilities ) )]
         public static void SetAbility( string ability, string onOff = "toggle" )
         {
             AbilitiesManager manager = AbilitiesManager.GetInstance();
 
-            // TODO stun/disarm old
+            if ( ability.ToLower().Equals( "stun" ) )
+            {
+                Engine.SendPacketToServer( new StunRequest() );
+                return;
+            }
+
+            if ( ability.ToLower().Equals( "disarm" ) )
+            {
+                Engine.SendPacketToServer( new DisarmRequest() );
+                return;
+            }
+
             bool primary;
 
             switch ( ability.ToLower() )
@@ -86,8 +95,7 @@ namespace ClassicAssist.Data.Macros.Commands
             manager.SetAbility( primary ? AbilityType.Primary : AbilityType.Secondary );
         }
 
-        [CommandsDisplay( Category = "Abilities", Description = "(Garoyle) Start flying if not already flying.",
-            InsertText = "Fly()" )]
+        [CommandsDisplay( Category = nameof( Strings.Abilities ) )]
         public static void Fly()
         {
             PlayerMobile player = Engine.Player;
@@ -103,8 +111,7 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
-        [CommandsDisplay( Category = "Abilities", Description = "Returns true if mobile is currently flying.",
-            InsertText = "if Flying(\"self\"):" )]
+        [CommandsDisplay( Category = nameof( Strings.Abilities ) )]
         public static bool Flying( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -127,8 +134,7 @@ namespace ClassicAssist.Data.Macros.Commands
             return mobile.Status.HasFlag( MobileStatus.Flying );
         }
 
-        [CommandsDisplay( Category = "Abilities", Description = "(Garoyle) Stop flying if currently flying.",
-            InsertText = "Land()" )]
+        [CommandsDisplay( Category = nameof( Strings.Abilities ) )]
         public static void Land()
         {
             PlayerMobile player = Engine.Player;

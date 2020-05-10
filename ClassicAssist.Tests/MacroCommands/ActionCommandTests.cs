@@ -3,6 +3,7 @@ using System.Threading;
 using Assistant;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -130,7 +131,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             Engine.Items.Add( new Item( 0x00aabbcc ) { Count = 50 } );
 
-            ActionCommands.MoveItem( 0x00aabbcc, 0xaabbdd );
+            ObjectCommands.MoveItem( 0x00aabbcc, 0xaabbdd );
 
             bool result = are.WaitOne( 5000 );
 
@@ -297,6 +298,47 @@ namespace ClassicAssist.Tests.MacroCommands
         }
 
         [TestMethod]
+        public void EquipTypeWillSendDragPacket()
+        {
+            Item backpack = new Item( 0x40000000 ) { Owner = 1, Container = new ItemCollection( 0x40000000 ) };
+
+            Engine.Player = new PlayerMobile( 1 ) { Equipment = { backpack } };
+            Engine.Player.SetLayer( Layer.Backpack, backpack.Serial );
+            Engine.Items.Add( backpack );
+
+            Item item = new Item( 0x40000001, backpack.Serial ) { ID = 0xff };
+            backpack.Container.Add( item );
+
+            AutoResetEvent are = new AutoResetEvent( false );
+
+            void OnInternalPacketSentEvent( byte[] data, int length )
+            {
+                if (data[0] != 0x07)
+                {
+                    return;
+                }
+
+                int serial = ( data[1] << 24 ) | ( data[2] << 16 ) | ( data[3] << 8 ) | data[4];
+
+                Assert.AreEqual( item.Serial, serial );
+
+                are.Set();
+            }
+
+            Engine.InternalPacketSentEvent += OnInternalPacketSentEvent;
+
+            ActionCommands.EquipType( item.ID, Layer.OneHanded );
+
+            bool result = are.WaitOne( 5000 );
+
+            Assert.IsTrue( result );
+
+            Engine.InternalPacketSentEvent -= OnInternalPacketSentEvent;
+            Engine.Player = null;
+            Engine.Items.Clear();
+        }
+
+        [TestMethod]
         public void WillFindLayer()
         {
             Engine.Player = new PlayerMobile( 1 );
@@ -308,6 +350,12 @@ namespace ClassicAssist.Tests.MacroCommands
 
             AliasCommands.UnsetAlias( "self" );
             Engine.Player = null;
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            ActionPacketQueue.Clear();
         }
     }
 }
