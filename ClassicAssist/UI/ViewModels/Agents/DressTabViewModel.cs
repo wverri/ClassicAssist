@@ -122,7 +122,15 @@ namespace ClassicAssist.UI.ViewModels.Agents
         public bool UseUO3DPackets
         {
             get => _useUo3DPackets;
-            set => SetProperty( ref _useUo3DPackets, value );
+            set
+            {
+                SetProperty( ref _useUo3DPackets, value );
+
+                if ( _manager != null )
+                {
+                    _manager.UseUO3DPackets = value;
+                }
+            }
         }
 
         public void Serialize( JObject json )
