@@ -167,6 +167,8 @@ namespace Assistant
             _requestMove = Marshal.GetDelegateForFunctionPointer<RequestMove>( plugin->RequestMove );
 
             ClientPath = _getUOFilePath();
+            ClientVersion = new Version( (byte) ( plugin->ClientVersion >> 24 ), (byte) ( plugin->ClientVersion >> 16 ),
+                (byte) ( plugin->ClientVersion >> 8 ), (byte) plugin->ClientVersion );
 
             if ( !Path.IsPathRooted( ClientPath ) )
             {
