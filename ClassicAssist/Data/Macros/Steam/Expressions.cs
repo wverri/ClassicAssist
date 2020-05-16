@@ -60,7 +60,8 @@ namespace ClassicAssist.Data.Macros.Steam
             Interpreter.RegisterExpressionHandler( "list", ListLengthExpression );
             Interpreter.RegisterExpressionHandler( "listexists", ListExistsExpression );
             Interpreter.RegisterExpressionHandler( "organizing", OrganizingExpression );
-            Interpreter.RegisterExpressionHandler( "property", PropertyExpression );
+            //Interpreter.RegisterExpressionHandler<bool>( "property", PropertyBinaryExpression );
+            Interpreter.RegisterExpressionHandler( "property", PropertyUnaryExpression );
             Interpreter.RegisterExpressionHandler( "skill", SkillExpression );
             Interpreter.RegisterExpressionHandler( "skillstate", SkillStateExpression );
             Interpreter.RegisterExpressionHandler( "timer", TimerExpression );
@@ -246,7 +247,44 @@ namespace ClassicAssist.Data.Macros.Steam
             return 0;
         }
 
-        private static double PropertyExpression( string expression, Argument[] args, bool quiet )
+        private static bool PropertyBinaryExpression( string expression, Argument[] args, bool quiet )
+        {
+            if ( args.Length < 2 )
+            {
+                UOC.SystemMessage( "Usage: property ('name') (serial)" );
+            }
+
+            string property = args[0].AsString();
+            int serial = args[1].ResolveSerial();
+
+            if ( serial == 0 )
+            {
+                return false;
+            }
+
+            Entity entity = (Entity) Engine.Items.GetItem( serial ) ?? Engine.Mobiles.GetMobile( serial );
+
+            if ( entity.Properties != null )
+            {
+                Property p = entity.Properties.FirstOrDefault( pe => pe.Text.ToLower().Contains( property.ToLower() ) );
+
+                // Property doesn't exist
+                if ( p == null )
+                {
+                    return false;
+                }
+
+                //Property exists but no argument or argument is string
+                if ( !int.TryParse( p.Arguments[0], out _ ) )
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static double PropertyUnaryExpression( string expression, Argument[] args, bool quiet )
         {
             if ( args.Length < 2 )
             {
