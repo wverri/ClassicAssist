@@ -179,8 +179,7 @@ namespace ClassicAssist.Data.Hotkeys
 
                             filter = !hks.PassToUO;
 
-                            Task.Run( () =>
-                                hks.Action.Invoke( hks ) );
+                            Task.Run( () => hks.Action.Invoke( hks ) );
 
                             break;
                         }
@@ -206,30 +205,36 @@ namespace ClassicAssist.Data.Hotkeys
                         continue;
                     }
 
-                    foreach ( HotkeyEntry hks in hke.Children )
+                    try
                     {
-                        if ( hks.Hotkey.Mouse != mouse )
+                        foreach ( HotkeyEntry hks in hke.Children )
                         {
-                            continue;
+                            if ( hks.Hotkey.Mouse != mouse )
+                            {
+                                continue;
+                            }
+
+                            if ( hks.Disableable && !Enabled )
+                            {
+                                continue;
+                            }
+
+                            Key modifier = _modifierKeys.FirstOrDefault( key =>
+                                Engine.Dispatcher.Invoke( () => Keyboard.IsKeyDown( key ) ) );
+
+                            if ( hks.Hotkey.Modifier != modifier )
+                            {
+                                continue;
+                            }
+
+                            Task.Run( () => hks.Action.Invoke( hks ) );
+
+                            break;
                         }
-
-                        if ( hks.Disableable && !Enabled )
-                        {
-                            continue;
-                        }
-
-                        Key modifier = _modifierKeys.FirstOrDefault( key =>
-                            Engine.Dispatcher.Invoke( () => Keyboard.IsKeyDown( key ) ) );
-
-                        if ( hks.Hotkey.Modifier != modifier )
-                        {
-                            continue;
-                        }
-
-                        Task.Run( () =>
-                            hks.Action.Invoke( hks ) );
-
-                        break;
+                    }
+                    catch ( InvalidOperationException )
+                    {
+                        // When spamming wheel
                     }
                 }
             }
