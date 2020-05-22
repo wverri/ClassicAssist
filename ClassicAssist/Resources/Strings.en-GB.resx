@@ -1185,4 +1185,76 @@
   <data name="Choose from Item" xml:space="preserve">
     <value>Choose from Item</value>
   </data>
+  <data name="Toggle mounted" xml:space="preserve">
+    <value>Toggle mounted</value>
+  </data>
+  <data name="Target Acquisition - Enemy" xml:space="preserve">
+    <value>Target Acquisition - Enemy</value>
+  </data>
+  <data name="Target Acquisition - Friend" xml:space="preserve">
+    <value>Target Acquisition - Friend</value>
+  </data>
+  <data name="Get Next Friend" xml:space="preserve">
+    <value>Get Next Friend</value>
+  </data>
+  <data name="Get Next Any" xml:space="preserve">
+    <value>Get Next Any</value>
+  </data>
+  <data name="Get Next Criminal" xml:space="preserve">
+    <value>Get Next Criminal</value>
+  </data>
+  <data name="Get Next Enemy" xml:space="preserve">
+    <value>Get Next Enemy</value>
+  </data>
+  <data name="Get Next Gray / Criminal" xml:space="preserve">
+    <value>Get Next Gray / Criminal</value>
+  </data>
+  <data name="Match Any ID" xml:space="preserve">
+    <value>Match Any ID</value>
+  </data>
+  <data name="Any" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Macro Commands Wiki (Launches in Browser)" xml:space="preserve">
+    <value>Macro Commands Wiki (Launches in Browser)</value>
+  </data>
+  <data name="MACRO_WIKI_URL" xml:space="preserve">
+    <value>https://github.com/Reetus/ClassicAssist/wiki/Macro-Commands</value>
+  </data>
+  <data name="Really remove macro &quot;{0}&quot;?" xml:space="preserve">
+    <value>Really remove macro "{0}"?</value>
+  </data>
+  <data name="Donating helps support continued development, your support is appreciated." xml:space="preserve">
+    <value>Donating helps support continued development, your support is appreciated.</value>
+  </data>
+  <data name="Max Target Queue Length:" xml:space="preserve">
+    <value>Max Target Queue Length:</value>
+  </data>
+  <data name="Target queue is not enabled..." xml:space="preserve">
+    <value>Target queue is not enabled...</value>
+  </data>
+  <data name="Next Target: {0}" xml:space="preserve">
+    <value>Next Target: {0}</value>
+  </data>
+  <data name="No Target" xml:space="preserve">
+    <value>No Target</value>
+  </data>
+  <data name="Show Next Target In Queue" xml:space="preserve">
+    <value>Show Next Target In Queue</value>
+  </data>
+  <data name="Shard:" xml:space="preserve">
+    <value>Shard:</value>
+  </data>
+  <data name="Sort Macros Alphabetical" xml:space="preserve">
+    <value>Sort Macros Alphabetical</value>
+  </data>
+  <data name="Equip Item" xml:space="preserve">
+    <value>Equip Item</value>
+  </data>
+  <data name="Show Chat Window" xml:space="preserve">
+    <value>Show Chat Window</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
 </root>

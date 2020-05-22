@@ -147,9 +147,11 @@
                   Command="{Binding Source={StaticResource Proxy}, Path=Data.(viewModels:EntityCollectionViewerViewModel.ContextMoveToBackpackCommand)}" />
         <MenuItem Header="{x:Static resources:Strings.Move_to_container}"
                   Command="{Binding Source={StaticResource Proxy}, Path=Data.(viewModels:EntityCollectionViewerViewModel.ContextMoveToContainerCommand)}" />
-        <Separator/>
+        <Separator />
         <MenuItem Header="{x:Static resources:Strings.Context_menu_request}"
                   Command="{Binding Source={StaticResource Proxy}, Path=Data.(viewModels:EntityCollectionViewerViewModel.ContextContextMenuRequestCommand)}" />
+        <MenuItem Header="Equip Item"
+                  Command="{Binding Source={StaticResource Proxy}, Path=Data.(viewModels:EntityCollectionViewerViewModel.EquipItemCommand)}" />
     </ContextMenu>
     <Style TargetType="Button" x:Key="ToolbarButtonStyle">
         <Setter Property="Opacity" Value="1" />

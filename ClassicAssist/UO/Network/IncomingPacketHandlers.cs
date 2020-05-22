@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Assistant;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Abilities;
+using ClassicAssist.Data.Chat;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Data.Skills;
 using ClassicAssist.Data.Vendors;
@@ -91,7 +92,9 @@ namespace ClassicAssist.UO.Network
             Register( 0xA1, 9, OnMobileHits );
             Register( 0xA2, 9, OnMobileMana );
             Register( 0xA3, 9, OnMobileStamina );
+            Register( 0xA8, 0, OnShardList );
             Register( 0xAE, 0, OnUnicodeText );
+            Register( 0xB2, 0, OnChatMessage );
             Register( 0xB9, 5, OnSupportedFeatures );
             Register( 0xBF, 0, OnExtendedCommand );
             Register( 0xC1, 0, OnLocalizedText );
@@ -108,6 +111,39 @@ namespace ClassicAssist.UO.Network
             RegisterExtended( 0x10, 0, OnDisplayEquipmentInfo );
             RegisterExtended( 0x21, 0, OnClearWeaponAbility );
             RegisterExtended( 0x25, 0, OnToggleSpecialMoves );
+        }
+
+        private static void OnChatMessage( PacketReader reader )
+        {
+            ChatManager.GetInstance().OnChatPacket( reader );
+        }
+
+        private static void OnShardList( PacketReader reader )
+        {
+            reader.ReadByte();
+            int count = reader.ReadInt16();
+
+            List<ShardEntry> shards = new List<ShardEntry>();
+
+            for ( int i = 0; i < count; i++ )
+            {
+                int index = reader.ReadInt16();
+                string name = reader.ReadStringSafe( 32 );
+                int full = reader.ReadByte();
+                int timezone = reader.ReadSByte();
+                int ip = reader.ReadInt32();
+
+                shards.Add( new ShardEntry
+                {
+                    Index = index,
+                    IP = ip,
+                    Name = name,
+                    PercentFull = full,
+                    Timezone = timezone
+                } );
+            }
+
+            Engine.Shards = shards;
         }
 
         private static void OnDisplayEquipmentInfo( PacketReader reader )
@@ -773,16 +809,21 @@ namespace ClassicAssist.UO.Network
                 return;
             }
 
-            object obj = Engine.LastTargetQueue.Dequeue();
-
-            if ( obj == null )
+            if ( flags == TargetFlags.Cancel )
             {
-                return;
+                Engine.TargetExists = false;
             }
+            else
+            {
+                object obj = Engine.LastTargetQueue.Dequeue();
 
-            TargetCommands.Target( obj, Options.CurrentOptions.RangeCheckLastTarget );
+                if ( obj == null )
+                {
+                    return;
+                }
 
-            Engine.TargetExists = false;
+                TargetCommands.Target( obj, Options.CurrentOptions.RangeCheckLastTarget );
+            }
         }
 
         private static void OnMobileStamina( PacketReader reader )

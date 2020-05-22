@@ -20,6 +20,7 @@ using ClassicAssist.Data.Commands;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Data.Macros;
 using ClassicAssist.Data.Scavenger;
+using ClassicAssist.Data.Targeting;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Views;
@@ -90,6 +91,7 @@ namespace Assistant
         public static string ClientPath { get; set; }
         public static Version ClientVersion { get; set; }
         public static bool Connected { get; set; }
+        public static ShardEntry CurrentShard { get; set; }
         public static Dispatcher Dispatcher { get; set; }
         public static FeatureFlags Features { get; set; }
         public static GumpCollection Gumps { get; set; } = new GumpCollection();
@@ -99,11 +101,12 @@ namespace Assistant
         public static DateTime LastActionPacket { get; set; }
         public static int LastPromptID { get; set; }
         public static int LastPromptSerial { get; set; }
-        public static Queue<object> LastTargetQueue { get; set; } = new Queue<object>();
+        public static TargetQueue<object> LastTargetQueue { get; set; } = new TargetQueue<object>();
         public static MobileCollection Mobiles { get; set; } = new MobileCollection( Items );
         public static PacketWaitEntries PacketWaitEntries { get; set; }
         public static PlayerMobile Player { get; set; }
         public static RehueList RehueList { get; set; } = new RehueList();
+        public static List<ShardEntry> Shards { get; set; }
         public static string StartupPath { get; set; }
         public static bool TargetExists { get; set; }
         public static TargetFlags TargetFlags { get; set; }

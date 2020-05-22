@@ -37,6 +37,7 @@ namespace ClassicAssist.Data.Macros
         public Func<bool> IsRecording { get; set; }
         public ObservableCollectionEx<MacroEntry> Items { get; set; }
         public static bool QuietMode { get; set; }
+        public bool Replay { get; set; }
 
         private void PacketSentEvent( byte[] data, int length )
         {
@@ -60,8 +61,7 @@ namespace ClassicAssist.Data.Macros
 
         private void PacketSentReceived( byte[] data, int length, PacketDirection direction )
         {
-            foreach ( string result in _parsers
-                .Select( parser => parser.Parse( data, length, direction ) )
+            foreach ( string result in _parsers.Select( parser => parser.Parse( data, length, direction ) )
                 .Where( result => !string.IsNullOrEmpty( result ) ) )
             {
                 InsertDocument?.Invoke( result );
@@ -106,7 +106,7 @@ namespace ClassicAssist.Data.Macros
             {
                 if ( CurrentMacro != null && CurrentMacro.IsRunning )
                 {
-                    if ( macro == CurrentMacro && macro.DoNotAutoInterrupt )
+                    if ( macro == CurrentMacro && macro.DoNotAutoInterrupt && !Replay )
                     {
                         return;
                     }

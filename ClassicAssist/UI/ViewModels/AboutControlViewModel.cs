@@ -26,10 +26,12 @@ namespace ClassicAssist.UI.ViewModels
         private double _latency;
         private ICommand _launchHomepageCommand;
         private int _mobileCount;
+        private ICommand _openPayPalCommand;
         private Timer _pingTimer;
         private string _playerName;
         private int _playerSerial;
         private string _playerStatus;
+        private string _shardName = "Unknown";
         private ICommand _showItemsCommand;
         private Timer _timer;
 
@@ -94,6 +96,9 @@ namespace ClassicAssist.UI.ViewModels
             set => SetProperty( ref _mobileCount, value );
         }
 
+        public ICommand OpenPayPalCommand =>
+            _openPayPalCommand ?? ( _openPayPalCommand = new RelayCommand( OpenPayPal, o => true ) );
+
         public string PlayerName
         {
             get => _playerName;
@@ -114,10 +119,21 @@ namespace ClassicAssist.UI.ViewModels
 
         public string Product { get; } = Strings.ProductName;
 
+        public string ShardName
+        {
+            get => _shardName;
+            set => SetProperty( ref _shardName, value );
+        }
+
         public ICommand ShowItemsCommand =>
             _showItemsCommand ?? ( _showItemsCommand = new RelayCommand( ShowItems, o => Connected ) );
 
         public string Version { get; set; }
+
+        private static void OpenPayPal( object obj )
+        {
+            Process.Start( "https://www.paypal.me/reeeetus" );
+        }
 
         private void LastTargetChangedEvent( int serial )
         {
@@ -169,6 +185,7 @@ namespace ClassicAssist.UI.ViewModels
             PlayerStatus = player.Status.ToString();
             player.LastTargetChangedEvent += LastTargetChangedEvent;
             player.MobileStatusUpdated += OnMobileStatusUpdated;
+            ShardName = Engine.CurrentShard?.Name ?? "Unknown";
         }
 
         private void OnMobileStatusUpdated( MobileStatus oldstatus, MobileStatus newstatus )

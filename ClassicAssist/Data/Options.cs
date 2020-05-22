@@ -41,6 +41,7 @@ namespace ClassicAssist.Data
         private int _lightLevel;
         private bool _limitMouseWheelTrigger;
         private int _limitMouseWheelTriggerMS;
+        private int _maxTargetQueueLength = 1;
         private string _name;
         private bool _persistUseOnce;
         private bool _preventAttackingFriendsInWarMode;
@@ -52,6 +53,7 @@ namespace ClassicAssist.Data
         private int _rangeCheckLastTargetAmount = 11;
         private bool _showProfileNameWindowTitle;
         private SmartTargetOption _smartTargetOption;
+        private bool _sortMacrosAlphabetical;
         private bool _useDeathScreenWhilstHidden;
         private bool _useExperimentalFizzleDetection;
         private bool _useObjectQueue;
@@ -179,6 +181,12 @@ namespace ClassicAssist.Data
             set => SetProperty( ref _limitMouseWheelTriggerMS, value );
         }
 
+        public int MaxTargetQueueLength
+        {
+            get => _maxTargetQueueLength;
+            set => SetProperty( ref _maxTargetQueueLength, value );
+        }
+
         public string Name
         {
             get => _name;
@@ -247,6 +255,12 @@ namespace ClassicAssist.Data
         {
             get => _smartTargetOption;
             set => SetProperty( ref _smartTargetOption, value );
+        }
+
+        public bool SortMacrosAlphabetical
+        {
+            get => _sortMacrosAlphabetical;
+            set => SetProperty( ref _sortMacrosAlphabetical, value );
         }
 
         public bool UseDeathScreenWhilstHidden
