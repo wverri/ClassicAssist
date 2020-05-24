@@ -10,7 +10,7 @@ namespace ClassicAssist.UI.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
-        private bool _alwaysOnTop =  true;
+        private bool _alwaysOnTop;
         private ICommand _debugCommand;
         private DebugWindow _debugWindow;
         private string _status = Strings.Ready___;
