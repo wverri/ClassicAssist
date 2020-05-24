@@ -1061,6 +1061,20 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to #get murderer
+        ///GetEnemy([&apos;Murderer&apos;])
+        ///#get closest murderer, any body type
+        ///GetEnemy([&apos;Murderer&apos;], &apos;Any&apos;, &apos;Closest&apos;)
+        ///#get next any notoriety, humanoid or transformation - unmounted
+        ///GetEnemy([&apos;Any&apos;], &apos;Both&apos;, &apos;Next&apos;, &apos;Unmounted&apos;).
+        /// </summary>
+        public static string GETENEMY_COMMAND_EXAMPLE {
+            get {
+                return ResourceManager.GetString("GETENEMY_COMMAND_EXAMPLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GetEnemy([&quot;Murderer&quot;]).
         /// </summary>
         public static string GETENEMY_COMMAND_INSERTTEXT {

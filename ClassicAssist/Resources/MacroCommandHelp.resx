@@ -1260,4 +1260,12 @@ FindObject("weapon", -1, "backpack")  </value>
   <data name="OPENQUESTSGUMP_COMMAND_INSERTTEXT" xml:space="preserve">
     <value>OpenQuestsGump()</value>
   </data>
+  <data name="GETENEMY_COMMAND_EXAMPLE" xml:space="preserve">
+    <value>#get murderer
+GetEnemy(['Murderer'])
+#get closest murderer, any body type
+GetEnemy(['Murderer'], 'Any', 'Closest')
+#get next any notoriety, humanoid or transformation - unmounted
+GetEnemy(['Any'], 'Both', 'Next', 'Unmounted')</value>
+  </data>
 </root>
