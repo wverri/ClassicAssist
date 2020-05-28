@@ -97,6 +97,7 @@ namespace ClassicAssist.Tests
         [TestCleanup]
         public void Cleanup()
         {
+            Engine.Items.Clear();
             Engine.ClientVersion = new Version( 7, 0, 45, 1 );
         }
     }
