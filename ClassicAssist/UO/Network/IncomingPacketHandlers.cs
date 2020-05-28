@@ -1033,7 +1033,7 @@ namespace ClassicAssist.UO.Network
             int count = reader.ReadUInt16();
             int x = reader.ReadInt16();
             int y = reader.ReadInt16();
-            int grid = Engine.ClientVersion > new Version( 6, 0, 1, 7 ) ? reader.ReadByte() : 0;
+            int grid = Engine.ClientVersion >= new Version( 6, 0, 1, 7 ) ? reader.ReadByte() : 0;
             int containerSerial = reader.ReadInt32();
             int hue = reader.ReadUInt16();
 
