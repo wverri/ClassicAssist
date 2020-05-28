@@ -32,15 +32,10 @@ namespace ClassicAssist.Tests
     [TestClass]
     public class OldPacketTests
     {
-        [TestInitialize]
-        public void Initialize()
-        {
-            Engine.ClientVersion = new Version( 5, 0, 9, 1 );
-        }
-
         [TestMethod]
         public void WillSendProperDropRequest()
         {
+            Engine.ClientVersion = new Version( 5, 0, 9, 1 );
             AutoResetEvent are = new AutoResetEvent( false );
 
             void OnInternalPacketSentEvent( byte[] data, int length )
@@ -68,12 +63,14 @@ namespace ClassicAssist.Tests
             Engine.InternalPacketSentEvent += OnInternalPacketSentEvent;
 
             Engine.SendPacketToServer( new DropItem( 0x11223344, 0x55667788, 1, 2, 3 ) );
-            are.WaitOne();
+            are.WaitOne(5000);
+            Engine.ClientVersion = new Version( 7, 0, 45, 1 );
         }
 
         [TestMethod]
         public void WillParseOldContainerContents()
         {
+            Engine.ClientVersion = new Version( 5, 0, 9, 1 );
             byte[] packet =
             {
                 0x3C, 0x00, 0x2B, 0x00, 0x02, 0x46, 0x13, 0xFF, 0x71, 0x0E, 0x76, 0x00, 0x00, 0x01, 0x00, 0x2C,
@@ -92,12 +89,7 @@ namespace ClassicAssist.Tests
             Item container = Engine.Items.GetItem( 0x4613ff6d );
             Assert.IsNotNull( container );
             Assert.AreEqual( 2, container.Container.GetItemCount() );
-        }
-
-        [TestCleanup]
-        public void Cleanup()
-        {
-            Engine.Items.Clear();
+            Engine.Items = null;
             Engine.ClientVersion = new Version( 7, 0, 45, 1 );
         }
     }
