@@ -483,6 +483,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return false;
         }
 
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Hue ) } )]
         public static void Rehue( object obj, int hue )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -507,7 +509,7 @@ namespace ClassicAssist.Data.Macros.Commands
                         return;
                     }
 
-                    Engine.RehueList.CheckMobileIncoming( m, m.Equipment );
+                    Engine.SendPacketToClient( new MobileIncoming( m, m.Equipment, hue ) );
                 }
                 else
                 {

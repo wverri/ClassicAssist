@@ -91,28 +91,28 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new QuestsButtonRequest() );
         }
 
-        public static int SendCustomGump( Gump gump )
-        {
-            PacketFilterInfo pfi = new PacketFilterInfo( 0xB1,
-                new[] { PacketFilterConditions.IntAtPositionCondition( (int) gump.ID, 7 ) } );
+        //public static int SendCustomGump( Gump gump )
+        //{
+        //    PacketFilterInfo pfi = new PacketFilterInfo( 0xB1,
+        //        new[] { PacketFilterConditions.IntAtPositionCondition( (int) gump.ID, 7 ) } );
 
-            Engine.AddSendFilter( pfi );
-            gump.SendGump();
+        //    Engine.AddSendFilter( pfi );
+        //    gump.SendGump();
 
-            PacketWaitEntry we = Engine.PacketWaitEntries.Add( pfi, PacketDirection.Outgoing, true, true );
+        //    PacketWaitEntry we = Engine.PacketWaitEntries.Add( pfi, PacketDirection.Outgoing, true, true );
 
-            we.Lock.WaitOne();
+        //    we.Lock.WaitOne();
 
-            if ( we.Packet == null )
-            {
-                return -1;
-            }
+        //    if ( we.Packet == null )
+        //    {
+        //        return -1;
+        //    }
 
-            PacketReader reader = new PacketReader( we.Packet, we.Packet.Length, false );
-            reader.ReadInt32();
-            reader.ReadInt32();
-            int buttonId = reader.ReadInt32();
-            return buttonId;
-        }
+        //    PacketReader reader = new PacketReader( we.Packet, we.Packet.Length, false );
+        //    reader.ReadInt32();
+        //    reader.ReadInt32();
+        //    int buttonId = reader.ReadInt32();
+        //    return buttonId;
+        //}
     }
 }

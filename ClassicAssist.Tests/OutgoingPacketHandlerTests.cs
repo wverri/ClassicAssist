@@ -54,9 +54,6 @@ namespace ClassicAssist.Tests
         [TestCleanup]
         public void Cleanup()
         {
-            Engine.Player = null;
-            Engine.Mobiles = null;
-            Engine.Items = null;
         }
     }
 }
