@@ -57,6 +57,15 @@ namespace ClassicAssist.Launcher
                 IsPreset = true,
                 HasStatusProtocol = true
             } );
+
+            Shards.Add( new ShardEntry
+            {
+                Name = "UO:Renaissance",
+                Address = "login.uorenaissance.com",
+                Port = 2593,
+                IsPreset = true,
+                HasStatusProtocol = true
+            } );
         }
 
         public ObservableCollection<ShardEntry> Shards { get; set; } = new ObservableCollection<ShardEntry>();
