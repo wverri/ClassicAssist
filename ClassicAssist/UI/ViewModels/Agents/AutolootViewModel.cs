@@ -383,18 +383,18 @@ namespace ClassicAssist.UI.ViewModels.Agents
                     return;
                 }
 
-                ActionPacketQueue.EnqueueActionPacket( new UseObject( serial ), QueuePriority.Medium );
+                //ActionPacketQueue.EnqueueActionPacket( new UseObject( serial ), QueuePriority.Medium );
 
-                PacketWaitEntry we = Engine.PacketWaitEntries.Add(
-                    new PacketFilterInfo( 0x3C, new[] { PacketFilterConditions.IntAtPositionCondition( serial, 19 ) } ),
-                    PacketDirection.Incoming );
+                //PacketWaitEntry we = Engine.PacketWaitEntries.Add(
+                //    new PacketFilterInfo( 0x3C, new[] { PacketFilterConditions.IntAtPositionCondition( serial, 19 ) } ),
+                //    PacketDirection.Incoming );
 
-                bool result = we.Lock.WaitOne( 3000 );
+                //bool result = we.Lock.WaitOne( 3000 );
 
-                if ( !result )
-                {
-                    return;
-                }
+                //if ( !result )
+                //{
+                //    return;
+                //}
 
                 IEnumerable<Item> items = Engine.Items.GetItem( serial )?.Container.GetItems();
 
