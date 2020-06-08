@@ -5,8 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Resources;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using ExportCommands.Properties;
 
@@ -202,18 +202,19 @@ namespace ExportCommands
 
                     GenerateCategory( assembly, category, categoryCommands, seeAlsoTypes, locale );
 
-                    string categoryFileName = $"{RemoveAccents(category)}-{locale}.md".Replace( ' ', '-' );
+                    string categoryFileName = $"{RemoveAccents( category )}-{locale}.md".Replace( ' ', '-' );
 
                     if ( locale.Equals( "en-US" ) )
                     {
                         categoryFileName = $"{category}.md";
                     }
 
-                    markDown += $"## [{category}]({categoryFileName})  \n";
+                    markDown += $"## [{category}]({Path.GetFileNameWithoutExtension( categoryFileName )})  \n";
 
                     foreach ( Commands categoryCommand in categoryCommands )
                     {
-                        markDown += $"[{categoryCommand.Name}]({categoryFileName}#{categoryCommand.Name})  \n";
+                        markDown +=
+                            $"[{categoryCommand.Name}]({Path.GetFileNameWithoutExtension( categoryFileName )}#{categoryCommand.Name})  \n";
                     }
                 }
 
@@ -252,7 +253,8 @@ namespace ExportCommands
             Console.WriteLine( $"Finished in {sw.Elapsed}" );
         }
 
-        private static void GenerateCategory( Assembly assembly, string category, IEnumerable<Commands> categoryCommands, List<Type> seeAlsoTypes, string locale )
+        private static void GenerateCategory( Assembly assembly, string category,
+            IEnumerable<Commands> categoryCommands, List<Type> seeAlsoTypes, string locale )
         {
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo( assembly.Location );
 
@@ -294,7 +296,7 @@ namespace ExportCommands
                         {
                             if ( !seeAlsoNames.Contains( parameter.SeeAlso.Name ) )
                             {
-                                seeAlsoNames.Add(parameter.SeeAlso.Name  );
+                                seeAlsoNames.Add( parameter.SeeAlso.Name );
                             }
 
                             markDown += string.Format( $" {Resources.See_Also___0_}  \n",
@@ -315,7 +317,8 @@ namespace ExportCommands
 
             markDown += "\n\n\n";
 
-            IOrderedEnumerable<Type> includedSeeAlso = seeAlsoTypes.Where( i => seeAlsoNames.Contains( i.Name ) ).OrderBy( i => i.Name );
+            IOrderedEnumerable<Type> includedSeeAlso =
+                seeAlsoTypes.Where( i => seeAlsoNames.Contains( i.Name ) ).OrderBy( i => i.Name );
 
             if ( includedSeeAlso.Any() )
             {
@@ -338,7 +341,7 @@ namespace ExportCommands
                 }
             }
 
-            string fileName = $"{category}-{locale}.md".Replace( ' ', '-' );
+            string fileName = $"{RemoveAccents(category)}-{locale}.md".Replace( ' ', '-' );
 
             if ( locale.Equals( "en-US" ) )
             {
@@ -397,10 +400,10 @@ namespace ExportCommands
             return null;
         }
 
-        private static string RemoveAccents(string input)
+        private static string RemoveAccents( string input )
         {
-            byte[] tempBytes = System.Text.Encoding.GetEncoding( "ISO-8859-8" ).GetBytes( input );
-            return System.Text.Encoding.UTF8.GetString( tempBytes );
+            byte[] tempBytes = Encoding.GetEncoding( "ISO-8859-8" ).GetBytes( input );
+            return Encoding.UTF8.GetString( tempBytes );
         }
     }
 
