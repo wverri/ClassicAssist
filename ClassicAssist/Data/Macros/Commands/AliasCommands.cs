@@ -47,6 +47,9 @@ namespace ClassicAssist.Data.Macros.Commands
                 case uint i:
                     serial = (int) i;
                     break;
+                case Entity i:
+                    serial = i.Serial;
+                    break;
                 case null:
                     serial = Engine.Player == null ? 0 : Engine.Player.Serial;
 
@@ -63,7 +66,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return serial;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Aliases ) )]
+        [CommandsDisplay( Category = nameof( Strings.Aliases ),
+            Parameters = new[] { nameof( ParameterType.AliasName ), nameof( ParameterType.SerialOrAlias ) } )]
         public static void SetAlias( string aliasName, object obj )
         {
             int value = ResolveSerial( obj );
@@ -78,7 +82,8 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Aliases ) )]
+        [CommandsDisplay( Category = nameof( Strings.Aliases ),
+            Parameters = new[] { nameof( ParameterType.AliasName ), nameof( ParameterType.SerialOrAlias ) } )]
         public static void SetMacroAlias( string aliasName, object obj )
         {
             int value = ResolveSerial( obj );
@@ -101,7 +106,8 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Aliases ) )]
+        [CommandsDisplay( Category = nameof( Strings.Aliases ),
+            Parameters = new[] { nameof( ParameterType.AliasName ) } )]
         public static void UnsetAlias( string aliasName )
         {
             MacroEntry macro = MacroManager.GetInstance().GetCurrentMacro();
@@ -120,7 +126,8 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Aliases ) )]
+        [CommandsDisplay( Category = nameof( Strings.Aliases ),
+            Parameters = new[] { nameof( ParameterType.AliasName ) } )]
         public static int GetAlias( string aliasName )
         {
             MacroEntry macro = MacroManager.GetInstance().GetCurrentMacro();
@@ -146,14 +153,17 @@ namespace ClassicAssist.Data.Macros.Commands
             return _aliases;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Aliases ) )]
-        public static void PromptAlias( string aliasName )
+        [CommandsDisplay( Category = nameof( Strings.Aliases ),
+            Parameters = new[] { nameof( ParameterType.AliasName ) } )]
+        public static int PromptAlias( string aliasName )
         {
-            int serial = UOC.GetTargeSerialAsync( Strings.Target_object___ ).Result;
+            int serial = UOC.GetTargeSerialAsync( string.Format( Strings.Target_object___0_____, aliasName ) ).Result;
             SetAlias( aliasName.ToLower(), serial );
+            return serial;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Aliases ) )]
+        [CommandsDisplay( Category = nameof( Strings.Aliases ),
+            Parameters = new[] { nameof( ParameterType.AliasName ) } )]
         public static bool FindAlias( string aliasName )
         {
             int serial;

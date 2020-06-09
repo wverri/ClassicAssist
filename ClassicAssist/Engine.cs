@@ -20,6 +20,7 @@ using ClassicAssist.Data.Commands;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Data.Macros;
 using ClassicAssist.Data.Scavenger;
+using ClassicAssist.Data.Targeting;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Views;
@@ -85,9 +86,12 @@ namespace Assistant
         private static DateTime _nextPacketSendTime;
         private static IntPtr _hWnd;
 
+        public static Assembly ClassicAssembly { get; set; }
+
         public static string ClientPath { get; set; }
         public static Version ClientVersion { get; set; }
         public static bool Connected { get; set; }
+        public static ShardEntry CurrentShard { get; set; }
         public static Dispatcher Dispatcher { get; set; }
         public static FeatureFlags Features { get; set; }
         public static GumpCollection Gumps { get; set; } = new GumpCollection();
@@ -97,11 +101,12 @@ namespace Assistant
         public static DateTime LastActionPacket { get; set; }
         public static int LastPromptID { get; set; }
         public static int LastPromptSerial { get; set; }
-        public static Queue<object> LastTargetQueue { get; set; } = new Queue<object>();
+        public static TargetQueue<object> LastTargetQueue { get; set; } = new TargetQueue<object>();
         public static MobileCollection Mobiles { get; set; } = new MobileCollection( Items );
         public static PacketWaitEntries PacketWaitEntries { get; set; }
         public static PlayerMobile Player { get; set; }
         public static RehueList RehueList { get; set; } = new RehueList();
+        public static List<ShardEntry> Shards { get; set; }
         public static string StartupPath { get; set; }
         public static bool TargetExists { get; set; }
         public static TargetFlags TargetFlags { get; set; }
@@ -132,7 +137,8 @@ namespace Assistant
             _mainThread = new Thread( () =>
             {
                 _window = new MainWindow();
-                _window.ShowDialog();
+                _window.Show();
+                Dispatcher.Run();
             } ) { IsBackground = true };
 
             _mainThread.SetApartmentState( ApartmentState.STA );
@@ -167,6 +173,8 @@ namespace Assistant
             _requestMove = Marshal.GetDelegateForFunctionPointer<RequestMove>( plugin->RequestMove );
 
             ClientPath = _getUOFilePath();
+            ClientVersion = new Version( (byte) ( plugin->ClientVersion >> 24 ), (byte) ( plugin->ClientVersion >> 16 ),
+                (byte) ( plugin->ClientVersion >> 8 ), (byte) plugin->ClientVersion );
 
             if ( !Path.IsPathRooted( ClientPath ) )
             {
@@ -179,6 +187,9 @@ namespace Assistant
             Skills.Initialize( ClientPath );
             Speech.Initialize( ClientPath );
             TileData.Initialize( ClientPath );
+
+            ClassicAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault( a => a.FullName.StartsWith( "ClassicUO," ) );
         }
 
         private static void OnMouse( int button, int wheel )
@@ -294,7 +305,7 @@ namespace Assistant
 
                 handler?.OnReceive?.Invoke( new PacketReader( packet.GetPacket(), packet.GetLength(), length > 0 ) );
 
-                PacketWaitEntries.CheckWait( packet.GetPacket(), PacketDirection.Incoming );
+                PacketWaitEntries?.CheckWait( packet.GetPacket(), PacketDirection.Incoming );
             }
             catch ( Exception e )
             {
@@ -316,7 +327,7 @@ namespace Assistant
 
                 handler?.OnReceive?.Invoke( new PacketReader( packet.GetPacket(), packet.GetLength(), length > 0 ) );
 
-                PacketWaitEntries.CheckWait( packet.GetPacket(), PacketDirection.Outgoing );
+                PacketWaitEntries?.CheckWait( packet.GetPacket(), PacketDirection.Outgoing );
             }
             catch ( Exception e )
             {
@@ -468,6 +479,8 @@ namespace Assistant
 
                 InternalPacketSentEvent?.Invoke( packet, length );
 
+                PacketWaitEntries?.CheckWait( packet, PacketDirection.Outgoing, true );
+
                 _sendToServer?.Invoke( ref packet, ref length );
 
                 _nextPacketSendTime = DateTime.Now + PACKET_SEND_DELAY;
@@ -551,6 +564,39 @@ namespace Assistant
             UpdateWindowTitleEvent?.Invoke();
         }
 
+        public static void GetMapZ( int x, int y, out sbyte groundZ, out sbyte staticZ )
+        {
+            groundZ = staticZ = (sbyte) ( Player?.Z ?? 0 );
+
+            if ( ClassicAssembly == null )
+            {
+                return;
+            }
+
+            PropertyInfo mapProperty = ClassicAssembly.GetType( "ClassicUO.Game.World" )?.GetProperty( "Map" );
+
+            if ( mapProperty == null )
+            {
+                return;
+            }
+
+            object mapInstance = mapProperty.GetMethod.Invoke( mapProperty, null );
+
+            MethodInfo getMapZMethod = mapInstance?.GetType().GetMethod( "GetMapZ" );
+
+            if ( getMapZMethod == null )
+            {
+                return;
+            }
+
+            object[] parameters = { x, y, null, null };
+
+            getMapZMethod.Invoke( mapInstance, parameters );
+
+            groundZ = (sbyte) parameters[2];
+            staticZ = (sbyte) parameters[3];
+        }
+
         #region ClassicUO Events
 
         private static bool OnPacketSend( ref byte[] data, ref int length )
@@ -570,6 +616,8 @@ namespace Assistant
                 }
 
                 SentPacketFilteredEvent?.Invoke( data, data.Length );
+
+                PacketWaitEntries.CheckWait( data, PacketDirection.Outgoing, true );
 
                 return false;
             }
@@ -596,6 +644,8 @@ namespace Assistant
                 }
 
                 ReceivedPacketFilteredEvent?.Invoke( data, data.Length );
+
+                PacketWaitEntries.CheckWait( data, PacketDirection.Incoming, true );
 
                 return false;
             }

@@ -15,11 +15,16 @@ namespace ClassicAssist.UO.Network.PacketFilter
         public event dWaitEntryAddedRemoved WaitEntryAddedEvent;
         public event dWaitEntryAddedRemoved WaitEntryRemovedEvent;
 
-        public PacketWaitEntry Add( PacketFilterInfo pfi, PacketDirection direction, bool autoRemove = false )
+        public PacketWaitEntry Add( PacketFilterInfo pfi, PacketDirection direction, bool autoRemove = false,
+            bool filteredOnly = false )
         {
             PacketWaitEntry we = new PacketWaitEntry
             {
-                PFI = pfi, Lock = new AutoResetEvent( false ), PacketDirection = direction, AutoRemove = autoRemove
+                PFI = pfi,
+                Lock = new AutoResetEvent( false ),
+                PacketDirection = direction,
+                AutoRemove = autoRemove,
+                MatchFilteredOnly = filteredOnly
             };
 
             lock ( _waitEntryLock )
@@ -31,7 +36,7 @@ namespace ClassicAssist.UO.Network.PacketFilter
             return we;
         }
 
-        public bool CheckWait( byte[] packet, PacketDirection direction )
+        public bool CheckWait( byte[] packet, PacketDirection direction, bool filteredPacket = false )
         {
             lock ( _waitEntryLock )
             {
@@ -45,8 +50,9 @@ namespace ClassicAssist.UO.Network.PacketFilter
 
             lock ( _waitEntryLock )
             {
-                foreach ( PacketWaitEntry t in _waitEntries.Where( t => packet[0] == t.PFI.PacketID )
-                    .Where( t => direction == t.PacketDirection ) )
+                foreach ( PacketWaitEntry t in _waitEntries.Where( t => packet[0] == t.PFI.PacketID ).Where( t =>
+                    direction == t.PacketDirection &&
+                    ( filteredPacket ? t.MatchFilteredOnly : !t.MatchFilteredOnly ) ) )
                 {
                     if ( t.PFI.GetConditions() == null )
                     {
@@ -139,6 +145,18 @@ namespace ClassicAssist.UO.Network.PacketFilter
             {
                 _waitEntries.Remove( we );
                 WaitEntryRemovedEvent?.Invoke( we );
+            }
+        }
+
+        public void RemoveRange( IEnumerable<PacketWaitEntry> wes )
+        {
+            lock ( _waitEntryLock )
+            {
+                foreach ( PacketWaitEntry we in wes )
+                {
+                    _waitEntries.Remove( we );
+                    WaitEntryRemovedEvent?.Invoke( we );
+                }
             }
         }
     }

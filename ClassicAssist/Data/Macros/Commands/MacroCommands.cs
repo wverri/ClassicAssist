@@ -7,18 +7,11 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class MacroCommands
     {
-        [CommandsDisplay( Category = nameof( Strings.Macros ) )]
+        [CommandsDisplay( Category = nameof( Strings.Macros ),
+            Parameters = new[] { nameof( ParameterType.MacroName ) } )]
         public static void PlayMacro( string name )
         {
             MacroManager manager = MacroManager.GetInstance();
-
-            MacroEntry current = manager.GetCurrentMacro();
-
-            if ( current != null && current.IsBackground )
-            {
-                UOC.SystemMessage( Strings.Cannot_PlayMacro_from_background_macro___ );
-                return;
-            }
 
             MacroEntry macro = manager.Items.FirstOrDefault( m => m.Name == name );
 
@@ -34,6 +27,12 @@ namespace ClassicAssist.Data.Macros.Commands
         [CommandsDisplay( Category = nameof( Strings.Macros ) )]
         public static void Stop()
         {
+            MacroManager.GetInstance().Stop();
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Macros ) )]
+        public static void StopAll()
+        {
             MacroManager.GetInstance().StopAll();
         }
 
@@ -42,7 +41,14 @@ namespace ClassicAssist.Data.Macros.Commands
         {
             MacroManager manager = MacroManager.GetInstance();
 
-            MacroEntry current = manager.GetCurrentMacro();
+            MacroEntry current = manager?.GetCurrentMacro();
+
+            if ( current?.Action == null )
+            {
+                return;
+            }
+
+            manager.Replay = true;
 
             Task.Run( () => current.Action( current ) );
         }

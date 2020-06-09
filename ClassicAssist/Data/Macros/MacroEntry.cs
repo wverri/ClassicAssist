@@ -5,8 +5,9 @@ using System.Windows;
 using System.Windows.Threading;
 using ClassicAssist.Data.Hotkeys;
 using ClassicAssist.Resources;
+using IronPython.Runtime.Operations;
 using Microsoft.Scripting;
-using UOScript;
+using Microsoft.Scripting.Runtime;
 
 namespace ClassicAssist.Data.Macros
 {
@@ -20,27 +21,14 @@ namespace ClassicAssist.Data.Macros
         private bool _isRunning;
         private bool _loop;
         private string _macro = string.Empty;
-        private IMacroInvoker _macroInvoker;
-        private MacroType _macroType;
+        private MacroInvoker _macroInvoker = new MacroInvoker();
         private string _name;
 
-        public MacroEntry( MacroType type )
+        public MacroEntry()
         {
             _dispatcher = Dispatcher.CurrentDispatcher;
-
-            switch ( type )
-            {
-                case MacroType.Python:
-                    _macroInvoker = new PythonInvoker();
-                    break;
-                case MacroType.Steam:
-                    _macroInvoker = new SteamInvoker();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException( nameof( type ), type, null );
-            }
-
-            MacroType = type;
+            _macroInvoker.ExceptionEvent += OnExceptionEvent;
+            _macroInvoker.StoppedEvent += OnStoppedEvent;
         }
 
         public Dictionary<string, int> Aliases
@@ -85,34 +73,10 @@ namespace ClassicAssist.Data.Macros
             set => SetProperty( ref _macro, value );
         }
 
-        public IMacroInvoker MacroInvoker
+        public MacroInvoker MacroInvoker
         {
             get => _macroInvoker;
             set => SetProperty( ref _macroInvoker, value );
-        }
-
-        public MacroType MacroType
-        {
-            get => _macroType;
-            set
-            {
-                if ( _macroType != value )
-                {
-                    switch ( value )
-                    {
-                        case MacroType.Python:
-                            _macroInvoker = new PythonInvoker();
-                            break;
-                        case MacroType.Steam:
-                            _macroInvoker = new SteamInvoker();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException( nameof( value ), value, null );
-                    }
-                }
-
-                SetProperty( ref _macroType, value );
-            }
         }
 
         public override string Name
@@ -128,9 +92,6 @@ namespace ClassicAssist.Data.Macros
 
         private void OnStoppedEvent()
         {
-            _macroInvoker.ExceptionEvent -= OnExceptionEvent;
-            _macroInvoker.StoppedEvent -= OnStoppedEvent;
-
             _dispatcher.Invoke( () => IsRunning = false );
 
             if ( IsBackground )
@@ -148,7 +109,7 @@ namespace ClassicAssist.Data.Macros
         {
             MacroManager manager = MacroManager.GetInstance();
 
-            bool exists = manager.Items?.Any( m => m.Name == value && !ReferenceEquals( m, this ) ) ?? false;
+            bool exists = manager.Items.Any( m => m.Name == value && !ReferenceEquals( m, this ) );
 
             if ( exists && name == null )
             {
@@ -179,9 +140,6 @@ namespace ClassicAssist.Data.Macros
                 UO.Commands.SystemMessage( string.Format( Strings.Background_macro___0___started___, Name ) );
             }
 
-            _macroInvoker.ExceptionEvent += OnExceptionEvent;
-            _macroInvoker.StoppedEvent += OnStoppedEvent;
-
             _macroInvoker.Execute( this );
         }
 
@@ -197,19 +155,18 @@ namespace ClassicAssist.Data.Macros
         {
             UO.Commands.SystemMessage( string.Format( Strings.Macro_error___0_, exception.Message ) );
 
-            if ( exception is SyntaxError se )
-            {
-                UO.Commands.SystemMessage( se.Node?.Lexeme );
-            }
-
-            if ( exception is RunTimeError re )
-            {
-                UO.Commands.SystemMessage( re.Node?.Lexeme );
-            }
-
             if ( exception is SyntaxErrorException syntaxError )
             {
                 UO.Commands.SystemMessage( $"{Strings.Line_Number}: {syntaxError.RawSpan.Start.Line}" );
+            }
+            else
+            {
+                DynamicStackFrame sf = PythonOps.GetDynamicStackFrames( exception ).FirstOrDefault();
+
+                if ( sf != null )
+                {
+                    UO.Commands.SystemMessage( $"{Strings.Line_Number}: {sf.GetFileLineNumber()}" );
+                }
             }
         }
     }

@@ -9,13 +9,15 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         private static readonly SpellManager _manager = SpellManager.GetInstance();
 
-        [CommandsDisplay( Category = nameof( Strings.Spells ) )]
+        [CommandsDisplay( Category = nameof( Strings.Spells ),
+            Parameters = new[] { nameof( ParameterType.SpellName ) } )]
         public static void Cast( string name )
         {
             _manager?.CastSpell( name );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Spells ) )]
+        [CommandsDisplay( Category = nameof( Strings.Spells ),
+            Parameters = new[] { nameof( ParameterType.SpellName ), nameof( ParameterType.SerialOrAlias ) } )]
         public static bool Cast( string name, object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -41,13 +43,26 @@ namespace ClassicAssist.Data.Macros.Commands
 
             _manager.CastSpell( sd.ID );
 
-            bool result = Options.CurrentOptions.UseExperimentalFizzleDetection
-                ? UOC.WaitForTargetOrFizzle( sd.Timeout + 1000 )
-                : TargetCommands.WaitForTarget( sd.Timeout + 500 );
+            int index = 0;
+            bool result;
+
+            if ( Options.CurrentOptions.UseExperimentalFizzleDetection )
+            {
+                ( index, result ) = UOC.WaitForTargetOrFizzle( sd.Timeout + 1000 );
+            }
+            else
+            {
+                result = TargetCommands.WaitForTarget( sd.Timeout + 500 );
+            }
+
+            if ( index == 0 && !result )
+            {
+                UOC.SystemMessage( Strings.Timeout___ );
+                return false;
+            }
 
             if ( !result )
             {
-                UOC.SystemMessage( Strings.Timeout___ );
                 return false;
             }
 

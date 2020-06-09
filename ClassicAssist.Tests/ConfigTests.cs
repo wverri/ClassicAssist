@@ -21,8 +21,7 @@ namespace ClassicAssist.Tests
         public void WontThrowExceptionOnDeserializeNullConfig()
         {
             AppDomain appDomain = AppDomain.CreateDomain( "WontThrowExceptionOnDeserializeNullConfig",
-                AppDomain.CurrentDomain.Evidence,
-                AppDomain.CurrentDomain.SetupInformation );
+                AppDomain.CurrentDomain.Evidence, AppDomain.CurrentDomain.SetupInformation );
 
             appDomain.DoCallBack( () => TestConfig( null ) );
         }
@@ -31,8 +30,7 @@ namespace ClassicAssist.Tests
         public void WontThrowExceptionOnDeserializeEmptyConfig()
         {
             AppDomain appDomain = AppDomain.CreateDomain( "WontThrowExceptionOnDeserializeEmptyConfig",
-                AppDomain.CurrentDomain.Evidence,
-                AppDomain.CurrentDomain.SetupInformation );
+                AppDomain.CurrentDomain.Evidence, AppDomain.CurrentDomain.SetupInformation );
 
             appDomain.DoCallBack( () => TestConfig( new JObject() ) );
         }

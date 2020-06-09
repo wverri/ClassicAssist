@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -14,6 +15,8 @@ namespace ClassicAssist.UI.Views
     /// </summary>
     public partial class HuePickerWindow : Window, INotifyPropertyChanged
     {
+        private ObservableCollection<HuePickerEntry> _filteredItems = new ObservableCollection<HuePickerEntry>();
+        private string _filterText;
         private ObservableCollection<HuePickerEntry> _items = new ObservableCollection<HuePickerEntry>();
         private ICommand _okCommand;
         private int _selectedHue = -1;
@@ -26,6 +29,24 @@ namespace ClassicAssist.UI.Views
             for ( int i = 0; i < 3000; i++ )
             {
                 Items.Add( new HuePickerEntry { Index = i + 1, Entry = Hues._lazyHueEntries.Value[i] } );
+            }
+
+            ApplyFilter( _filterText );
+        }
+
+        public ObservableCollection<HuePickerEntry> FilteredItems
+        {
+            get => _filteredItems;
+            set => SetProperty( ref _filteredItems, value );
+        }
+
+        public string FilterText
+        {
+            get => _filterText;
+            set
+            {
+                SetProperty( ref _filterText, value );
+                ApplyFilter( value );
             }
         }
 
@@ -50,6 +71,12 @@ namespace ClassicAssist.UI.Views
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void ApplyFilter( string value )
+        {
+            FilteredItems = new ObservableCollection<HuePickerEntry>( Items.Where( i =>
+                string.IsNullOrEmpty( value ) || i.Index.ToString().StartsWith( value ) ) );
+        }
 
         public static bool GetHue( out int hue )
         {

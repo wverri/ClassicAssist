@@ -23,8 +23,7 @@ namespace ClassicAssist.Tests.Agents
         {
             _packetLengths = new int[byte.MaxValue];
 
-            string json = File.ReadAllText( Path.Combine( Environment.CurrentDirectory,
-                "packetlengths.json" ) );
+            string json = File.ReadAllText( Path.Combine( Environment.CurrentDirectory, "packetlengths.json" ) );
 
             JObject jsonObj = JObject.Parse( json );
 
@@ -51,6 +50,7 @@ namespace ClassicAssist.Tests.Agents
 
             IncomingPacketHandlers.Initialize();
             OutgoingPacketHandlers.Initialize();
+            Engine.ClientVersion = new Version( 7, 0, 45, 1 );
 
             Engine.InternalPacketSentEvent += OnInternalPacketSentEvent;
         }

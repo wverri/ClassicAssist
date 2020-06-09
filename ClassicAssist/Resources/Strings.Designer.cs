@@ -196,6 +196,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Enabled.
+        /// </summary>
+        public static string All_Enabled {
+            get {
+                return ResourceManager.GetString("All Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Packets.
+        /// </summary>
+        public static string All_Packets {
+            get {
+                return ResourceManager.GetString("All Packets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All skills:.
         /// </summary>
         public static string All_skills_ {
@@ -223,6 +241,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Any.
+        /// </summary>
+        public static string Any {
+            get {
+                return ResourceManager.GetString("Any", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Applies to hotkeys / macros only..
         /// </summary>
         public static string Applies_to_hotkeys___macros_only_ {
@@ -237,6 +264,15 @@ namespace ClassicAssist.Resources {
         public static string Apply {
             get {
                 return ResourceManager.GetString("Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arguments.
+        /// </summary>
+        public static string Arguments {
+            get {
+                return ResourceManager.GetString("Arguments", resourceCulture);
             }
         }
         
@@ -345,6 +381,15 @@ namespace ClassicAssist.Resources {
         public static string Bandage_Self {
             get {
                 return ResourceManager.GetString("Bandage Self", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base.
+        /// </summary>
+        public static string Base {
+            get {
+                return ResourceManager.GetString("Base", resourceCulture);
             }
         }
         
@@ -475,6 +520,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cap.
+        /// </summary>
+        public static string Cap {
+            get {
+                return ResourceManager.GetString("Cap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Capture Packets.
         /// </summary>
         public static string Capture_Packets {
@@ -493,11 +547,38 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat.
+        /// </summary>
+        public static string Chat {
+            get {
+                return ResourceManager.GetString("Chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check For Updates.
         /// </summary>
         public static string Check_For_Updates {
             get {
                 return ResourceManager.GetString("Check For Updates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose by Cliloc.
+        /// </summary>
+        public static string Choose_by_Cliloc {
+            get {
+                return ResourceManager.GetString("Choose by Cliloc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose from Item.
+        /// </summary>
+        public static string Choose_from_Item {
+            get {
+                return ResourceManager.GetString("Choose from Item", resourceCulture);
             }
         }
         
@@ -552,6 +633,15 @@ namespace ClassicAssist.Resources {
         public static string Clear_Weapon_Ability {
             get {
                 return ResourceManager.GetString("Clear Weapon Ability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cliloc.
+        /// </summary>
+        public static string Cliloc {
+            get {
+                return ResourceManager.GetString("Cliloc", resourceCulture);
             }
         }
         
@@ -754,6 +844,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Define Custom Properties.
+        /// </summary>
+        public static string Define_Custom_Properties {
+            get {
+                return ResourceManager.GetString("Define Custom Properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable inside guardzone.
         /// </summary>
         public static string Disable_inside_guardzone {
@@ -781,6 +880,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donating helps support continued development, your support is appreciated..
+        /// </summary>
+        public static string Donating_helps_support_continued_development__your_support_is_appreciated_ {
+            get {
+                return ResourceManager.GetString("Donating helps support continued development, your support is appreciated.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dress.
         /// </summary>
         public static string Dress {
@@ -799,6 +907,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drop Holding Object.
+        /// </summary>
+        public static string Drop_Holding_Object {
+            get {
+                return ResourceManager.GetString("Drop Holding Object", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duplicate.
         /// </summary>
         public static string Duplicate {
@@ -813,6 +930,15 @@ namespace ClassicAssist.Resources {
         public static string Enabled {
             get {
                 return ResourceManager.GetString("Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled Packets:.
+        /// </summary>
+        public static string Enabled_Packets_ {
+            get {
+                return ResourceManager.GetString("Enabled Packets:", resourceCulture);
             }
         }
         
@@ -880,6 +1006,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Equip Item.
+        /// </summary>
+        public static string Equip_Item {
+            get {
+                return ResourceManager.GetString("Equip Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Equip Last Weapon (Quick Weapon Switch) *.
         /// </summary>
         public static string Equip_Last_Weapon__Quick_Weapon_Switch_ {
@@ -939,6 +1074,15 @@ namespace ClassicAssist.Resources {
         public static string Explosion_Potion {
             get {
                 return ResourceManager.GetString("Explosion Potion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Features:.
+        /// </summary>
+        public static string Features_ {
+            get {
+                return ResourceManager.GetString("Features:", resourceCulture);
             }
         }
         
@@ -1033,11 +1177,56 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Next Any.
+        /// </summary>
+        public static string Get_Next_Any {
+            get {
+                return ResourceManager.GetString("Get Next Any", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Next Criminal.
+        /// </summary>
+        public static string Get_Next_Criminal {
+            get {
+                return ResourceManager.GetString("Get Next Criminal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Next Enemy.
+        /// </summary>
+        public static string Get_Next_Enemy {
+            get {
+                return ResourceManager.GetString("Get Next Enemy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Next Friend.
+        /// </summary>
+        public static string Get_Next_Friend {
+            get {
+                return ResourceManager.GetString("Get Next Friend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get Next Gray.
         /// </summary>
         public static string Get_Next_Gray {
             get {
                 return ResourceManager.GetString("Get Next Gray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Next Gray / Criminal.
+        /// </summary>
+        public static string Get_Next_Gray___Criminal {
+            get {
+                return ResourceManager.GetString("Get Next Gray / Criminal", resourceCulture);
             }
         }
         
@@ -1128,6 +1317,15 @@ namespace ClassicAssist.Resources {
         public static string Heal_Potion {
             get {
                 return ResourceManager.GetString("Heal Potion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hotkey will still trigger with hotkeys disabled.
+        /// </summary>
+        public static string Hotkey_will_still_trigger_with_hotkeys_disabled {
+            get {
+                return ResourceManager.GetString("Hotkey will still trigger with hotkeys disabled", resourceCulture);
             }
         }
         
@@ -1402,11 +1600,29 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Journal receives filtered messages.
+        /// </summary>
+        public static string Journal_receives_filtered_messages {
+            get {
+                return ResourceManager.GetString("Journal receives filtered messages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         public static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Object.
+        /// </summary>
+        public static string Last_Object {
+            get {
+                return ResourceManager.GetString("Last Object", resourceCulture);
             }
         }
         
@@ -1528,6 +1744,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Macro Commands Wiki (Launches in Browser).
+        /// </summary>
+        public static string Macro_Commands_Wiki__Launches_in_Browser_ {
+            get {
+                return ResourceManager.GetString("Macro Commands Wiki (Launches in Browser)", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Macro error: {0}.
         /// </summary>
         public static string Macro_error___0_ {
@@ -1542,6 +1767,15 @@ namespace ClassicAssist.Resources {
         public static string Macro_name_must_be_unique_ {
             get {
                 return ResourceManager.GetString("Macro name must be unique.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/Reetus/ClassicAssist/wiki/Macro-Commands.
+        /// </summary>
+        public static string MACRO_WIKI_URL {
+            get {
+                return ResourceManager.GetString("MACRO_WIKI_URL", resourceCulture);
             }
         }
         
@@ -1609,11 +1843,29 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Match Any ID.
+        /// </summary>
+        public static string Match_Any_ID {
+            get {
+                return ResourceManager.GetString("Match Any ID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max Price.
         /// </summary>
         public static string Max_Price {
             get {
                 return ResourceManager.GetString("Max Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Target Queue Length:.
+        /// </summary>
+        public static string Max_Target_Queue_Length_ {
+            get {
+                return ResourceManager.GetString("Max Target Queue Length:", resourceCulture);
             }
         }
         
@@ -1650,6 +1902,15 @@ namespace ClassicAssist.Resources {
         public static string Misc {
             get {
                 return ResourceManager.GetString("Misc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Miscellaneous.
+        /// </summary>
+        public static string Miscellaneous {
+            get {
+                return ResourceManager.GetString("Miscellaneous", resourceCulture);
             }
         }
         
@@ -1767,6 +2028,24 @@ namespace ClassicAssist.Resources {
         public static string New_version_available_ {
             get {
                 return ResourceManager.GetString("New version available:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next Target: {0}.
+        /// </summary>
+        public static string Next_Target___0_ {
+            get {
+                return ResourceManager.GetString("Next Target: {0}", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Target.
+        /// </summary>
+        public static string No_Target {
+            get {
+                return ResourceManager.GetString("No Target", resourceCulture);
             }
         }
         
@@ -2118,6 +2397,15 @@ namespace ClassicAssist.Resources {
         public static string Ready___ {
             get {
                 return ResourceManager.GetString("Ready...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Really remove macro &quot;{0}&quot;?.
+        /// </summary>
+        public static string Really_remove_macro___0___ {
+            get {
+                return ResourceManager.GetString("Really remove macro \"{0}\"?", resourceCulture);
             }
         }
         
@@ -2500,11 +2788,38 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shard:.
+        /// </summary>
+        public static string Shard_ {
+            get {
+                return ResourceManager.GetString("Shard:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Chat Window.
+        /// </summary>
+        public static string Show_Chat_Window {
+            get {
+                return ResourceManager.GetString("Show Chat Window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show GIF Capture.
         /// </summary>
         public static string Show_GIF_Capture {
             get {
                 return ResourceManager.GetString("Show GIF Capture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Next Target In Queue.
+        /// </summary>
+        public static string Show_Next_Target_In_Queue {
+            get {
+                return ResourceManager.GetString("Show Next Target In Queue", resourceCulture);
             }
         }
         
@@ -2563,6 +2878,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sort Macros Alphabetical.
+        /// </summary>
+        public static string Sort_Macros_Alphabetical {
+            get {
+                return ResourceManager.GetString("Sort Macros Alphabetical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Spells.
         /// </summary>
         public static string Spells {
@@ -2586,6 +2910,15 @@ namespace ClassicAssist.Resources {
         public static string Stats {
             get {
                 return ResourceManager.GetString("Stats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string Status {
+            get {
+                return ResourceManager.GetString("Status", resourceCulture);
             }
         }
         
@@ -2667,6 +3000,24 @@ namespace ClassicAssist.Resources {
         public static string Target {
             get {
                 return ResourceManager.GetString("Target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Acquisition - Enemy.
+        /// </summary>
+        public static string Target_Acquisition___Enemy {
+            get {
+                return ResourceManager.GetString("Target Acquisition - Enemy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Acquisition - Friend.
+        /// </summary>
+        public static string Target_Acquisition___Friend {
+            get {
+                return ResourceManager.GetString("Target Acquisition - Friend", resourceCulture);
             }
         }
         
@@ -2770,6 +3121,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Target object &apos;{0}&apos;....
+        /// </summary>
+        public static string Target_object___0_____ {
+            get {
+                return ResourceManager.GetString("Target object \'{0}\'...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target out of range, try again....
         /// </summary>
         public static string Target_out_of_range__try_again___ {
@@ -2784,6 +3144,15 @@ namespace ClassicAssist.Resources {
         public static string Target_queue_cleared___ {
             get {
                 return ResourceManager.GetString("Target queue cleared...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target queue is not enabled....
+        /// </summary>
+        public static string Target_queue_is_not_enabled___ {
+            get {
+                return ResourceManager.GetString("Target queue is not enabled...", resourceCulture);
             }
         }
         
@@ -2878,6 +3247,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Toggle mounted.
+        /// </summary>
+        public static string Toggle_mounted {
+            get {
+                return ResourceManager.GetString("Toggle mounted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Toggle Primary Ability.
         /// </summary>
         public static string Toggle_Primary_Ability {
@@ -2905,6 +3283,15 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total base:.
+        /// </summary>
+        public static string Total_base_ {
+            get {
+                return ResourceManager.GetString("Total base:", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trinsic Rose Petal.
         /// </summary>
         public static string Trinsic_Rose_Petal {
@@ -2919,6 +3306,15 @@ namespace ClassicAssist.Resources {
         public static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Undisableable.
+        /// </summary>
+        public static string Undisableable {
+            get {
+                return ResourceManager.GetString("Undisableable", resourceCulture);
             }
         }
         
@@ -3099,6 +3495,15 @@ namespace ClassicAssist.Resources {
         public static string Use_skill {
             get {
                 return ResourceManager.GetString("Use skill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use UO3D Packets.
+        /// </summary>
+        public static string Use_UO3D_Packets {
+            get {
+                return ResourceManager.GetString("Use UO3D Packets", resourceCulture);
             }
         }
         

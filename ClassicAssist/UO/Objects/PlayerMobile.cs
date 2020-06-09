@@ -61,6 +61,8 @@ namespace ClassicAssist.UO.Objects
 
         public int Gold { get; set; }
         public int HitChanceIncrease { get; set; }
+        public int Holding { get; set; }
+        public int HoldingAmount { get; set; }
         public int Int { get; set; }
 
         [DisplayFormat( typeof( HexFormatProvider ) )]
@@ -107,6 +109,11 @@ namespace ClassicAssist.UO.Objects
         internal override void SetLayer( Layer layer, int serial )
         {
             base.SetLayer( layer, serial );
+
+            if ( layer != Layer.OneHanded && layer != Layer.TwoHanded )
+            {
+                return;
+            }
 
             AbilitiesManager manager = AbilitiesManager.GetInstance();
             manager.ResendGump( manager.Enabled );

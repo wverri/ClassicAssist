@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -33,16 +34,25 @@ namespace ClassicAssist.UO.Objects
         public bool IsDead
         {
             get =>
-                ID == 0x0192 ||
-                ID == 0x0193 ||
-                ID >= 0x025F && ID <= 0x0260 ||
-                ID == 0x2B6 || ID == 0x02B7 || _isDead;
+                ID == 0x0192 || ID == 0x0193 || ID >= 0x025F && ID <= 0x0260 || ID == 0x2B6 || ID == 0x02B7 || _isDead;
             set => _isDead = value;
         }
 
         public bool IsFrozen => Status.HasFlag( MobileStatus.Frozen );
         public bool IsMounted => Mount != null;
-        public bool IsPoisoned => HealthbarColour.HasFlag( HealthbarColour.Green );
+        public bool IsPoisoned
+        {
+            get
+            {
+                if ( Engine.ClientVersion != null && Engine.ClientVersion < new Version( 7, 0, 0, 0 ) )
+                {
+                    return Status.HasFlag( MobileStatus.Flying ) || HealthbarColour.HasFlag( HealthbarColour.Green );
+                }
+
+                return HealthbarColour.HasFlag( HealthbarColour.Green );
+            }
+        }
+
         public bool IsRenamable { get; set; }
         public bool IsYellowHits => HealthbarColour.HasFlag( HealthbarColour.Yellow );
 

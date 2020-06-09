@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using ExportCommands.Properties;
 
@@ -63,20 +64,121 @@ namespace ExportCommands
                     t.Namespace != null && t.Namespace.StartsWith( "ClassicAssist.Data.Macros.Commands" ) );
 
                 Type cda = assembly.GetType( "ClassicAssist.Data.Macros.CommandsDisplayAttribute" );
+                Type cdsaa = assembly.GetType( "ClassicAssist.Data.Macros.CommandsDisplayStringSeeAlsoAttribute" );
 
-                List<Commands> commands = ( from type in types
-                    from memberInfo in type.GetMembers( BindingFlags.Public | BindingFlags.Static )
-                    let attr = memberInfo.GetCustomAttribute( cda )
-                    where (dynamic) attr != null
-                    select new Commands
+                List<Commands> commands = new List<Commands>();
+                List<Type> seeAlsoTypes = new List<Type>();
+
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                foreach ( Type type in types )
+                {
+                    // ReSharper disable once LoopCanBeConvertedToQuery
+                    foreach ( MemberInfo memberInfo in type.GetMembers( BindingFlags.Public | BindingFlags.Static ) )
                     {
-                        Category = ( (dynamic) attr ).Category,
-                        Description = ( (dynamic) attr ).Description,
-                        Example = ( (dynamic) attr ).Example,
-                        InsertText = ( (dynamic) attr ).InsertText,
-                        Signature = memberInfo.ToString(),
-                        Name = memberInfo.Name
-                    } ).ToList();
+                        Attribute attrCD = memberInfo.GetCustomAttribute( cda );
+                        Attribute attrCDSA = memberInfo.GetCustomAttribute( cdsaa );
+
+                        if ( attrCDSA != null )
+                        {
+                        }
+
+                        if ( attrCD == null )
+                        {
+                            continue;
+                        }
+
+                        List<Parameter> param = new List<Parameter>();
+
+                        dynamic attrParams = ( (dynamic) attrCD ).Parameters;
+                        dynamic attr2Params = null;
+
+                        if ( attrCDSA != null )
+                        {
+                            attr2Params = ( (dynamic) attrCDSA ).Enums;
+                        }
+
+                        if ( memberInfo.MemberType == MemberTypes.Method && attrParams != null )
+                        {
+                            MethodInfo methodInfo = memberInfo as MethodInfo;
+                            ParameterInfo[] parameters = methodInfo?.GetParameters();
+
+                            int i = 0;
+
+                            if ( parameters != null )
+                            {
+                                foreach ( ParameterInfo parameterInfo in parameters )
+                                {
+                                    Parameter parameter = new Parameter();
+
+                                    object defaultValue = parameterInfo.RawDefaultValue;
+
+                                    if ( i + 1 > attrParams.Length )
+                                    {
+                                        parameter.Name = parameterInfo.Name.ToLower();
+                                        parameter.Optional =
+                                            defaultValue == null || defaultValue.GetType() != typeof( DBNull );
+                                        parameter.Description = Resources.ResourceManager.GetString(
+                                            "PARAMETER_DESCRIPTION_UNKNOWN" );
+                                        param.Add( parameter );
+                                        i++;
+                                    }
+                                    else
+                                    {
+                                        dynamic attrParam = attrParams[i];
+
+                                        if ( attrParam == null )
+                                        {
+                                            continue;
+                                        }
+
+                                        parameter.Name = parameterInfo.Name.ToLower();
+                                        parameter.Optional =
+                                            defaultValue == null || defaultValue.GetType() != typeof( DBNull );
+
+                                        string resourceName = $"PARAMETER_DESCRIPTION_{attrParam.ToUpper()}";
+
+                                        string resourceValue = Resources.ResourceManager.GetString( resourceName );
+
+                                        if ( string.IsNullOrEmpty( resourceValue ) )
+                                        {
+                                            throw new InvalidOperationException( resourceName );
+                                        }
+
+                                        parameter.Description = !string.IsNullOrEmpty( resourceValue )
+                                            ? resourceValue
+                                            : Resources.Unknown;
+
+                                        if ( attr2Params != null && attr2Params?.Length >= i + 1 &&
+                                             attr2Params?[i] != null )
+                                        {
+                                            dynamic typeSA = FindEnumType( attr2Params?[i], assembly );
+                                            parameter.SeeAlso = typeSA;
+
+                                            if ( typeSA != null && !seeAlsoTypes.Contains( typeSA ) )
+                                            {
+                                                seeAlsoTypes.Add( typeSA );
+                                            }
+                                        }
+
+                                        param.Add( parameter );
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+
+                        commands.Add( new Commands
+                        {
+                            Category = ( (dynamic) attrCD ).Category,
+                            Description = ( (dynamic) attrCD ).Description,
+                            Example = ( (dynamic) attrCD ).Example,
+                            InsertText = ( (dynamic) attrCD ).InsertText,
+                            Signature = memberInfo.ToString(),
+                            Name = memberInfo.Name,
+                            Parameters = param
+                        } );
+                    }
+                }
 
                 commands.Sort( new CommandComparer() );
 
@@ -98,25 +200,43 @@ namespace ExportCommands
                     IEnumerable<Commands> categoryCommands =
                         commands.Where( c => c.Category == category ).OrderBy( c => c.Name );
 
-                    markDown += $"## {category}  \n";
+                    GenerateCategory( assembly, category, categoryCommands, seeAlsoTypes, locale );
 
-                    foreach ( Commands command in categoryCommands )
+                    string categoryFileName = $"{RemoveAccents( category )}-{locale}.md".Replace( ' ', '-' );
+
+                    if ( locale.Equals( "en-US" ) )
                     {
-                        string example = command.InsertText;
-
-                        if ( !string.IsNullOrEmpty( command.Example ) )
-                        {
-                            example = command.Example;
-                        }
-
-                        markDown += $"### {command.Name}  \n  \n";
-                        markDown += $"{Resources.Method_Signature}:  \n  \n**{command.Signature}**  \n  \n";
-                        markDown += $"{Resources.Description}:  \n  \n**{command.Description}**  \n  \n";
-                        markDown += $"{Resources.Example}:  \n  \n```python  \n{example}  \n```  \n  \n";
+                        categoryFileName = $"{category}.md";
                     }
 
-                    markDown += "\n\n\n";
+                    markDown += $"## [{category}]({Path.GetFileNameWithoutExtension( categoryFileName )})  \n";
+
+                    foreach ( Commands categoryCommand in categoryCommands )
+                    {
+                        markDown +=
+                            $"[{categoryCommand.Name}]({Path.GetFileNameWithoutExtension( categoryFileName )}#{categoryCommand.Name})  \n";
+                    }
                 }
+
+                //markDown += $"## {Resources.Types}  \n";
+
+                //seeAlsoTypes = seeAlsoTypes.OrderBy( t => t.Name ).ToList();
+
+                //foreach ( Type seeAlsoType in seeAlsoTypes )
+                //{
+                //    markDown += $"### {seeAlsoType.Name}  \n";
+
+                //    string[] enumNames = seeAlsoType.GetEnumNames();
+
+                //    if ( enumNames == null )
+                //    {
+                //        continue;
+                //    }
+
+                //    markDown = enumNames.Aggregate( markDown, ( current, enumName ) => current + $"* {enumName}  \n" );
+
+                //    markDown += "  \n";
+                //}
 
                 string fileName = $"Macro-Commands ({locale}).md";
 
@@ -131,6 +251,111 @@ namespace ExportCommands
             sw.Stop();
 
             Console.WriteLine( $"Finished in {sw.Elapsed}" );
+        }
+
+        private static void GenerateCategory( Assembly assembly, string category,
+            IEnumerable<Commands> categoryCommands, List<Type> seeAlsoTypes, string locale )
+        {
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo( assembly.Location );
+
+            string markDown =
+                $"# {Resources.ClassicAssist_Macro_Commands}  \n{Resources.Generated_on} {DateTime.UtcNow}  \n{Resources.Version}: {fvi.ProductVersion}  \n  \n";
+
+            if ( !string.IsNullOrEmpty( Resources.TRANSLATE_CREDIT ) )
+            {
+                markDown =
+                    $"# {Resources.ClassicAssist_Macro_Commands}  \n{Resources.Generated_on} {DateTime.UtcNow}  \n{Resources.Version}: {fvi.ProductVersion}  \n{Resources.TRANSLATE_CREDIT}  \n  \n";
+            }
+
+            markDown += $"## {category}  \n";
+
+            List<string> seeAlsoNames = new List<string>();
+
+            foreach ( Commands command in categoryCommands )
+            {
+                string example = command.InsertText;
+
+                if ( !string.IsNullOrEmpty( command.Example ) )
+                {
+                    example = command.Example;
+                }
+
+                markDown += $"### {command.Name}  \n  \n";
+                markDown += $"{Resources.Method_Signature}:  \n  \n**{command.Signature}**  \n  \n";
+
+                if ( command.Parameters.Any() )
+                {
+                    markDown += $"#### {Resources.Parameters}  \n";
+
+                    foreach ( Parameter parameter in command.Parameters )
+                    {
+                        markDown +=
+                            $"* {parameter.Name}: {parameter.Description}.{( parameter.Optional ? $" ({Resources.Optional})" : "" )}";
+
+                        if ( parameter.SeeAlso != null )
+                        {
+                            if ( !seeAlsoNames.Contains( parameter.SeeAlso.Name ) )
+                            {
+                                seeAlsoNames.Add( parameter.SeeAlso.Name );
+                            }
+
+                            markDown += string.Format( $" {Resources.See_Also___0_}  \n",
+                                $"[{parameter.SeeAlso.Name}](#{parameter.SeeAlso.Name})" );
+                        }
+                        else
+                        {
+                            markDown += "  \n";
+                        }
+                    }
+
+                    markDown += "  \n";
+                }
+
+                markDown += $"{Resources.Description}:  \n  \n**{command.Description}**  \n  \n";
+                markDown += $"{Resources.Example}:  \n  \n```python  \n{example}  \n```  \n  \n";
+            }
+
+            markDown += "\n\n\n";
+
+            IOrderedEnumerable<Type> includedSeeAlso =
+                seeAlsoTypes.Where( i => seeAlsoNames.Contains( i.Name ) ).OrderBy( i => i.Name );
+
+            if ( includedSeeAlso.Any() )
+            {
+                markDown += $"## {Resources.Types}  \n";
+
+                foreach ( Type seeAlsoType in includedSeeAlso )
+                {
+                    markDown += $"### {seeAlsoType.Name}  \n";
+
+                    string[] enumNames = seeAlsoType.GetEnumNames();
+
+                    if ( enumNames == null )
+                    {
+                        continue;
+                    }
+
+                    markDown = enumNames.Aggregate( markDown, ( current, enumName ) => current + $"* {enumName}  \n" );
+
+                    markDown += "  \n";
+                }
+            }
+
+            string fileName = $"{RemoveAccents(category)}-{locale}.md".Replace( ' ', '-' );
+
+            if ( locale.Equals( "en-US" ) )
+            {
+                fileName = $"{category}.md";
+            }
+
+            File.WriteAllText( Path.Combine( Environment.CurrentDirectory, fileName ), markDown );
+        }
+
+        private static Type FindEnumType( string shortName, Assembly assembly )
+        {
+            Type matchingType = assembly.GetTypes().FirstOrDefault( t => t.Name == shortName );
+
+            return matchingType;
         }
 
         private static Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
@@ -174,6 +399,12 @@ namespace ExportCommands
 
             return null;
         }
+
+        private static string RemoveAccents( string input )
+        {
+            byte[] tempBytes = Encoding.GetEncoding( "ISO-8859-8" ).GetBytes( input );
+            return Encoding.UTF8.GetString( tempBytes );
+        }
     }
 
     internal class CommandComparer : IComparer<Commands>
@@ -186,13 +417,22 @@ namespace ExportCommands
         }
     }
 
-    public class Commands
+    internal class Parameter
+    {
+        public string Description { get; set; } = "Unknown";
+        public string Name { get; set; } = "Unknown";
+        public bool Optional { get; set; }
+        public Type SeeAlso { get; set; }
+    }
+
+    internal class Commands
     {
         public string Category { get; set; }
         public string Description { get; set; }
         public string Example { get; set; }
         public string InsertText { get; set; }
         public string Name { get; set; }
+        public List<Parameter> Parameters { get; set; }
         public string Signature { get; set; }
     }
 }

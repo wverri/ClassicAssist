@@ -4,6 +4,7 @@ using System.Linq;
 using Assistant;
 using ClassicAssist.Misc;
 using ClassicAssist.Resources;
+using ClassicAssist.UO;
 using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
@@ -15,7 +16,8 @@ namespace ClassicAssist.Data.Macros.Commands
     {
         internal static List<int> IgnoreList { get; set; } = new List<int>();
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static void IgnoreObject( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -39,7 +41,8 @@ namespace ClassicAssist.Data.Macros.Commands
             IgnoreList.Clear();
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static void UseObject( object obj, bool skipQueue = false )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -55,7 +58,12 @@ namespace ClassicAssist.Data.Macros.Commands
                 skipQueue ? QueuePriority.Immediate : QueuePriority.Low );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Actions ) )]
+        [CommandsDisplay( Category = nameof( Strings.Actions ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Hue ),
+                nameof( ParameterType.SerialOrAlias )
+            } )]
         public static void UseType( object type, int hue = -1, object container = null )
         {
             int serial = AliasCommands.ResolveSerial( type );
@@ -95,7 +103,11 @@ namespace ClassicAssist.Data.Macros.Commands
             Engine.SendPacketToServer( new UseObject( useItem.Serial ) );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.ItemID ), nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Hue )
+            } )]
         public static int CountType( int graphic, object source = null, int hue = -1 )
         {
             if ( source == null )
@@ -120,7 +132,11 @@ namespace ClassicAssist.Data.Macros.Commands
             return matches?.Sum( i => i.Count ) ?? 0;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.ItemID ), nameof( ParameterType.Hue ), nameof( ParameterType.Range )
+            } )]
         public static int CountTypeGround( int graphic, int hue = -1, int range = -1 )
         {
             IEnumerable<Item> matches = Engine.Items.Where( i =>
@@ -141,7 +157,12 @@ namespace ClassicAssist.Data.Macros.Commands
             return count;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.ItemID ), nameof( ParameterType.Range ),
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Hue )
+            } )]
         public static bool FindType( int graphic, int range = -1, object findLocation = null, int hue = -1 )
         {
             int owner = 0;
@@ -190,7 +211,12 @@ namespace ClassicAssist.Data.Macros.Commands
             return true;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Range ),
+                nameof( ParameterType.SerialOrAlias )
+            } )]
         public static bool FindObject( object obj, int range = -1, object findLocation = null )
         {
             int owner = 0;
@@ -248,7 +274,13 @@ namespace ClassicAssist.Data.Macros.Commands
             return true;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.SerialOrAlias ),
+                nameof( ParameterType.Amount ), nameof( ParameterType.XCoordinate ),
+                nameof( ParameterType.YCoordinate )
+            } )]
         public static void MoveItem( object item, object destination, int amount = -1, int x = -1, int y = -1 )
         {
             int itemSerial = AliasCommands.ResolveSerial( item );
@@ -284,7 +316,13 @@ namespace ClassicAssist.Data.Macros.Commands
             ActionPacketQueue.EnqueueDragDrop( itemSerial, amount, containerSerial, QueuePriority.Low, true, x, y );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.XCoordinateOffset ),
+                nameof( ParameterType.YCoordinateOffset ), nameof( ParameterType.ZCoordinateOffset ),
+                nameof( ParameterType.Amount )
+            } )]
         public static void MoveItemOffset( object obj, int xOffset, int yOffset, int zOffset, int amount = -1 )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -310,7 +348,13 @@ namespace ClassicAssist.Data.Macros.Commands
             ActionPacketQueue.EnqueueDragDropGround( serial, amount, x, y, z );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.ItemID ), nameof( ParameterType.SerialOrAlias ),
+                nameof( ParameterType.XCoordinateOffset ), nameof( ParameterType.YCoordinateOffset ),
+                nameof( ParameterType.ZCoordinateOffset ), nameof( ParameterType.Amount )
+            } )]
         public static bool MoveTypeOffset( int id, object findLocation, int xOffset, int yOffset, int zOffset,
             int amount = -1 )
         {
@@ -351,7 +395,14 @@ namespace ClassicAssist.Data.Macros.Commands
             return true;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.ItemID ), nameof( ParameterType.SerialOrAlias ),
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.XCoordinate ),
+                nameof( ParameterType.YCoordinate ), nameof( ParameterType.ZCoordinate ),
+                nameof( ParameterType.Hue ), nameof( ParameterType.Amount )
+            } )]
         public static void MoveType( int id, object sourceContainer, object destinationContainer, int x = -1,
             int y = -1, int z = 0, int hue = -1, int amount = -1 )
         {
@@ -414,6 +465,68 @@ namespace ClassicAssist.Data.Macros.Commands
             {
                 ActionPacketQueue.EnqueueDragDrop( entity.Serial, amount, destinationSerial );
             }
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
+        public static bool InIgnoreList( object obj )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial > 0 )
+            {
+                return IgnoreList.Contains( serial );
+            }
+
+            UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+
+            return false;
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Hue ) } )]
+        public static void Rehue( object obj, int hue )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial > 0 )
+            {
+                if ( hue > 0 )
+                {
+                    Engine.RehueList.Add( serial, hue );
+                }
+                else
+                {
+                    Engine.RehueList.Remove( serial );
+                }
+
+                if ( UOMath.IsMobile( serial ) )
+                {
+                    Mobile m = Engine.Mobiles.GetMobile( serial );
+
+                    if ( m == null )
+                    {
+                        return;
+                    }
+
+                    Engine.SendPacketToClient( new MobileIncoming( m, m.Equipment, hue ) );
+                }
+                else
+                {
+                    Item i = Engine.Items.GetItem( serial );
+
+                    if ( i == null )
+                    {
+                        return;
+                    }
+
+                    Engine.RehueList.CheckItem( i );
+                }
+
+                return;
+            }
+
+            UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
         }
     }
 }

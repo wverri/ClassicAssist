@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Assistant;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Abilities;
+using ClassicAssist.Data.Chat;
+using ClassicAssist.Data.Counters;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Data.Skills;
 using ClassicAssist.Data.Vendors;
@@ -21,7 +23,7 @@ namespace ClassicAssist.UO.Network
 {
     public static class IncomingPacketHandlers
     {
-        public delegate void dBufficonEnabledDisabled( int type, bool enabled );
+        public delegate void dBufficonEnabledDisabled( int type, bool enabled, int duration );
 
         public delegate void dContainerContents( int serial, ItemCollection container );
 
@@ -36,6 +38,8 @@ namespace ClassicAssist.UO.Network
         public delegate void dMobileIncoming( Mobile mobile, ItemCollection equipment );
 
         public delegate void dMobileUpdated( Mobile mobile );
+
+        public delegate void dNewWorldItem( Item item );
 
         public delegate void dSkillList( SkillInfo[] skills );
 
@@ -59,6 +63,8 @@ namespace ClassicAssist.UO.Network
         public static event dSkillList SkillsListEvent;
         public static event dMobileUpdated MobileUpdatedEvent;
         public static event dMobileIncoming MobileIncomingEvent;
+
+        public static event dNewWorldItem NewWorldItemEvent;
         public static event dContainerContents ContainerContentsEvent;
         public static event dGump GumpEvent;
         public static event dBufficonEnabledDisabled BufficonEnabledDisabledEvent;
@@ -70,6 +76,7 @@ namespace ClassicAssist.UO.Network
             _extendedHandlers = new PacketHandler[0x100];
 
             Register( 0x11, 0, OnMobileStatus );
+            Register( 0x1A, 0, OnWorldItem );
             Register( 0x17, 0, OnHealthbarColour );
             Register( 0x1B, 37, OnInitializePlayer );
             Register( 0x1C, 0, OnASCIIText );
@@ -79,6 +86,9 @@ namespace ClassicAssist.UO.Network
             Register( 0x22, 3, OnMoveAccepted );
             Register( 0x24, 9, OnContainerDisplay );
             Register( 0x25, 21, OnItemAddedToContainer );
+            Register( 0x27, 2, OnResetHolding );
+            Register( 0x28, 5, OnResetHolding );
+            Register( 0x29, 1, OnResetHolding );
             Register( 0x2E, 15, OnItemEquipped );
             Register( 0x3A, 0, OnSkillsList );
             Register( 0x3C, 0, OnContainerContents );
@@ -87,11 +97,14 @@ namespace ClassicAssist.UO.Network
             Register( 0x77, 17, OnMobileMoving );
             Register( 0x78, 0, OnMobileIncoming );
             Register( 0x98, 0, OnMobileName );
+            Register( 0x99, 30, OnTarget );
             Register( 0x9E, 0, OnShopSell );
             Register( 0xA1, 9, OnMobileHits );
             Register( 0xA2, 9, OnMobileMana );
             Register( 0xA3, 9, OnMobileStamina );
+            Register( 0xA8, 0, OnShardList );
             Register( 0xAE, 0, OnUnicodeText );
+            Register( 0xB2, 0, OnChatMessage );
             Register( 0xB9, 5, OnSupportedFeatures );
             Register( 0xBF, 0, OnExtendedCommand );
             Register( 0xC1, 0, OnLocalizedText );
@@ -110,6 +123,111 @@ namespace ClassicAssist.UO.Network
             RegisterExtended( 0x25, 0, OnToggleSpecialMoves );
         }
 
+        private static void OnWorldItem( PacketReader reader )
+        {
+            byte[] packet = reader.GetData();
+            Item item;
+            uint serial = (uint) ( ( packet[3] << 24 ) | ( packet[4] << 16 ) | ( packet[5] << 8 ) | packet[6] );
+            int offset = 9;
+
+            if ( ( serial & 0x80000000 ) != 0 )
+            {
+                serial ^= 0x80000000;
+                item = Engine.GetOrCreateItem( (int) serial );
+                item.Count = ( packet[offset] << 8 ) | packet[offset + 1];
+                offset += 2;
+            }
+            else
+            {
+                item = Engine.GetOrCreateItem( (int) serial );
+            }
+
+            int id = ( packet[7] << 8 ) | packet[8];
+
+            if ( ( id & 0x8000 ) != 0 )
+            {
+                id ^= 0x8000;
+                id += packet[offset]; // stack id
+                offset++;
+            }
+
+            item.ID = id;
+            int x = ( packet[offset] << 8 ) | packet[offset + 1];
+            int y = ( packet[offset + 2] << 8 ) | packet[offset + 3];
+            offset += 4;
+
+            if ( ( x & 0x8000 ) != 0 )
+            {
+                x ^= 0x8000;
+                item.Direction = (Direction) packet[offset];
+                offset++;
+            }
+
+            item.X = x;
+            item.Z = (sbyte) packet[offset];
+            offset++;
+
+            if ( ( y & 0x8000 ) != 0 )
+            {
+                y ^= 0x8000;
+                item.Hue = ( packet[offset] << 8 ) | packet[offset + 1];
+                offset += 2;
+            }
+
+            if ( ( y & 0x4000 ) != 0 )
+            {
+                y ^= 0x4000;
+                item.Flags = packet[offset]; // ???
+            }
+
+            item.Y = y;
+            item.Owner = 0;
+
+            Engine.Items.Add( item );
+
+            NewWorldItemEvent?.Invoke( item );
+        }
+
+        private static void OnResetHolding( PacketReader reader )
+        {
+            Engine.Player.Holding = 0;
+            Engine.Player.HoldingAmount = 0;
+            CountersManager.GetInstance().RecountAll?.Invoke();
+        }
+
+        private static void OnChatMessage( PacketReader reader )
+        {
+            ChatManager.GetInstance().OnChatPacket( reader );
+        }
+
+        private static void OnShardList( PacketReader reader )
+        {
+            reader.ReadByte();
+            int count = reader.ReadInt16();
+
+            List<ShardEntry> shards = new List<ShardEntry>();
+
+            for ( int i = 0; i < count; i++ )
+            {
+                int index = reader.ReadInt16();
+                string name = reader.ReadStringSafe( 32 );
+                int full = reader.ReadByte();
+                int timezone = reader.ReadSByte();
+                int ip = reader.ReadInt32();
+
+                shards.Add( new ShardEntry
+                {
+                    Index = index,
+                    IP = ip,
+                    Name = name,
+                    PercentFull = full,
+                    Timezone = timezone
+                } );
+            }
+
+            Engine.Shards = shards;
+        }
+
         private static void OnDisplayEquipmentInfo( PacketReader reader )
         {
             int serial = reader.ReadInt32();
@@ -119,6 +237,8 @@ namespace ClassicAssist.UO.Network
 
             List<Property> properties =
                 new List<Property> { new Property { Cliloc = cliloc, Text = Cliloc.GetProperty( cliloc ) } };
+
+            string journalOutput = Cliloc.GetProperty( cliloc );
 
             do
             {
@@ -138,6 +258,8 @@ namespace ClassicAssist.UO.Network
 
                         properties.Add( new Property { Cliloc = -3, Text = craftedBy } );
 
+                        journalOutput += $" {craftedBy}";
+
                         break;
                     }
                     case 0xFFFFFFFC:
@@ -151,6 +273,8 @@ namespace ClassicAssist.UO.Network
                         {
                             Cliloc = (int) number, Text = attrName, Arguments = new[] { charges.ToString() }
                         } );
+
+                        journalOutput += $" {attrName}";
 
                         break;
                     }
@@ -166,6 +290,8 @@ namespace ClassicAssist.UO.Network
                             Cliloc = (int) number, Text = attrName, Arguments = new[] { charges.ToString() }
                         } );
 
+                        journalOutput += $" {attrName}";
+
                         break;
                     }
                 }
@@ -178,6 +304,11 @@ namespace ClassicAssist.UO.Network
                 next = reader.ReadUInt32();
             }
             while ( next != 0xFFFFFFFF );
+
+            Engine.Journal.Write( new JournalEntry
+            {
+                Serial = -1, SpeechType = JournalSpeech.Label, Name = "System", Text = journalOutput
+            } );
 
             Item item = Engine.Items.GetItem( serial );
 
@@ -336,8 +467,15 @@ namespace ClassicAssist.UO.Network
             }
 
             bool enabled = count > 0;
+            int duration = 0;
 
-            BufficonEnabledDisabledEvent?.Invoke( type, enabled );
+            if ( count == 1 )
+            {
+                reader.Seek( 12, SeekOrigin.Current );
+                duration = reader.ReadInt16();
+            }
+
+            BufficonEnabledDisabledEvent?.Invoke( type, enabled, duration );
         }
 
         private static void OnLocalizedText( PacketReader reader )
@@ -375,8 +513,7 @@ namespace ClassicAssist.UO.Network
                 }
             }
 
-            Engine.Journal.Write( journalEntry );
-            JournalEntryAddedEvent?.Invoke( journalEntry );
+            AddToJournal( journalEntry );
         }
 
         private static void OnLocalizedTextAffix( PacketReader reader )
@@ -416,8 +553,7 @@ namespace ClassicAssist.UO.Network
                 journalEntry.Text = $"{text}{affix}";
             }
 
-            Engine.Journal.Write( journalEntry );
-            JournalEntryAddedEvent?.Invoke( journalEntry );
+            AddToJournal( journalEntry );
         }
 
         private static void OnPartyCommand( PacketReader reader )
@@ -494,30 +630,7 @@ namespace ClassicAssist.UO.Network
         private static void OnHealthbarColour( PacketReader reader )
         {
             int serial = reader.ReadInt32();
-            reader.ReadInt16(); // 0x01;
-
-            int status = reader.ReadInt16();
-            int flags = reader.ReadByte();
-
-            HealthbarColour healthbar = HealthbarColour.None;
-
-            switch ( status )
-            {
-                case 0x01:
-                    healthbar = HealthbarColour.Green;
-
-                    break;
-
-                case 0x02:
-                    healthbar = HealthbarColour.Yellow;
-
-                    break;
-
-                case 0x03:
-                    healthbar = HealthbarColour.Red;
-
-                    break;
-            }
+            int count = reader.ReadInt16();
 
             Mobile mobile = Engine.Mobiles.GetMobile( serial );
 
@@ -526,13 +639,71 @@ namespace ClassicAssist.UO.Network
                 return;
             }
 
-            if ( flags >= 1 )
+            HealthbarColour healthbar = HealthbarColour.None;
+
+            if ( Engine.ClientVersion < new Version( 7, 0, 0, 0 ) )
             {
-                mobile.HealthbarColour |= healthbar;
+                for ( int i = 0; i < count; i++ )
+                {
+                    int type = reader.ReadInt16();
+                    bool enabled = reader.ReadBoolean();
+
+                    switch ( type )
+                    {
+                        case 1 when enabled:
+                            healthbar |= HealthbarColour.Green;
+                            break;
+                        case 1:
+                            healthbar &= ~HealthbarColour.Green;
+                            break;
+                        case 2 when enabled:
+                            healthbar |= HealthbarColour.Yellow;
+                            break;
+                        case 2:
+                            healthbar &= ~HealthbarColour.Yellow;
+                            break;
+                        case 3 when enabled:
+                            healthbar |= HealthbarColour.Red;
+                            break;
+                        case 3:
+                            healthbar &= ~HealthbarColour.Red;
+                            break;
+                    }
+                }
+
+                mobile.HealthbarColour = healthbar;
             }
             else
             {
-                mobile.HealthbarColour &= ~healthbar;
+                int status = reader.ReadInt16();
+                int flags = reader.ReadByte();
+
+                switch ( status )
+                {
+                    case 0x01:
+                        healthbar = HealthbarColour.Green;
+
+                        break;
+
+                    case 0x02:
+                        healthbar = HealthbarColour.Yellow;
+
+                        break;
+
+                    case 0x03:
+                        healthbar = HealthbarColour.Red;
+
+                        break;
+                }
+
+                if ( flags >= 1 )
+                {
+                    mobile.HealthbarColour |= healthbar;
+                }
+                else
+                {
+                    mobile.HealthbarColour &= ~healthbar;
+                }
             }
         }
 
@@ -558,8 +729,7 @@ namespace ClassicAssist.UO.Network
                 Text = reader.ReadString()
             };
 
-            Engine.Journal.Write( journalEntry );
-            JournalEntryAddedEvent?.Invoke( journalEntry );
+            AddToJournal( journalEntry );
         }
 
         private static void OnUnicodeText( PacketReader reader )
@@ -576,8 +746,7 @@ namespace ClassicAssist.UO.Network
                 Text = reader.ReadUnicodeString()
             };
 
-            Engine.Journal.Write( journalEntry );
-            JournalEntryAddedEvent?.Invoke( journalEntry );
+            AddToJournal( journalEntry );
         }
 
         private static void OnMoveAccepted( PacketReader reader )
@@ -635,7 +804,7 @@ namespace ClassicAssist.UO.Network
                 return;
             }
 
-            string layout = Encoding.ASCII.GetString( decompressedBuffer );
+            string layout = Encoding.ASCII.GetString( decompressedBuffer ).TrimEnd( '\0' );
 
             if ( string.IsNullOrEmpty( layout ) )
             {
@@ -724,6 +893,8 @@ namespace ClassicAssist.UO.Network
             mobile.Hue = hue;
             mobile.Status = (MobileStatus) status;
             mobile.Notoriety = (Notoriety) notoriety;
+
+            Engine.Mobiles.Add( mobile );
         }
 
         private static void OnMobileUpdated( PacketReader reader )
@@ -747,6 +918,8 @@ namespace ClassicAssist.UO.Network
             mobile.Y = y;
             mobile.Direction = (Direction) direction;
             mobile.Z = z;
+
+            Engine.Mobiles.Add( mobile );
 
             MobileUpdatedEvent?.Invoke( mobile );
         }
@@ -773,16 +946,21 @@ namespace ClassicAssist.UO.Network
                 return;
             }
 
-            object obj = Engine.LastTargetQueue.Dequeue();
-
-            if ( obj == null )
+            if ( flags == TargetFlags.Cancel )
             {
-                return;
+                Engine.TargetExists = false;
             }
+            else
+            {
+                object obj = Engine.LastTargetQueue.Dequeue();
 
-            TargetCommands.Target( obj, Options.CurrentOptions.RangeCheckLastTarget );
+                if ( obj == null )
+                {
+                    return;
+                }
 
-            Engine.TargetExists = false;
+                TargetCommands.Target( obj, Options.CurrentOptions.RangeCheckLastTarget );
+            }
         }
 
         private static void OnMobileStamina( PacketReader reader )
@@ -911,7 +1089,9 @@ namespace ClassicAssist.UO.Network
             int count = reader.ReadUInt16();
             int x = reader.ReadInt16();
             int y = reader.ReadInt16();
-            int grid = reader.ReadByte();
+            int grid = Engine.ClientVersion == null || Engine.ClientVersion >= new Version( 6, 0, 1, 7 )
+                ? reader.ReadByte()
+                : 0;
             int containerSerial = reader.ReadInt32();
             int hue = reader.ReadUInt16();
 
@@ -974,7 +1154,7 @@ namespace ClassicAssist.UO.Network
 
             if ( item.IsDescendantOf( backpack ) )
             {
-                Engine.RehueList.CheckRehue( item );
+                Engine.RehueList.CheckItem( item );
             }
 
             //rehueList
@@ -1194,7 +1374,7 @@ namespace ClassicAssist.UO.Network
             mobile.Status = (MobileStatus) reader.ReadByte();
             mobile.Notoriety = (Notoriety) reader.ReadByte();
 
-            bool useNewIncoming = Engine.ClientVersion >= new Version( 7, 0, 33, 1 );
+            bool useNewIncoming = Engine.ClientVersion == null || Engine.ClientVersion >= new Version( 7, 0, 33, 1 );
 
             for ( ;; )
             {
@@ -1329,7 +1509,7 @@ namespace ClassicAssist.UO.Network
 
                 ContainerContentsEvent?.Invoke( container.Serial, container );
 
-                Engine.RehueList.CheckRehue( container );
+                Engine.RehueList.CheckContainer( container );
             }
             catch ( Exception e )
             {
@@ -1363,6 +1543,7 @@ namespace ClassicAssist.UO.Network
             item.Owner = 0;
 
             Engine.Items.Add( item );
+            NewWorldItemEvent?.Invoke( item );
         }
 
         private static void OnInitializePlayer( PacketReader reader )
@@ -1415,6 +1596,12 @@ namespace ClassicAssist.UO.Network
         private static PacketHandler GetExtendedHandler( int packetId )
         {
             return _extendedHandlers[packetId];
+        }
+
+        public static void AddToJournal( JournalEntry entry )
+        {
+            Engine.Journal.Write( entry );
+            JournalEntryAddedEvent?.Invoke( entry );
         }
     }
 }

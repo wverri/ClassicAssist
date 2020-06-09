@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -14,6 +15,7 @@ using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UI.Views;
+using ClassicAssist.UI.Views.Autoloot;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network;
 using ClassicAssist.UO.Network.PacketFilter;
@@ -30,55 +32,55 @@ namespace ClassicAssist.UI.ViewModels.Agents
     {
         private const int LOOT_TIMEOUT = 5000;
         private readonly object _autolootLock = new object();
+
+        private readonly string _propertiesFile = Path.Combine( Engine.StartupPath ?? Environment.CurrentDirectory,
+            "Data", "Properties.json" );
+
+        private readonly string _propertiesFileCustom =
+            Path.Combine( Engine.StartupPath ?? Environment.CurrentDirectory, "Data", "Properties.Custom.json" );
+
         private ICommand _clipboardCopyCommand;
         private ICommand _clipboardPasteCommand;
 
         private ObservableCollection<PropertyEntry> _constraints = new ObservableCollection<PropertyEntry>();
 
         private int _containerSerial;
+        private ICommand _defineCustomPropertiesCommand;
 
         private bool _disableInGuardzone;
         private bool _enabled;
 
         private ICommand _insertCommand;
         private ICommand _insertConstraintCommand;
+        private ICommand _insertMatchAnyCommand;
 
         private ObservableCollectionEx<AutolootEntry> _items = new ObservableCollectionEx<AutolootEntry>();
+
         private ICommand _removeCommand;
         private ICommand _removeConstraintCommand;
         private RelayCommand _resetContainerCommand;
         private AutolootEntry _selectedItem;
+
+        private ObservableCollection<AutolootConstraintEntry> _selectedProperties =
+            new ObservableCollection<AutolootConstraintEntry>();
+
         private AutolootConstraintEntry _selectedProperty;
         private ICommand _selectHueCommand;
         private ICommand _setContainerCommand;
 
         public AutolootViewModel()
         {
-            string constraintsFile = Path.Combine( Engine.StartupPath ?? Environment.CurrentDirectory, "Data",
-                "Properties.json" );
-
-            if ( !File.Exists( constraintsFile ) )
+            if ( !File.Exists( _propertiesFile ) )
             {
                 return;
             }
 
-            JsonSerializer serializer = new JsonSerializer();
-
-            using ( StreamReader sr = new StreamReader( constraintsFile ) )
-            {
-                using ( JsonTextReader reader = new JsonTextReader( sr ) )
-                {
-                    PropertyEntry[] constraints = serializer.Deserialize<PropertyEntry[]>( reader );
-
-                    foreach ( PropertyEntry constraint in constraints )
-                    {
-                        Constraints.AddSorted( constraint );
-                    }
-                }
-            }
+            LoadProperties();
+            LoadCustomProperties();
 
             AutolootHelpers.SetAutolootContainer = serial => ContainerSerial = serial;
             IncomingPacketHandlers.CorpseContainerDisplayEvent += OnCorpseContainerDisplayEvent;
+            AutolootManager.GetInstance().GetEntries = () => _items.ToList();
         }
 
         public ICommand ClipboardCopyCommand =>
@@ -99,6 +101,10 @@ namespace ClassicAssist.UI.ViewModels.Agents
             set => SetProperty( ref _containerSerial, value );
         }
 
+        public ICommand DefineCustomPropertiesCommand =>
+            _defineCustomPropertiesCommand ??
+            ( _defineCustomPropertiesCommand = new RelayCommand( DefineCustomProperties, o => true ) );
+
         public bool DisableInGuardzone
         {
             get => _disableInGuardzone;
@@ -117,6 +123,9 @@ namespace ClassicAssist.UI.ViewModels.Agents
         public ICommand InsertConstraintCommand =>
             _insertConstraintCommand ?? ( _insertConstraintCommand =
                 new RelayCommand( InsertConstraint, o => SelectedItem != null ) );
+
+        public ICommand InsertMatchAnyCommand =>
+            _insertMatchAnyCommand ?? ( _insertMatchAnyCommand = new RelayCommand( InsertMatchAny, o => true ) );
 
         public ObservableCollectionEx<AutolootEntry> Items
         {
@@ -137,6 +146,12 @@ namespace ClassicAssist.UI.ViewModels.Agents
         {
             get => _selectedItem;
             set => SetProperty( ref _selectedItem, value );
+        }
+
+        public ObservableCollection<AutolootConstraintEntry> SelectedProperties
+        {
+            get => _selectedProperties;
+            set => SetProperty( ref _selectedProperties, value );
         }
 
         public AutolootConstraintEntry SelectedProperty
@@ -272,17 +287,67 @@ namespace ClassicAssist.UI.ViewModels.Agents
             }
         }
 
+        private void LoadCustomProperties()
+        {
+            if ( !File.Exists( _propertiesFileCustom ) )
+            {
+                return;
+            }
+
+            JsonSerializer serializer = new JsonSerializer();
+
+            using ( StreamReader sr = new StreamReader( _propertiesFileCustom ) )
+            {
+                using ( JsonTextReader reader = new JsonTextReader( sr ) )
+                {
+                    PropertyEntry[] constraints = serializer.Deserialize<PropertyEntry[]>( reader );
+
+                    foreach ( PropertyEntry constraint in constraints )
+                    {
+                        Constraints.AddSorted( constraint );
+                    }
+                }
+            }
+        }
+
+        private void LoadProperties()
+        {
+            JsonSerializer serializer = new JsonSerializer();
+
+            using ( StreamReader sr = new StreamReader( _propertiesFile ) )
+            {
+                using ( JsonTextReader reader = new JsonTextReader( sr ) )
+                {
+                    PropertyEntry[] constraints = serializer.Deserialize<PropertyEntry[]>( reader );
+
+                    foreach ( PropertyEntry constraint in constraints )
+                    {
+                        Constraints.AddSorted( constraint );
+                    }
+                }
+            }
+        }
+
         private void ClipboardPaste( object obj )
         {
             string text = Clipboard.GetText();
 
             try
             {
-                AutolootConstraintEntry entry = JsonConvert.DeserializeObject<AutolootConstraintEntry>( text );
+                IEnumerable<AutolootConstraintEntry> entries =
+                    JsonConvert.DeserializeObject<IEnumerable<AutolootConstraintEntry>>( text );
 
-                if ( entry != null )
+                if ( entries == null )
                 {
-                    SelectedItem?.Constraints.Add( entry );
+                    return;
+                }
+
+                foreach ( AutolootConstraintEntry entry in entries )
+                {
+                    if ( !SelectedItem.Constraints.Contains( entry ) )
+                    {
+                        SelectedItem?.Constraints.Add( entry );
+                    }
                 }
             }
             catch ( Exception )
@@ -293,12 +358,12 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
         private static void ClipboardCopy( object obj )
         {
-            if ( !( obj is AutolootConstraintEntry entry ) )
+            if ( !( obj is IList<AutolootConstraintEntry> entries ) )
             {
                 return;
             }
 
-            string text = JsonConvert.SerializeObject( entry );
+            string text = JsonConvert.SerializeObject( entries );
 
             Clipboard.SetText( text );
         }
@@ -323,21 +388,24 @@ namespace ClassicAssist.UI.ViewModels.Agents
                     new PacketFilterInfo( 0x3C, new[] { PacketFilterConditions.IntAtPositionCondition( serial, 19 ) } ),
                     PacketDirection.Incoming );
 
-                bool result = we.Lock.WaitOne( 5000 );
+                we.Lock.WaitOne( 2000 );
 
-                if ( !result )
-                {
-                    return;
-                }
-
-                IEnumerable<Item> items = Engine.Items.GetItem( serial )?.Container.GetItems();
+                IEnumerable<Item> items = Engine.Items.GetItem( serial )?.Container?.GetItems();
 
                 if ( items == null )
                 {
                     return;
                 }
 
+                if ( Engine.Features.HasFlag( FeatureFlags.AOS ) )
+                {
+                    Engine.SendPacketToServer( new BatchQueryProperties( items.Select( i => i.Serial ).ToArray() ) );
+                    Thread.Sleep( 1000 );
+                }
+
                 List<Item> lootItems = new List<Item>();
+
+                // If change logic, also change in DebugAutolootViewModel
 
                 foreach ( AutolootEntry entry in Items )
                 {
@@ -346,7 +414,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
                         continue;
                     }
 
-                    IEnumerable<Item> matchItems = AutolootFilter( items, entry );
+                    IEnumerable<Item> matchItems = AutolootHelpers.AutolootFilter( items, entry );
 
                     if ( matchItems == null )
                     {
@@ -389,7 +457,7 @@ namespace ClassicAssist.UI.ViewModels.Agents
                         containerSerial = Engine.Player.Backpack.Serial;
                     }
 
-                    UOC.SystemMessage( string.Format( Strings.Autolooting___0__, lootItem.Name ) );
+                    UOC.SystemMessage( string.Format( Strings.Autolooting___0__, lootItem.Name ), 61 );
                     Task t = ActionPacketQueue.EnqueueDragDrop( lootItem.Serial, lootItem.Count, containerSerial,
                         QueuePriority.Medium );
 
@@ -400,12 +468,15 @@ namespace ClassicAssist.UI.ViewModels.Agents
 
         private void RemoveConstraint( object obj )
         {
-            if ( !( obj is AutolootConstraintEntry constraint ) )
+            if ( !( obj is IEnumerable<AutolootConstraintEntry> constraints ) )
             {
                 return;
             }
 
-            SelectedItem.Constraints.Remove( constraint );
+            foreach ( AutolootConstraintEntry constraintEntry in constraints.ToList() )
+            {
+                SelectedItem?.Constraints.Remove( constraintEntry );
+            }
         }
 
         private void InsertConstraint( object obj )
@@ -422,6 +493,19 @@ namespace ClassicAssist.UI.ViewModels.Agents
                 };
 
             SelectedItem.Constraints = new ObservableCollection<AutolootConstraintEntry>( constraints );
+        }
+
+        private void DefineCustomProperties( object obj )
+        {
+            Engine.Dispatcher.Invoke( () =>
+            {
+                CustomPropertiesWindow window = new CustomPropertiesWindow();
+                window.ShowDialog();
+
+                Constraints.Clear();
+                LoadProperties();
+                LoadCustomProperties();
+            } );
         }
 
         private void ResetContainer( object obj )
@@ -442,6 +526,16 @@ namespace ClassicAssist.UI.ViewModels.Agents
             ContainerSerial = serial;
         }
 
+        private void InsertMatchAny( object obj )
+        {
+            AutolootEntry entry = new AutolootEntry
+            {
+                Name = Strings.Any, ID = -1, Constraints = new ObservableCollection<AutolootConstraintEntry>()
+            };
+
+            Items.Add( entry );
+        }
+
         private async Task Insert( object arg )
         {
             int serial = await UOC.GetTargeSerialAsync( Strings.Target_object___ );
@@ -460,12 +554,14 @@ namespace ClassicAssist.UI.ViewModels.Agents
                 return;
             }
 
-            Items.Add( new AutolootEntry
+            AutolootEntry entry = new AutolootEntry
             {
                 Name = TileData.GetStaticTile( item.ID ).Name,
                 ID = item.ID,
                 Constraints = new ObservableCollection<AutolootConstraintEntry>()
-            } );
+            };
+
+            Items.Add( entry );
         }
 
         private async Task Remove( object arg )
@@ -491,53 +587,6 @@ namespace ClassicAssist.UI.ViewModels.Agents
             {
                 entry.RehueHue = hue;
             }
-        }
-
-        public static IEnumerable<Item> AutolootFilter( IEnumerable<Item> items, AutolootEntry entry )
-        {
-            return items == null
-                ? null
-                : ( from item in items
-                    where item.ID == entry.ID
-                    let predicates = ConstraintsToPredicates( entry.Constraints )
-                    where !predicates.Any() || CheckPredicates( item, predicates )
-                    select item ).ToList();
-        }
-
-        private static bool CheckPredicates( Item item, IEnumerable<Predicate<Item>> predicates )
-        {
-            return predicates.All( predicate => predicate( item ) );
-        }
-
-        public static IEnumerable<Predicate<Item>> ConstraintsToPredicates(
-            IEnumerable<AutolootConstraintEntry> constraints )
-        {
-            List<Predicate<Item>> predicates = new List<Predicate<Item>>();
-
-            foreach ( AutolootConstraintEntry constraint in constraints )
-            {
-                switch ( constraint.Property.ConstraintType )
-                {
-                    case PropertyType.Properties:
-                        predicates.Add( i => i.Properties != null && constraint.Property.Clilocs.Any( cliloc =>
-                                                 i.Properties.Any( p => AutolootHelpers.MatchProperty( p, cliloc,
-                                                     constraint.Property, constraint.Operator, constraint.Value ) ) ) );
-                        break;
-                    case PropertyType.Object:
-
-                        predicates.Add( i =>
-                            AutolootHelpers.ItemHasObjectProperty( i, constraint.Property.Name ) &&
-                            AutolootHelpers.Operation( constraint.Operator,
-                                AutolootHelpers.GetItemObjectPropertyValue<int>( i, constraint.Property.Name ),
-                                constraint.Value ) );
-
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            return predicates;
         }
     }
 }

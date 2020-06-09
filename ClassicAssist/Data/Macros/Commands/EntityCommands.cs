@@ -12,7 +12,8 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class EntityCommands
     {
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static int Distance( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -28,7 +29,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return entity?.Distance ?? int.MaxValue;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Distance ) } )]
         public static bool InRange( object obj, int distance )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -46,11 +48,11 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.Distance < distance;
             }
 
-            UOC.SystemMessage( Strings.Cannot_find_item___ );
             return false;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static int Hue( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -78,7 +80,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static int Graphic( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -106,7 +109,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static int X( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -134,7 +138,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static int Y( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -162,7 +167,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static int Z( object obj = null )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -190,19 +196,29 @@ namespace ClassicAssist.Data.Macros.Commands
             return 0;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.BuffName ) } )]
         public static bool BuffExists( string name )
         {
             return BuffIconManager.GetInstance().BuffExists( name );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.BuffName ) } )]
+        public static double BuffTime( string name )
+        {
+            return BuffIconManager.GetInstance().BuffTime( name );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SpecialMoveName ) } )]
         public static bool SpecialMoveExists( string name )
         {
             return SpecialMovesManager.GetInstance().SpecialMoveExists( name );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static string DirectionTo( object obj )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -224,7 +240,8 @@ namespace ClassicAssist.Data.Macros.Commands
             return UOMath.MapDirection( Engine.Player.X, Engine.Player.Y, entity.X, entity.Y ).ToString();
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static string Name( object obj = null )
         {
             return GetEntityProperty<string>( obj, nameof( Entity.Name ) )?.Trim() ?? string.Empty;

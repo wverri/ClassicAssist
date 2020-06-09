@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assistant;
 using ClassicAssist.Data.Regions;
 using ClassicAssist.Data.Targeting;
+using ClassicAssist.Misc;
 using ClassicAssist.Resources;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
@@ -23,20 +24,30 @@ namespace ClassicAssist.Data.Macros.Commands
             Neutral
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
-        public static void CancelTarget()
+        public enum TargetResourceType
         {
-            Engine.SendPacketToServer( new Target( TargetTypeEnum.Object, -1, TargetFlags.Cancel, -1, -1, -1,
-                0, 0, true ) );
+            Ore,
+            Sand,
+            Wood,
+            Graves,
+            Red_Mushrooms
         }
 
         [CommandsDisplay( Category = nameof( Strings.Target ) )]
+        public static void CancelTarget()
+        {
+            Engine.SendPacketToServer( new Target( TargetTypeEnum.Object, -1, TargetFlags.Cancel, -1, -1, -1, 0, 0,
+                true ) );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Target ), Parameters = new[] { nameof( ParameterType.Timeout ) } )]
         public static bool WaitForTarget( int timeout = 5000 )
         {
             return UOC.WaitForTarget( timeout );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static void Target( object obj, bool checkRange = false, bool useQueue = false )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -72,6 +83,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 Mobile mobile = Engine.Mobiles.GetMobile( serial );
 
                 if ( mobile != null && mobile.Notoriety == Notoriety.Innocent &&
+                     mobile.Serial != Engine.Player?.Serial && Engine.TargetFlags == TargetFlags.Harmful &&
                      mobile.GetRegion().Attributes.HasFlag( RegionAttributes.Guarded ) )
                 {
                     UOC.SystemMessage( Strings.Target_blocked____try_again___ );
@@ -90,9 +102,35 @@ namespace ClassicAssist.Data.Macros.Commands
 
             Engine.SendPacketToServer( new Target( TargetTypeEnum.Object, -1, TargetFlags.None, serial, -1, -1, -1, 0,
                 true ) );
+            Engine.TargetExists = false;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.String ) } )]
+        [CommandsDisplayStringSeeAlso( new[] { null, nameof( TargetResourceType ) } )]
+        public static void TargetByResource( object toolObj, string resourceType )
+        {
+            int serial = AliasCommands.ResolveSerial( toolObj );
+
+            if ( serial == 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return;
+            }
+
+            try
+            {
+                TargetResourceType resourceEnum = Utility.GetEnumValueByName<TargetResourceType>( resourceType );
+
+                Engine.SendPacketToServer( new TargetByResource( serial, (int) resourceEnum ) );
+            }
+            catch ( InvalidOperationException )
+            {
+            }
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static void TargetTileRelative( object obj, int distance, bool reverse = false )
         {
             int serial = AliasCommands.ResolveSerial( obj );
@@ -172,13 +210,34 @@ namespace ClassicAssist.Data.Macros.Commands
                 destinationY, entity.Z, 0, true ) );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
-        public static bool GetEnemy( IEnumerable<string> notos, string bodyType = "Any", string distance = "Next",
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.XCoordinateOffset ), nameof( ParameterType.YCoordinateOffset ),
+                nameof( ParameterType.YCoordinateOffset )
+            } )]
+        public static void TargetTileOffset( int xOffset, int yOffset, int zOffset )
+        {
+            TargetXYZ( Engine.Player.X + xOffset, Engine.Player.Y + yOffset, Engine.Player.Z + zOffset );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.Empty ), nameof( ParameterType.Empty ), nameof( ParameterType.Empty ),
+                nameof( ParameterType.Empty )
+            } )]
+        [CommandsDisplayStringSeeAlso( new[]
+        {
+            nameof( TargetNotoriety ), nameof( TargetBodyType ), nameof( TargetDistance ),
+            nameof( TargetInfliction )
+        } )]
+        public static bool GetEnemy( IEnumerable<string> notorieties, string bodyType = "Any", string distance = "Next",
             string infliction = "Any" )
         {
             TargetNotoriety notoFlags = TargetNotoriety.None;
 
-            foreach ( string noto in notos )
+            foreach ( string noto in notorieties )
             {
                 if ( Enum.TryParse( noto, true, out TargetNotoriety flag ) )
                 {
@@ -204,7 +263,15 @@ namespace ClassicAssist.Data.Macros.Commands
             return TargetManager.GetInstance().GetEnemy( notoFlags, bt, td, TargetFriendType.None, ti );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.Empty ), nameof( ParameterType.Empty ), nameof( ParameterType.Empty )
+            } )]
+        [CommandsDisplayStringSeeAlso( new[]
+        {
+            nameof( TargetDistance ), nameof( TargetInfliction ), nameof( TargetBodyType )
+        } )]
         public static bool GetFriendListOnly( string distance = "Next", string targetInfliction = "Any",
             string bodyType = "Any" )
         {
@@ -223,17 +290,26 @@ namespace ClassicAssist.Data.Macros.Commands
                 bt = TargetBodyType.Any;
             }
 
-            return TargetManager.GetInstance()
-                .GetFriend( TargetNotoriety.Any, bt, td, TargetFriendType.Only, ti );
+            return TargetManager.GetInstance().GetFriend( TargetNotoriety.Any, bt, td, TargetFriendType.Only, ti );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
-        public static bool GetFriend( IEnumerable<string> notos, string bodyType = "Any", string distance = "Next",
-            string infliction = "Any" )
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.Empty ), nameof( ParameterType.Empty ), nameof( ParameterType.Empty ),
+                nameof( ParameterType.Empty )
+            } )]
+        [CommandsDisplayStringSeeAlso( new[]
+        {
+            nameof( TargetNotoriety ), nameof( TargetBodyType ), nameof( TargetDistance ),
+            nameof( TargetInfliction )
+        } )]
+        public static bool GetFriend( IEnumerable<string> notorieties, string bodyType = "Any",
+            string distance = "Next", string infliction = "Any" )
         {
             TargetNotoriety notoFlags = TargetNotoriety.None;
 
-            foreach ( string noto in notos )
+            foreach ( string noto in notorieties )
             {
                 if ( Enum.TryParse( noto, true, out TargetNotoriety flag ) )
                 {
@@ -259,7 +335,9 @@ namespace ClassicAssist.Data.Macros.Commands
             return TargetManager.GetInstance().GetFriend( notoFlags, bt, td, TargetFriendType.Include, ti );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[] { nameof( ParameterType.BeneficialHarmfulNeutral ) } )]
+        [CommandsDisplayStringSeeAlso( new[] { nameof( TargetExistsType ) } )]
         public static bool TargetExists( string targetExistsType = "Any" )
         {
             if ( !Enum.TryParse( targetExistsType, out TargetExistsType enumValue ) )
@@ -303,7 +381,11 @@ namespace ClassicAssist.Data.Macros.Commands
             UOC.SystemMessage( Strings.Target_queue_cleared___ );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Hue ), nameof( ParameterType.Range )
+            } )]
         public static void TargetType( object obj, int hue = -1, int range = -1 )
         {
             int id = AliasCommands.ResolveSerial( obj );
@@ -333,7 +415,11 @@ namespace ClassicAssist.Data.Macros.Commands
             Target( item.Serial, false, Options.CurrentOptions.QueueLastTarget );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Target ) )]
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.Hue ), nameof( ParameterType.Range )
+            } )]
         public static void TargetGround( object obj, int hue = -1, int range = -1 )
         {
             int id = AliasCommands.ResolveSerial( obj );
@@ -344,10 +430,11 @@ namespace ClassicAssist.Data.Macros.Commands
                 return;
             }
 
-            Entity entity = (Entity) Engine.Items.SelectEntity( i =>
-                                i.ID == id && ( hue == -1 || i.Hue == hue ) &&
-                                ( range == -1 || i.Distance < range ) ) ?? Engine.Mobiles.SelectEntity( m =>
-                                m.ID == id && ( hue == -1 || m.Hue == hue ) && ( range == -1 || m.Distance < range ) );
+            Entity entity =
+                (Entity) Engine.Items.SelectEntity( i =>
+                    i.ID == id && ( hue == -1 || i.Hue == hue ) && ( range == -1 || i.Distance < range ) ) ??
+                Engine.Mobiles.SelectEntity( m =>
+                    m.ID == id && ( hue == -1 || m.Hue == hue ) && ( range == -1 || m.Distance < range ) );
 
             if ( entity == null )
             {
@@ -356,6 +443,98 @@ namespace ClassicAssist.Data.Macros.Commands
             }
 
             Target( entity.Serial, false, Options.CurrentOptions.QueueLastTarget );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
+        public static void SetEnemy( object obj )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial <= 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+
+                return;
+            }
+
+            Entity entity = Engine.Items.GetItem( serial ) ?? (Entity) Engine.Mobiles.GetMobile( serial );
+
+            if ( entity == null )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return;
+            }
+
+            TargetManager.GetInstance().SetEnemy( entity );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
+        public static void SetFriend( object obj )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial <= 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+
+                return;
+            }
+
+            Entity entity = Engine.Items.GetItem( serial ) ?? (Entity) Engine.Mobiles.GetMobile( serial );
+
+            if ( entity == null )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return;
+            }
+
+            TargetManager.GetInstance().SetFriend( entity );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
+        public static void SetLastTarget( object obj )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial <= 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+
+                return;
+            }
+
+            Entity entity = Engine.Items.GetItem( serial ) ?? (Entity) Engine.Mobiles.GetMobile( serial );
+
+            if ( entity == null )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                return;
+            }
+
+            TargetManager.GetInstance().SetLastTarget( entity );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Target ), Parameters = new[] { nameof( ParameterType.Timeout ) } )]
+        public static bool WaitForTargetOrFizzle( int timeout )
+        {
+            ( _, bool result ) = UOC.WaitForTargetOrFizzle( timeout );
+
+            return result;
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Target ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.XCoordinate ), nameof( ParameterType.YCoordinate ),
+                nameof( ParameterType.ZCoordinate )
+            } )]
+        public static void TargetXYZ( int x, int y, int z )
+        {
+            Engine.SendPacketToServer( new Target( TargetTypeEnum.Tile, -1, TargetFlags.None, 0, x, y, z, 0, true ) );
+            Engine.TargetExists = false;
         }
     }
 }

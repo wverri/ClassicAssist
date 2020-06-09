@@ -19,13 +19,14 @@ namespace ClassicAssist.Data.Macros.Commands
 {
     public static class MainCommands
     {
-        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        [CommandsDisplay( Category = nameof( Strings.Main ), Parameters = new[] { nameof( ParameterType.OnOff ) } )]
         public static void SetQuietMode( bool onOff )
         {
             MacroManager.QuietMode = onOff;
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        [CommandsDisplay( Category = nameof( Strings.Main ), Parameters = new[] { nameof( ParameterType.String ) } )]
+        [CommandsDisplayStringSeeAlso( new[] { nameof( Virtues ) } )]
         public static void InvokeVirtue( string virtue )
         {
             Virtues v = Utility.GetEnumValueByName<Virtues>( virtue );
@@ -44,19 +45,28 @@ namespace ClassicAssist.Data.Macros.Commands
             UOC.Resync();
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        [CommandsDisplay( Category = nameof( Strings.Main ), Parameters = new[] { nameof( ParameterType.Timeout ) } )]
         public static void Pause( int milliseconds )
         {
-            Thread.Sleep( milliseconds );
+            try
+            {
+                Thread.Sleep( milliseconds );
+            }
+            catch ( ThreadInterruptedException )
+            {
+                // Squash
+            }
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Main ) )]
-        public static void SysMessage( string text )
+        [CommandsDisplay( Category = nameof( Strings.Main ),
+            Parameters = new[] { nameof( ParameterType.String ), nameof( ParameterType.Hue ) } )]
+        public static void SysMessage( string text, int hue = 0x03b2 )
         {
-            UOC.SystemMessage( text );
+            UOC.SystemMessage( text, hue );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        [CommandsDisplay( Category = nameof( Strings.Main ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static void Info( object obj = null )
         {
             int serial = 0;
@@ -111,7 +121,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 manager.Enabled ? 0x3F : 36 );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        [CommandsDisplay( Category = nameof( Strings.Main ), Parameters = new[] { nameof( ParameterType.OnOff ) } )]
         public static void WarMode( string onOff = "toggle" )
         {
             if ( Engine.Player == null )
@@ -136,7 +146,8 @@ namespace ClassicAssist.Data.Macros.Commands
                 : new WarMode( true ) );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        [CommandsDisplay( Category = nameof( Strings.Main ),
+            Parameters = new[] { nameof( ParameterType.String ), nameof( ParameterType.String ) } )]
         public static void MessageBox( string title, string body )
         {
             System.Windows.MessageBox.Show( body, title, MessageBoxButton.OK, MessageBoxImage.Information );
@@ -172,17 +183,17 @@ namespace ClassicAssist.Data.Macros.Commands
         {
             MacroManager manager = MacroManager.GetInstance();
 
-            return manager.CurrentMacro != null && manager.CurrentMacro.IsRunning;
+            return manager.CurrentMacro != null && ( manager.CurrentMacro.IsRunning || manager.Replay );
         }
 
-        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        [CommandsDisplay( Category = nameof( Strings.Main ), Parameters = new[] { nameof( ParameterType.MacroName ) } )]
         public static bool Playing( string macroName )
         {
             MacroManager manager = MacroManager.GetInstance();
 
             MacroEntry macro = manager.Items.FirstOrDefault( m => m.Name.Equals( macroName ) );
 
-            return macro != null && macro.IsRunning;
+            return macro != null && ( macro.IsRunning || manager.Replay );
         }
     }
 }

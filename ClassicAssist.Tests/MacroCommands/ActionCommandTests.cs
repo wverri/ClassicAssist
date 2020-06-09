@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading;
 using Assistant;
 using ClassicAssist.Data.Macros.Commands;
@@ -12,6 +13,12 @@ namespace ClassicAssist.Tests.MacroCommands
     [TestClass]
     public class ActionCommandTests
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Engine.ClientVersion = new Version( 7, 0, 45, 1 );
+        }
+
         [TestMethod]
         public void AttackWillSendAttackPacket()
         {
@@ -313,7 +320,7 @@ namespace ClassicAssist.Tests.MacroCommands
 
             void OnInternalPacketSentEvent( byte[] data, int length )
             {
-                if (data[0] != 0x07)
+                if ( data[0] != 0x07 )
                 {
                     return;
                 }

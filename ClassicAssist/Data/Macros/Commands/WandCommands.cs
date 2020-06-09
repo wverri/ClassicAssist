@@ -66,7 +66,9 @@ namespace ClassicAssist.Data.Macros.Commands
 
         private static readonly int[] _wandIds = { 0xDF2, 0xDF3, 0xDF4, 0xDF5 };
 
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.WandName ), nameof( ParameterType.IntegerValue ) } )]
+        [CommandsDisplayStringSeeAlso( new[] { nameof( WandTypes ) } )]
         public static bool EquipWand( string wandName, int minimumCharges = -1 )
         {
             try
@@ -95,10 +97,14 @@ namespace ClassicAssist.Data.Macros.Commands
             return false;
         }
 
-
-        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
-        public static bool FindWand( string wandName, object containerSource = null,
-            int minimumCharges = -1 )
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.WandName ), nameof( ParameterType.SerialOrAlias ),
+                nameof( ParameterType.IntegerValue )
+            } )]
+        [CommandsDisplayStringSeeAlso( new[] { nameof( WandTypes ) } )]
+        public static bool FindWand( string wandName, object containerSource = null, int minimumCharges = -1 )
         {
             try
             {

@@ -11,6 +11,7 @@ using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Search;
 using Microsoft.Scripting.Utils;
 
 namespace ClassicAssist.UI.Views
@@ -34,9 +35,8 @@ namespace ClassicAssist.UI.Views
                 new XmlTextReader( Path.Combine( Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ),
                     "Python.Dark.xshd" ) ), HighlightingManager.Instance );
 
-            IEnumerable<Type> namespaces = Assembly.GetExecutingAssembly().GetTypes()
-                .Where( t =>
-                    t.Namespace != null && t.IsPublic && t.IsClass && t.Namespace.EndsWith( "Macros.Commands" ) );
+            IEnumerable<Type> namespaces = Assembly.GetExecutingAssembly().GetTypes().Where( t =>
+                t.Namespace != null && t.IsPublic && t.IsClass && t.Namespace.EndsWith( "Macros.Commands" ) );
 
             _completionData = new List<PythonCompletionData>();
 
@@ -59,6 +59,7 @@ namespace ClassicAssist.UI.Views
             }
 
             CodeTextEditor.TextArea.TextEntered += OnTextEntered;
+            SearchPanel.Install( CodeTextEditor );
         }
 
         private void OnTextEntered( object sender, TextCompositionEventArgs e )
@@ -73,9 +74,7 @@ namespace ClassicAssist.UI.Views
             }
 
             List<PythonCompletionData> data = _completionData.Where( m =>
-                    ( (string) m.Content ).StartsWith( trimmed,
-                        StringComparison.InvariantCultureIgnoreCase ) )
-                .ToList();
+                ( (string) m.Content ).StartsWith( trimmed, StringComparison.InvariantCultureIgnoreCase ) ).ToList();
 
             if ( data.Count <= 0 )
             {

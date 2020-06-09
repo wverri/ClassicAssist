@@ -169,6 +169,35 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Returns milliseconds remaining for given buff name, or 0 if expired/not enabled..
+        /// </summary>
+        public static string BUFFTIME_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("BUFFTIME_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to if not BuffExists(&apos;Enemy Of One&apos;) or BuffTime(&apos;Enemy Of One&apos;) &lt; 5000:
+        ///    Cast(&apos;Enemy Of One&apos;)
+        ///.
+        /// </summary>
+        public static string BUFFTIME_COMMAND_EXAMPLE {
+            get {
+                return ResourceManager.GetString("BUFFTIME_COMMAND_EXAMPLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to if BuffTime(&apos;Enemy Of One&apos;) &lt; 5000:.
+        /// </summary>
+        public static string BUFFTIME_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("BUFFTIME_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancels the current prompt..
         /// </summary>
         public static string CANCELPROMPT_COMMAND_DESCRIPTION {
@@ -219,6 +248,24 @@ namespace ClassicAssist.Resources {
         public static string CAST_COMMAND_INSERTTEXT {
             get {
                 return ResourceManager.GetString("CAST_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sends a chat message..
+        /// </summary>
+        public static string CHATMSG_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("CHATMSG_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ChatMsg(&quot;Mary had a little lamb&quot;).
+        /// </summary>
+        public static string CHATMSG_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("CHATMSG_COMMAND_INSERTTEXT", resourceCulture);
             }
         }
         
@@ -877,6 +924,22 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to # Find on ground
+        ///FindObject(&quot;mount&quot;)
+        ///
+        ///# Find on ground with range
+        ///FindObject(&quot;mount&quot;, 10)
+        ///
+        ///# Find in container, must specify search level or -1
+        ///FindObject(&quot;weapon&quot;, -1, &quot;backpack&quot;)  .
+        /// </summary>
+        public static string FINDOBJECT_COMMAND_EXAMPLE {
+            get {
+                return ResourceManager.GetString("FINDOBJECT_COMMAND_EXAMPLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FindObject(&quot;mount&quot;).
         /// </summary>
         public static string FINDOBJECT_COMMAND_INSERTTEXT {
@@ -1027,6 +1090,20 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to #get murderer
+        ///GetEnemy([&apos;Murderer&apos;])
+        ///#get closest murderer, any body type
+        ///GetEnemy([&apos;Murderer&apos;], &apos;Any&apos;, &apos;Closest&apos;)
+        ///#get next any notoriety, humanoid or transformation - unmounted
+        ///GetEnemy([&apos;Any&apos;], &apos;Both&apos;, &apos;Next&apos;, &apos;Unmounted&apos;).
+        /// </summary>
+        public static string GETENEMY_COMMAND_EXAMPLE {
+            get {
+                return ResourceManager.GetString("GETENEMY_COMMAND_EXAMPLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GetEnemy([&quot;Murderer&quot;]).
         /// </summary>
         public static string GETENEMY_COMMAND_INSERTTEXT {
@@ -1063,7 +1140,7 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GetFriendListOnly([&quot;Closest&quot;]).
+        ///   Looks up a localized string similar to GetFriendListOnly(&quot;Closest&quot;).
         /// </summary>
         public static string GETFRIENDLISTONLY_COMMAND_INSERTTEXT {
             get {
@@ -1315,7 +1392,7 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to if InFriendsList(&quot;last&quot;):.
+        ///   Looks up a localized string similar to if InFriendList(&quot;last&quot;):.
         /// </summary>
         public static string INFRIENDLIST_COMMAND_INSERTTEXT {
             get {
@@ -1338,6 +1415,24 @@ namespace ClassicAssist.Resources {
         public static string INGUMP_COMMAND_INSERTTEXT {
             get {
                 return ResourceManager.GetString("INGUMP_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check whether the given serial / alias exists in the ignore list..
+        /// </summary>
+        public static string INIGNORELIST_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("INIGNORELIST_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to if InIgnoreList(&quot;mount&quot;):.
+        /// </summary>
+        public static string INIGNORELIST_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("INIGNORELIST_COMMAND_INSERTTEXT", resourceCulture);
             }
         }
         
@@ -1747,7 +1842,7 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MoveItemOffset(&quot;trashitem&quot;, 0, 1, 0, -1&quot;).
+        ///   Looks up a localized string similar to MoveItemOffset(&quot;trashitem&quot;, 0, 1, 0, -1).
         /// </summary>
         public static string MOVEITEMOFFSET_COMMAND_INSERTTEXT {
             get {
@@ -1860,6 +1955,60 @@ namespace ClassicAssist.Resources {
         public static string NAME_COMMAND_INSERTTEXT {
             get {
                 return ResourceManager.GetString("NAME_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the Guild gump.
+        /// </summary>
+        public static string OPENGUILDGUMP_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("OPENGUILDGUMP_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenGuildGump().
+        /// </summary>
+        public static string OPENGUILDGUMP_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("OPENGUILDGUMP_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the Quests gump.
+        /// </summary>
+        public static string OPENQUESTSGUMP_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("OPENQUESTSGUMP_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenQuestsGump().
+        /// </summary>
+        public static string OPENQUESTSGUMP_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("OPENQUESTSGUMP_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the Virtue gump of the given serial/alias (defaults to current player).
+        /// </summary>
+        public static string OPENVIRTUEGUMP_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("OPENVIRTUEGUMP_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenVirtueGump(&quot;enemy&quot;).
+        /// </summary>
+        public static string OPENVIRTUEGUMP_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("OPENVIRTUEGUMP_COMMAND_INSERTTEXT", resourceCulture);
             }
         }
         
@@ -2089,7 +2238,7 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to if Property(&quot;item&quot;, &quot;Defense Chance Increase&quot;).
+        ///   Looks up a localized string similar to if Property(&quot;item&quot;, &quot;Defense Chance Increase&quot;):.
         /// </summary>
         public static string PROPERTY_COMMAND_INSERTTEXT {
             get {
@@ -2130,6 +2279,24 @@ namespace ClassicAssist.Resources {
         public static string PUSHLIST_COMMAND_INSERTTEXT {
             get {
                 return ResourceManager.GetString("PUSHLIST_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rehue an item/mobile the specified hue value, set to 0 to remove. (Experimental).
+        /// </summary>
+        public static string REHUE_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("REHUE_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rehue(&quot;mount&quot;, 1176).
+        /// </summary>
+        public static string REHUE_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("REHUE_COMMAND_INSERTTEXT", resourceCulture);
             }
         }
         
@@ -2305,7 +2472,7 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SetAlias(&quot;mount&quot;, 0x40000001&quot;).
+        ///   Looks up a localized string similar to SetAlias(&quot;mount&quot;, 0x40000001).
         /// </summary>
         public static string SETALIAS_COMMAND_INSERTTEXT {
             get {
@@ -2332,6 +2499,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sets the enemy to the given serial/alias..
+        /// </summary>
+        public static string SETENEMY_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("SETENEMY_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SetEnemy(&quot;mount&quot;).
+        /// </summary>
+        public static string SETENEMY_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("SETENEMY_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set force walk, True or False.
         /// </summary>
         public static string SETFORCEWALK_COMMAND_DESCRIPTION {
@@ -2350,6 +2535,42 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sets the friend to the given serial/alias..
+        /// </summary>
+        public static string SETFRIEND_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("SETFRIEND_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SetFriend(&quot;mount&quot;).
+        /// </summary>
+        public static string SETFRIEND_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("SETFRIEND_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sets the last target to the given serial/alias..
+        /// </summary>
+        public static string SETLASTTARGET_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("SETLASTTARGET_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SetLastTarget(&quot;mount&quot;).
+        /// </summary>
+        public static string SETLASTTARGET_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("SETLASTTARGET_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sets the value of the given alias name, alias is valid only in the current macro..
         /// </summary>
         public static string SETMACROALIAS_COMMAND_DESCRIPTION {
@@ -2359,7 +2580,7 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SetMacroAlias(&quot;mount&quot;, 0x40000001&quot;).
+        ///   Looks up a localized string similar to SetMacroAlias(&quot;mount&quot;, 0x40000001).
         /// </summary>
         public static string SETMACROALIAS_COMMAND_INSERTTEXT {
             get {
@@ -2400,6 +2621,24 @@ namespace ClassicAssist.Resources {
         public static string SETSKILL_COMMAND_INSERTTEXT {
             get {
                 return ResourceManager.GetString("SETSKILL_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sets the lock state of the given stat, up, down or locked..
+        /// </summary>
+        public static string SETSTATUS_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("SETSTATUS_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SetStatus(&apos;str&apos;, &apos;locked&apos;).
+        /// </summary>
+        public static string SETSTATUS_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("SETSTATUS_COMMAND_INSERTTEXT", resourceCulture);
             }
         }
         
@@ -2530,6 +2769,24 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stops all running macros including background macros..
+        /// </summary>
+        public static string STOPALL_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("STOPALL_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StopAll().
+        /// </summary>
+        public static string STOPALL_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("STOPALL_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Returns the strength of the player.
         /// </summary>
         public static string STR_COMMAND_DESCRIPTION {
@@ -2557,6 +2814,18 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to # default hue
+        ///SysMessage(&quot;Hello&quot;)
+        ///# specifying hue
+        ///SysMessage(&quot;Hello&quot;, 35).
+        /// </summary>
+        public static string SYSMESSAGE_COMMAND_EXAMPLE {
+            get {
+                return ResourceManager.GetString("SYSMESSAGE_COMMAND_EXAMPLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SysMessage(&quot;hello&quot;).
         /// </summary>
         public static string SYSMESSAGE_COMMAND_INSERTTEXT {
@@ -2580,6 +2849,24 @@ namespace ClassicAssist.Resources {
         public static string TARGET_COMMAND_INSERTTEXT {
             get {
                 return ResourceManager.GetString("TARGET_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses tool and targets specified resource type (Requires server support (OSI / ServUO)).
+        /// </summary>
+        public static string TARGETBYRESOURCE_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("TARGETBYRESOURCE_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TargetByResource(&apos;pickaxe&apos;, &apos;Ore&apos;).
+        /// </summary>
+        public static string TARGETBYRESOURCE_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("TARGETBYRESOURCE_COMMAND_INSERTTEXT", resourceCulture);
             }
         }
         
@@ -2620,6 +2907,34 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Targets the tile at the given offsets relative to the player.
+        /// </summary>
+        public static string TARGETTILEOFFSET_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("TARGETTILEOFFSET_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #Targets the tile at the current Y coordinate + 1
+        ///TargetTileOffset(0, 1, 0).
+        /// </summary>
+        public static string TARGETTILEOFFSET_COMMAND_EXAMPLE {
+            get {
+                return ResourceManager.GetString("TARGETTILEOFFSET_COMMAND_EXAMPLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TargetTileOffset(0, 1, 0).
+        /// </summary>
+        public static string TARGETTILEOFFSET_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("TARGETTILEOFFSET_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target tile the given distance relative to the specified alias/serial, optional boolean for reverse mode..
         /// </summary>
         public static string TARGETTILERELATIVE_COMMAND_DESCRIPTION {
@@ -2652,6 +2967,24 @@ namespace ClassicAssist.Resources {
         public static string TARGETTYPE_COMMAND_INSERTTEXT {
             get {
                 return ResourceManager.GetString("TARGETTYPE_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Targets the ground at the given coordinates..
+        /// </summary>
+        public static string TARGETXYZ_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("TARGETXYZ_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TargetXYZ(1000, 1000, 0).
+        /// </summary>
+        public static string TARGETXYZ_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("TARGETXYZ_COMMAND_INSERTTEXT", resourceCulture);
             }
         }
         
@@ -3012,6 +3345,24 @@ namespace ClassicAssist.Resources {
         public static string WAITFORTARGET_COMMAND_INSERTTEXT {
             get {
                 return ResourceManager.GetString("WAITFORTARGET_COMMAND_INSERTTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Waits the specified timeout for target cursor whilst returning false if the spell is fizzled / uncastable beforehand..
+        /// </summary>
+        public static string WAITFORTARGETORFIZZLE_COMMAND_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("WAITFORTARGETORFIZZLE_COMMAND_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WaitForTargetOrFizzle(5000).
+        /// </summary>
+        public static string WAITFORTARGETORFIZZLE_COMMAND_INSERTTEXT {
+            get {
+                return ResourceManager.GetString("WAITFORTARGETORFIZZLE_COMMAND_INSERTTEXT", resourceCulture);
             }
         }
         

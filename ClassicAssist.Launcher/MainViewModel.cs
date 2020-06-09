@@ -297,14 +297,13 @@ namespace ClassicAssist.Launcher
 
         private void SelectClientPath( object obj )
         {
-            OpenFileDialog ofd =
-                new OpenFileDialog
-                {
-                    CheckFileExists = true,
-                    Multiselect = false,
-                    Filter = "ClassicUO.exe|ClassicUO.exe",
-                    Title = Resources.Select_a_client
-                };
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Multiselect = false,
+                Filter = "ClassicUO.exe|ClassicUO.exe",
+                Title = Resources.Select_a_client
+            };
 
             bool? result = ofd.ShowDialog();
 
@@ -323,11 +322,10 @@ namespace ClassicAssist.Launcher
 
         private void SelectDataPath( object obj )
         {
-            FolderBrowserDialog folderBrowserDialog =
-                new FolderBrowserDialog
-                {
-                    Description = Resources.Select_your_Ultima_Online_directory, ShowNewFolderButton = false
-                };
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
+            {
+                Description = Resources.Select_your_Ultima_Online_directory, ShowNewFolderButton = false
+            };
             DialogResult result = folderBrowserDialog.ShowDialog();
 
             if ( result != DialogResult.OK )
@@ -374,6 +372,7 @@ namespace ClassicAssist.Launcher
             args.Append( $"-ip \"{ip}\" -port \"{SelectedShard.Port}\" " );
             args.Append( $"-uopath \"{SelectedDataPath}\" " );
             args.Append( $"-encryption {( SelectedShard.Encryption ? 1 : 0 )} " );
+            args.Append( SelectedShard.ShardType > 0 ? $"-shard {SelectedShard.ShardType} " : "-shard 0 " );
 
             BuildClassicOptions( args );
 

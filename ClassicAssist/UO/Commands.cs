@@ -145,8 +145,7 @@ namespace ClassicAssist.UO
             Engine.SendPacketToClient( pw );
         }
 
-        public static void MobileQuery( int serial,
-            MobileQueryType queryType = MobileQueryType.StatsRequest )
+        public static void MobileQuery( int serial, MobileQueryType queryType = MobileQueryType.StatsRequest )
         {
             Engine.SendPacketToServer( new MobileQuery( serial, queryType ) );
         }
@@ -181,8 +180,7 @@ namespace ClassicAssist.UO
                 int serial = -1;
 
                 PacketFilterInfo pfi = new PacketFilterInfo( 0x6C,
-                    new[] { PacketFilterConditions.UIntAtPositionCondition( value, 2 ) },
-                    ( packet, info ) =>
+                    new[] { PacketFilterConditions.UIntAtPositionCondition( value, 2 ) }, ( packet, info ) =>
                     {
                         serial = ( packet[7] << 24 ) | ( packet[8] << 16 ) | ( packet[9] << 8 ) | packet[10];
 
@@ -220,14 +218,14 @@ namespace ClassicAssist.UO
             } );
         }
 
-        public static bool GumpButtonClick( uint gumpID, int buttonID )
+        public static bool GumpButtonClick( uint gumpID, int buttonID, int[] switches = null )
         {
             if ( !Engine.GumpList.TryGetValue( gumpID, out int serial ) )
             {
                 return false;
             }
 
-            Engine.SendPacketToServer( new GumpButtonClick( (int) gumpID, serial, buttonID ) );
+            Engine.SendPacketToServer( new GumpButtonClick( (int) gumpID, serial, buttonID, switches ) );
 
             Engine.GumpList.TryRemove( gumpID, out _ );
             CloseClientGump( gumpID );
@@ -274,6 +272,11 @@ namespace ClassicAssist.UO
                 Engine.SendPacketToServer(
                     new MobileQuery( Engine.Player?.Serial ?? 0, MobileQueryType.SkillsRequest ) );
             }
+        }
+
+        public static void ChangeStatLock( StatType stat, LockStatus lockStatus )
+        {
+            Engine.SendPacketToServer( new ChangeStatLock( stat, lockStatus ) );
         }
 
         public static void UseSkill( Skill skill )
@@ -461,30 +464,66 @@ namespace ClassicAssist.UO
             }
         }
 
-        public static bool WaitForTargetOrFizzle( int timeout )
+        public static (int, bool) WaitForTargetOrFizzle( int timeout )
         {
-            PacketFilterInfo targetPfi = new PacketFilterInfo( 0x6C );
-            PacketFilterInfo fizzPfi = new PacketFilterInfo( 0xC0,
+            PacketWaitEntry targetWe = CreateWaitEntry( new PacketFilterInfo( 0x6C ) );
+
+            PacketWaitEntry fizzWe = CreateWaitEntry( new PacketFilterInfo( 0xC0,
                 new[]
                 {
                     PacketFilterConditions.IntAtPositionCondition( Engine.Player.Serial, 2 ),
                     PacketFilterConditions.ShortAtPositionCondition( 0x3735, 10 )
-                } );
+                } ) );
 
-            PacketFilterInfo fizzChivPFI = new PacketFilterInfo( 0x54,
+            PacketWaitEntry fizzMessageWe = CreateWaitEntry( new PacketFilterInfo( 0xC1,
+                new[] { PacketFilterConditions.IntAtPositionCondition( 502632, 14 ) /* The spell fizzles. */ } ) );
+
+            PacketWaitEntry recoveredMessageWe = CreateWaitEntry( new PacketFilterInfo( 0xC1,
+                new[]
+                {
+                    PacketFilterConditions.IntAtPositionCondition( 502644,
+                        14 ) /* You have not yet recovered from casting a spell. */
+                } ) );
+
+            PacketWaitEntry alreadyCastingWe = CreateWaitEntry( new PacketFilterInfo( 0xC1,
+                new[]
+                {
+                    PacketFilterConditions.IntAtPositionCondition( 502642,
+                        14 ) /* You are already casting a spell. */
+                } ) );
+
+            PacketWaitEntry alreadyCasting2We = CreateWaitEntry( new PacketFilterInfo( 0xC1,
+                new[]
+                {
+                    PacketFilterConditions.IntAtPositionCondition( 502645,
+                        14 ) /* You are already casting a spell. */
+                } ) );
+
+            PacketWaitEntry concentrationWe = CreateWaitEntry( new PacketFilterInfo( 0xC1,
+                new[]
+                {
+                    PacketFilterConditions.IntAtPositionCondition( 500641,
+                        14 ) /* Your concentration is disturbed, thus ruining thy spell. */
+                } ) );
+
+            PacketWaitEntry noManaWe = CreateWaitEntry( new PacketFilterInfo( 0xC1,
+                new[]
+                {
+                    PacketFilterConditions.IntAtPositionCondition( 502625, 14 ) /* Insufficient mana etc... */
+                } ) );
+
+            PacketWaitEntry fizzChivWe = CreateWaitEntry( new PacketFilterInfo( 0x54,
                 new[]
                 {
                     PacketFilterConditions.ShortAtPositionCondition( 0x1D6, 2 ),
                     PacketFilterConditions.ShortAtPositionCondition( Engine.Player.X, 6 ),
                     PacketFilterConditions.ShortAtPositionCondition( Engine.Player.Y, 8 ),
                     PacketFilterConditions.ShortAtPositionCondition( Engine.Player.Z, 10 )
-                } );
+                } ) );
 
             Engine.WaitingForTarget = true;
 
-            PacketWaitEntry targetWe = Engine.PacketWaitEntries.Add( targetPfi, PacketDirection.Incoming );
-            PacketWaitEntry fizzWe = Engine.PacketWaitEntries.Add( fizzPfi, PacketDirection.Incoming );
-            PacketWaitEntry fizzChivWe = Engine.PacketWaitEntries.Add( fizzChivPFI, PacketDirection.Incoming );
+            List<Task> tasks = new List<Task>();
 
             try
             {
@@ -509,22 +548,74 @@ namespace ClassicAssist.UO
                     while ( true );
                 } );
 
-                Task fizzTask = Task.Run( () => fizzWe.Lock.WaitOne( timeout ) );
+                Task fizzTask = Task.Factory.StartNew( () => fizzWe.Lock.WaitOne( timeout ),
+                    TaskCreationOptions.LongRunning );
 
-                Task fizzChivTask = Task.Run( () => fizzChivWe.Lock.WaitOne( timeout ) );
+                Task fizzMessageTask = Task.Factory.StartNew( () => fizzMessageWe.Lock.WaitOne( timeout + 100 ),
+                    TaskCreationOptions.LongRunning );
 
-                int index = Task.WaitAny( targetTask, fizzTask, fizzChivTask );
+                Task recoveredMessageTask =
+                    Task.Factory.StartNew( () => recoveredMessageWe.Lock.WaitOne( timeout + 100 ),
+                        TaskCreationOptions.LongRunning );
 
-                return index == 0 && targetTask.Result;
+                Task alreadyCastingTask = Task.Factory.StartNew( () => alreadyCastingWe.Lock.WaitOne( timeout + 100 ),
+                    TaskCreationOptions.LongRunning );
+
+                Task alreadyCasting2Task = Task.Factory.StartNew( () => alreadyCasting2We.Lock.WaitOne( timeout + 100 ),
+                    TaskCreationOptions.LongRunning );
+
+                Task concentrationTask = Task.Factory.StartNew( () => concentrationWe.Lock.WaitOne( timeout + 100 ),
+                    TaskCreationOptions.LongRunning );
+
+                Task noManaTask = Task.Factory.StartNew( () => noManaWe.Lock.WaitOne( timeout + 100 ),
+                    TaskCreationOptions.LongRunning );
+
+                Task fizzChivTask = Task.Factory.StartNew( () => fizzChivWe.Lock.WaitOne( timeout + 100 ),
+                    TaskCreationOptions.LongRunning );
+
+                int index;
+
+                tasks.AddRange( new[]
+                {
+                    targetTask, fizzTask, fizzMessageTask, recoveredMessageTask, alreadyCastingTask,
+                    alreadyCasting2Task, concentrationTask, noManaTask, fizzChivTask
+                } );
+
+                try
+                {
+                    index = Task.WaitAny( tasks.ToArray() );
+                }
+                catch ( OperationCanceledException )
+                {
+                    return ( -1, false );
+                }
+                catch ( ThreadInterruptedException )
+                {
+                    return ( -1, false );
+                }
+
+                return ( index, index == 0 && targetTask.Result );
             }
             finally
             {
                 Engine.PacketWaitEntries.Remove( targetWe );
                 Engine.PacketWaitEntries.Remove( fizzWe );
+                Engine.PacketWaitEntries.Remove( fizzMessageWe );
+                Engine.PacketWaitEntries.Remove( recoveredMessageWe );
+                Engine.PacketWaitEntries.Remove( alreadyCastingWe );
+                Engine.PacketWaitEntries.Remove( alreadyCasting2We );
+                Engine.PacketWaitEntries.Remove( concentrationWe );
+                Engine.PacketWaitEntries.Remove( noManaWe );
                 Engine.PacketWaitEntries.Remove( fizzChivWe );
 
                 Engine.WaitingForTarget = false;
             }
+        }
+
+        private static PacketWaitEntry CreateWaitEntry( PacketFilterInfo packetFilterInfo,
+            PacketDirection direction = PacketDirection.Incoming )
+        {
+            return Engine.PacketWaitEntries.Add( packetFilterInfo, direction );
         }
 
         public static bool WaitForTarget( int timeout )
@@ -563,7 +654,8 @@ namespace ClassicAssist.UO
             }
         }
 
-        public static async Task<bool> WaitForIncomingPacketFilterAsync( PacketFilterInfo pfi, int timeout, bool invokeHandler = true, bool fixedSize = false )
+        public static async Task<bool> WaitForIncomingPacketFilterAsync( PacketFilterInfo pfi, int timeout,
+            bool invokeHandler = true, bool fixedSize = false )
         {
             AutoResetEvent are = new AutoResetEvent( false );
             byte[] packet = null;
@@ -785,6 +877,7 @@ namespace ClassicAssist.UO
             pw.Write( (short) 0 );
             pw.Write( (short) 0 );
 
+            Engine.TargetExists = true;
             Engine.SendPacketToClient( pw );
         }
 
@@ -822,6 +915,88 @@ namespace ClassicAssist.UO
             pw.Write( (byte) ( force ? 2 : 0 ) );
 
             Engine.SendPacketToClient( pw );
+        }
+
+        public static void UO3DEquipItems( int[] serials )
+        {
+            if ( serials == null || serials.Length == 0 )
+            {
+                return;
+            }
+
+            int len = 4 + serials.Length * 4;
+
+            PacketWriter pw = new PacketWriter( len );
+
+            pw.Write( (byte) 0xEC );
+            pw.Write( (short) len ); //size
+            pw.Write( (byte) serials.Length );
+
+            foreach ( int serial in serials )
+            {
+                pw.Write( serial );
+            }
+
+            Engine.SendPacketToServer( pw );
+        }
+
+        public static void UO3DUnequipItems( int[] layers )
+        {
+            if ( layers == null || layers.Length == 0 )
+            {
+                return;
+            }
+
+            PacketWriter pw = new PacketWriter( 4 + layers.Length * 2 );
+
+            pw.Write( (byte) 0xED );
+            pw.Write( (short) ( 4 + layers.Length * 2 ) );
+            pw.Write( (byte) layers.Length );
+
+            foreach ( int layer in layers )
+            {
+                pw.Write( (short) layer );
+            }
+
+            Engine.SendPacketToServer( pw );
+        }
+
+        public static void ChatMsg( string text )
+        {
+            PacketWriter pw = new PacketWriter( 11 + text.Length * 2 );
+
+            pw.Write( (byte) 0xB3 );
+            pw.Write( (short) ( 11 + text.Length * 2 ) );
+            pw.WriteAsciiFixed( Strings.UO_LOCALE, 4 );
+            pw.Write( (short) 0x61 );
+            pw.WriteBigUniNull( text );
+
+            Engine.SendPacketToServer( pw );
+        }
+
+        public static void JoinChatChannel( string channel )
+        {
+            /*
+             * Text 0x62 (Join Conference):
+                BYTE[2] Holder (0x0022)
+                BYTE[?] Unicode conference name
+                BYTE[2] Holder (0x0022)
+                BYTE[2] Holder (0x0020)
+                BYTE[?] Unicode password if pass req'd
+                BYTE[2] Null Teriminator (0x0000)
+             */
+
+            PacketWriter pw = new PacketWriter();
+            pw.Write( (byte) 0xB3 );
+            pw.Write( (short) ( 17 + channel.Length * 2 ) );
+            pw.WriteAsciiFixed( Strings.UO_LOCALE, 4 );
+            pw.Write( (short) 0x62 );
+            pw.WriteBigUniNull( channel );
+            pw.Write( (short) 0x22 );
+            pw.Write( (short) 0x20 );
+            pw.Write( (short) 0 );
+
+            Engine.SendPacketToServer( pw );
         }
     }
 }

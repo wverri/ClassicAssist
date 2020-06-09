@@ -355,13 +355,13 @@ MoveType(0x170f, "backpack", "bank", -1, -1, 0, 50, 10)</value>
     <value>Sets the value of the given alias name.</value>
   </data>
   <data name="SETALIAS_COMMAND_INSERTTEXT" xml:space="preserve">
-    <value>SetAlias("mount", 0x40000001")</value>
+    <value>SetAlias("mount", 0x40000001)</value>
   </data>
   <data name="SETMACROALIAS_COMMAND_DESCRIPTION" xml:space="preserve">
     <value>Sets the value of the given alias name, alias is valid only in the current macro.</value>
   </data>
   <data name="SETMACROALIAS_COMMAND_INSERTTEXT" xml:space="preserve">
-    <value>SetMacroAlias("mount", 0x40000001")</value>
+    <value>SetMacroAlias("mount", 0x40000001)</value>
   </data>
   <data name="UNSETALIAS_COMMAND_DESCRIPTION" xml:space="preserve">
     <value>Removes the alias name given.</value>
@@ -517,7 +517,7 @@ MoveType(0x170f, "backpack", "bank", -1, -1, 0, 50, 10)</value>
     <value>Returns true if supplied mobile exists in the friends list.</value>
   </data>
   <data name="INFRIENDLIST_COMMAND_INSERTTEXT" xml:space="preserve">
-    <value>if InFriendsList("last"):</value>
+    <value>if InFriendList("last"):</value>
   </data>
   <data name="INNOCENT_COMMAND_DESCRIPTION" xml:space="preserve">
     <value>Returns true if the mobile's notoriety is Innocent</value>
@@ -607,7 +607,7 @@ MoveType(0x170f, "backpack", "bank", -1, -1, 0, 50, 10)</value>
     <value>Move the given serial/alias to the specified x,y,z offset of the player, no amount specified or -1 will move the full stack.</value>
   </data>
   <data name="MOVEITEMOFFSET_COMMAND_INSERTTEXT" xml:space="preserve">
-    <value>MoveItemOffset("trashitem", 0, 1, 0, -1")</value>
+    <value>MoveItemOffset("trashitem", 0, 1, 0, -1)</value>
   </data>
   <data name="MOVETYPE_COMMAND_DESCRIPTION" xml:space="preserve">
     <value>Move a type from source to destintion.</value>
@@ -985,7 +985,7 @@ MoveType(0x170f, "backpack", "bank", -1, -1, 0, 50, 10)</value>
     <value>Returns true if the given text appears in the items item properties.</value>
   </data>
   <data name="PROPERTY_COMMAND_INSERTTEXT" xml:space="preserve">
-    <value>if Property("item", "Defense Chance Increase")</value>
+    <value>if Property("item", "Defense Chance Increase"):</value>
   </data>
   <data name="PROPERTYVALUE_COMMAND_DESCRIPTION" xml:space="preserve">
     <value>Returns the argument value of the given property name. Optional argument index.</value>
@@ -1057,7 +1057,7 @@ MoveType(0x170f, "backpack", "bank", -1, -1, 0, 50, 10)</value>
     <value>Get friend that only exists in the friends list, parameter distance 'Closest'/'Nearest'/'Next'</value>
   </data>
   <data name="GETFRIENDLISTONLY_COMMAND_INSERTTEXT" xml:space="preserve">
-    <value>GetFriendListOnly(["Closest"])</value>
+    <value>GetFriendListOnly("Closest")</value>
   </data>
   <data name="TARGET_COMMAND_DESCRIPTION" xml:space="preserve">
     <value>Targets the given object (parameter can be serial or alias).</value>
@@ -1189,5 +1189,134 @@ for i in GetList("food"):
   </data>
   <data name="REPLAY_COMMAND_INSERTTEXT" xml:space="preserve">
     <value>Replay()</value>
+  </data>
+  <data name="INIGNORELIST_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Check whether the given serial / alias exists in the ignore list.</value>
+  </data>
+  <data name="INIGNORELIST_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>if InIgnoreList("mount"):</value>
+  </data>
+  <data name="SETFRIEND_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Sets the friend to the given serial/alias.</value>
+  </data>
+  <data name="SETFRIEND_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>SetFriend("mount")</value>
+  </data>
+  <data name="SETENEMY_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Sets the enemy to the given serial/alias.</value>
+  </data>
+  <data name="SETENEMY_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>SetEnemy("mount")</value>
+  </data>
+  <data name="SETLASTTARGET_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Sets the last target to the given serial/alias.</value>
+  </data>
+  <data name="SETLASTTARGET_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>SetLastTarget("mount")</value>
+  </data>
+  <data name="WAITFORTARGETORFIZZLE_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Waits the specified timeout for target cursor whilst returning false if the spell is fizzled / uncastable beforehand.</value>
+  </data>
+  <data name="WAITFORTARGETORFIZZLE_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>WaitForTargetOrFizzle(5000)</value>
+  </data>
+  <data name="SYSMESSAGE_COMMAND_EXAMPLE" xml:space="preserve">
+    <value># default hue
+SysMessage("Hello")
+# specifying hue
+SysMessage("Hello", 35)</value>
+  </data>
+  <data name="FINDOBJECT_COMMAND_EXAMPLE" xml:space="preserve">
+    <value># Find on ground
+FindObject("mount")
+
+# Find on ground with range
+FindObject("mount", 10)
+
+# Find in container, must specify search level or -1
+FindObject("weapon", -1, "backpack")  </value>
+  </data>
+  <data name="CHATMSG_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Sends a chat message.</value>
+  </data>
+  <data name="CHATMSG_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>ChatMsg("Mary had a little lamb")</value>
+  </data>
+  <data name="OPENVIRTUEGUMP_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Opens the Virtue gump of the given serial/alias (defaults to current player)</value>
+  </data>
+  <data name="OPENVIRTUEGUMP_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>OpenVirtueGump("enemy")</value>
+  </data>
+  <data name="OPENGUILDGUMP_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Opens the Guild gump</value>
+  </data>
+  <data name="OPENQUESTSGUMP_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Opens the Quests gump</value>
+  </data>
+  <data name="OPENGUILDGUMP_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>OpenGuildGump()</value>
+  </data>
+  <data name="OPENQUESTSGUMP_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>OpenQuestsGump()</value>
+  </data>
+  <data name="GETENEMY_COMMAND_EXAMPLE" xml:space="preserve">
+    <value>#get murderer
+GetEnemy(['Murderer'])
+#get closest murderer, any body type
+GetEnemy(['Murderer'], 'Any', 'Closest')
+#get next any notoriety, humanoid or transformation - unmounted
+GetEnemy(['Any'], 'Both', 'Next', 'Unmounted')</value>
+  </data>
+  <data name="TARGETXYZ_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Targets the ground at the given coordinates.</value>
+  </data>
+  <data name="TARGETXYZ_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>TargetXYZ(1000, 1000, 0)</value>
+  </data>
+  <data name="REHUE_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Rehue an item/mobile the specified hue value, set to 0 to remove. (Experimental)</value>
+  </data>
+  <data name="REHUE_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>Rehue("mount", 1176)</value>
+  </data>
+  <data name="STOPALL_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Stops all running macros including background macros.</value>
+  </data>
+  <data name="STOPALL_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>StopAll()</value>
+  </data>
+  <data name="SETSTATUS_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Sets the lock state of the given stat, up, down or locked.</value>
+  </data>
+  <data name="SETSTATUS_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>SetStatus('str', 'locked')</value>
+  </data>
+  <data name="TARGETTILEOFFSET_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Targets the tile at the given offsets relative to the player</value>
+  </data>
+  <data name="TARGETTILEOFFSET_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>TargetTileOffset(0, 1, 0)</value>
+  </data>
+  <data name="TARGETTILEOFFSET_COMMAND_EXAMPLE" xml:space="preserve">
+    <value>#Targets the tile at the current Y coordinate + 1
+TargetTileOffset(0, 1, 0)</value>
+  </data>
+  <data name="BUFFTIME_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Returns milliseconds remaining for given buff name, or 0 if expired/not enabled.</value>
+  </data>
+  <data name="BUFFTIME_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>if BuffTime('Enemy Of One') &lt; 5000:</value>
+  </data>
+  <data name="BUFFTIME_COMMAND_EXAMPLE" xml:space="preserve">
+    <value>if not BuffExists('Enemy Of One') or BuffTime('Enemy Of One') &lt; 5000:
+    Cast('Enemy Of One')
+</value>
+  </data>
+  <data name="TARGETBYRESOURCE_COMMAND_DESCRIPTION" xml:space="preserve">
+    <value>Uses tool and targets specified resource type (Requires server support (OSI / ServUO))</value>
+  </data>
+  <data name="TARGETBYRESOURCE_COMMAND_INSERTTEXT" xml:space="preserve">
+    <value>TargetByResource('pickaxe', 'Ore')</value>
   </data>
 </root>

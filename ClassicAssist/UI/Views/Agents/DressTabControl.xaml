@@ -10,6 +10,8 @@
     xmlns:valueConverters="clr-namespace:ClassicAssist.UI.Misc.ValueConverters"
     xmlns:misc="clr-namespace:ClassicAssist.Misc"
     xmlns:dress="clr-namespace:ClassicAssist.Data.Dress"
+    xmlns:misc1="clr-namespace:ClassicAssist.UI.Misc"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     x:Class="ClassicAssist.UI.Views.Agents.DressTabControl"
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="500" Margin="0">
@@ -38,6 +40,7 @@
         <Grid Margin="5" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -46,8 +49,20 @@
             </Grid.Resources>
             <CheckBox Content="{x:Static resources:Strings.Move_conflicting_items}"
                       IsChecked="{Binding MoveConflictingItems}" Grid.Row="0" />
-            <ListBox x:Name="listBox1" Grid.Row="1" Margin="0,5" ItemsSource="{Binding Items}"
+            <CheckBox Content="{x:Static resources:Strings.Use_UO3D_Packets}"
+                      IsChecked="{Binding UseUO3DPackets}" Grid.Row="1"
+                      ToolTip="{x:Static resources:Strings.Requires_Server_Support}" />
+            <ListBox x:Name="listBox1" Grid.Row="2" Margin="0,5" ItemsSource="{Binding Items}"
                      SelectedItem="{Binding SelectedItem}" SelectedIndex="0">
+                <ListBox.InputBindings>
+                    <KeyBinding Key="Delete"
+                                Command="{Binding RemoveDressEntryCommand}" CommandParameter="{Binding SelectedItem}" />
+                </ListBox.InputBindings>
+
+                <i:Interaction.Behaviors>
+                    <misc1:ItemsControlSelectNewEntryBehaviour SelectedItem="{Binding SelectedItem}"
+                                                               Type="{x:Type dress:DressAgentEntry}" />
+                </i:Interaction.Behaviors>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <controls1:EditTextBlock Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
@@ -55,7 +70,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10" />

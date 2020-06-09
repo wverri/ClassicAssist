@@ -1167,19 +1167,139 @@
   <data name="Show Profile Name In Title" xml:space="preserve">
     <value>在标题中显示配置文件名称</value>
   </data>
-  <data name="Python" xml:space="preserve">
-    <value>Python</value>
+  <data name="Use UO3D Packets" xml:space="preserve">
+    <value>使用 UO3D 数据包</value>
   </data>
-  <data name="Steam" xml:space="preserve">
-    <value>Steam</value>
+  <data name="Define Custom Properties" xml:space="preserve">
+    <value>定义自定义属性</value>
   </data>
-  <data name="Command &quot;{0}&quot; currently not implemented." xml:space="preserve">
-    <value>命令"{0}"当前未实现。</value>
+  <data name="Cliloc" xml:space="preserve">
+    <value>Cliloc</value>
   </data>
-  <data name="Min: {0}, Max: {1}, Average: {2}" xml:space="preserve">
-    <value>最小： {0}， 最大： {1}， 平均： {2}</value>
+  <data name="Arguments" xml:space="preserve">
+    <value>参数</value>
   </data>
-  <data name="Usage: {0}" xml:space="preserve">
-    <value>用法：{0}</value>
+  <data name="Choose by Cliloc" xml:space="preserve">
+    <value>由克利洛克选择</value>
+  </data>
+  <data name="Choose from Item" xml:space="preserve">
+    <value>从项目中进行选择</value>
+  </data>
+  <data name="Toggle mounted" xml:space="preserve">
+    <value>安装的切换</value>
+  </data>
+  <data name="Target Acquisition - Enemy" xml:space="preserve">
+    <value>目标获取 - 敌人</value>
+  </data>
+  <data name="Target Acquisition - Friend" xml:space="preserve">
+    <value>目标获取 - 朋友</value>
+  </data>
+  <data name="Get Next Friend" xml:space="preserve">
+    <value>获取下一个好友</value>
+  </data>
+  <data name="Get Next Any" xml:space="preserve">
+    <value>获取下一个任意</value>
+  </data>
+  <data name="Get Next Criminal" xml:space="preserve">
+    <value>获取下一个犯罪</value>
+  </data>
+  <data name="Get Next Enemy" xml:space="preserve">
+    <value>获取下一个敌人</value>
+  </data>
+  <data name="Get Next Gray / Criminal" xml:space="preserve">
+    <value>获取下一个灰色 / 犯罪</value>
+  </data>
+  <data name="Match Any ID" xml:space="preserve">
+    <value>匹配任何 ID</value>
+  </data>
+  <data name="Any" xml:space="preserve">
+    <value>任何</value>
+  </data>
+  <data name="Macro Commands Wiki (Launches in Browser)" xml:space="preserve">
+    <value>宏命令维基（在浏览器中启动）</value>
+  </data>
+  <data name="MACRO_WIKI_URL" xml:space="preserve">
+    <value>https://github.com/Reetus/ClassicAssist/wiki/Macro-Commands</value>
+  </data>
+  <data name="Really remove macro &quot;{0}&quot;?" xml:space="preserve">
+    <value>真的删除宏"{0}"？</value>
+  </data>
+  <data name="Donating helps support continued development, your support is appreciated." xml:space="preserve">
+    <value>捐赠有助于支持持续发展，您的支持是值得赞赏的。</value>
+  </data>
+  <data name="Max Target Queue Length:" xml:space="preserve">
+    <value>最大目标队列长度：</value>
+  </data>
+  <data name="Target queue is not enabled..." xml:space="preserve">
+    <value>未启用目标队列...</value>
+  </data>
+  <data name="Next Target: {0}" xml:space="preserve">
+    <value>下一个目标：{0}</value>
+  </data>
+  <data name="No Target" xml:space="preserve">
+    <value>无目标</value>
+  </data>
+  <data name="Show Next Target In Queue" xml:space="preserve">
+    <value>在队列中显示下一个目标</value>
+  </data>
+  <data name="Shard:" xml:space="preserve">
+    <value>碎片：</value>
+  </data>
+  <data name="Sort Macros Alphabetical" xml:space="preserve">
+    <value>按字母顺序对宏进行排序</value>
+  </data>
+  <data name="Equip Item" xml:space="preserve">
+    <value>装备项目</value>
+  </data>
+  <data name="Show Chat Window" xml:space="preserve">
+    <value>显示聊天窗口</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>聊天</value>
+  </data>
+  <data name="Target object '{0}'..." xml:space="preserve">
+    <value>目标对象"{0}"...</value>
+  </data>
+  <data name="Miscellaneous" xml:space="preserve">
+    <value>杂项</value>
+  </data>
+  <data name="Base" xml:space="preserve">
+    <value>基地</value>
+  </data>
+  <data name="Cap" xml:space="preserve">
+    <value>帽</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>地位</value>
+  </data>
+  <data name="Total base:" xml:space="preserve">
+    <value>总基数：</value>
+  </data>
+  <data name="Drop Holding Object" xml:space="preserve">
+    <value>放置保持对象</value>
+  </data>
+  <data name="Journal receives filtered messages" xml:space="preserve">
+    <value>日志接收筛选的消息</value>
+  </data>
+  <data name="Enabled Packets:" xml:space="preserve">
+    <value>已启用数据包：</value>
+  </data>
+  <data name="All Enabled" xml:space="preserve">
+    <value>全部已启用</value>
+  </data>
+  <data name="All Packets" xml:space="preserve">
+    <value>所有数据包</value>
+  </data>
+  <data name="Last Object" xml:space="preserve">
+    <value>最后一个对象</value>
+  </data>
+  <data name="Features:" xml:space="preserve">
+    <value>特征：</value>
+  </data>
+  <data name="Undisableable" xml:space="preserve">
+    <value>不可禁用</value>
+  </data>
+  <data name="Hotkey will still trigger with hotkeys disabled" xml:space="preserve">
+    <value>热键仍将触发，禁用热键</value>
   </data>
 </root>
