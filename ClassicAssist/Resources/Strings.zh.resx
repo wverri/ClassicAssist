@@ -1302,4 +1302,19 @@
   <data name="Hotkey will still trigger with hotkeys disabled" xml:space="preserve">
     <value>热键仍将触发，禁用热键</value>
   </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Usage: {0}" xml:space="preserve">
+    <value>用法: {0}</value>
+  </data>
+  <data name="Min: {0} Max: {1}: Average: {2}" xml:space="preserve">
+    <value>最小值： {0} 最大值： {1}： 平均值： {2}</value>
+  </data>
+  <data name="Command '{0}' currently not implemented." xml:space="preserve">
+    <value>命令"{0}"当前未实现。</value>
+  </data>
 </root>

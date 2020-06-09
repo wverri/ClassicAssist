@@ -682,11 +682,11 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Command &quot;{0}&quot; currently not implemented..
+        ///   Looks up a localized string similar to Command &apos;{0}&apos; currently not implemented..
         /// </summary>
         public static string Command___0___currently_not_implemented_ {
             get {
-                return ResourceManager.GetString("Command \"{0}\" currently not implemented.", resourceCulture);
+                return ResourceManager.GetString("Command \'{0}\' currently not implemented.", resourceCulture);
             }
         }
         
@@ -1879,11 +1879,11 @@ namespace ClassicAssist.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Min: {0}, Max: {1}, Average: {2}.
+        ///   Looks up a localized string similar to Min: {0} Max: {1}: Average: {2}.
         /// </summary>
-        public static string Min___0___Max___1___Average___2_ {
+        public static string Min___0__Max___1___Average___2_ {
             get {
-                return ResourceManager.GetString("Min: {0}, Max: {1}, Average: {2}", resourceCulture);
+                return ResourceManager.GetString("Min: {0} Max: {1}: Average: {2}", resourceCulture);
             }
         }
         

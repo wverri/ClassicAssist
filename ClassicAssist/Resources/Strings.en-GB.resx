@@ -1302,4 +1302,19 @@
   <data name="Hotkey will still trigger with hotkeys disabled" xml:space="preserve">
     <value>Hotkey will still trigger with hotkeys disabled</value>
   </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="Usage: {0}" xml:space="preserve">
+    <value>Usage: {0}</value>
+  </data>
+  <data name="Min: {0} Max: {1}: Average: {2}" xml:space="preserve">
+    <value>Min: {0} Max: {1}: Average: {2}</value>
+  </data>
+  <data name="Command '{0}' currently not implemented." xml:space="preserve">
+    <value>Command '{0}' currently not implemented.</value>
+  </data>
 </root>

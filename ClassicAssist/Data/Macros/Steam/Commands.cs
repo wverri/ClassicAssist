@@ -697,7 +697,7 @@ namespace ClassicAssist.Data.Macros.Steam
             long max = results.Max();
             double avg = results.Average();
 
-            UOC.SystemMessage( string.Format( Strings.Min___0___Max___1___Average___2_, min, max, avg ) );
+            UOC.SystemMessage( string.Format( Strings.Min___0__Max___1___Average___2_, min, max, avg ) );
 
             return true;
         }

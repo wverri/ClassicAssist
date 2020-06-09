@@ -21,11 +21,13 @@ namespace ClassicAssist.Data.Macros
         private bool _isRunning;
         private bool _loop;
         private string _macro = string.Empty;
-        private MacroInvoker _macroInvoker = new MacroInvoker();
+        private IMacroInvoker _macroInvoker;
         private string _name;
+        private MacroType _macroType;
 
-        public MacroEntry()
+        public MacroEntry(MacroType macroType)
         {
+            _macroType = macroType;
             _dispatcher = Dispatcher.CurrentDispatcher;
             _macroInvoker.ExceptionEvent += OnExceptionEvent;
             _macroInvoker.StoppedEvent += OnStoppedEvent;
@@ -41,6 +43,12 @@ namespace ClassicAssist.Data.Macros
         {
             get => _doNotAutoInterrupt;
             set => SetProperty( ref _doNotAutoInterrupt, value );
+        }
+
+        public MacroType MacroType
+        {
+            get => _macroType;
+            set => SetProperty(ref _macroType, value);
         }
 
         public bool IsAutostart
@@ -73,7 +81,7 @@ namespace ClassicAssist.Data.Macros
             set => SetProperty( ref _macro, value );
         }
 
-        public MacroInvoker MacroInvoker
+        public IMacroInvoker MacroInvoker
         {
             get => _macroInvoker;
             set => SetProperty( ref _macroInvoker, value );
