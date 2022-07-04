@@ -1,12 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 using System.Windows.Input;
+using Assistant;
 using ClassicAssist.Data.Hotkeys;
 
 namespace ClassicAssist.Misc
 {
     public static class SDLKeys
     {
+        /* Key modifiers (bitfield) available for hot keys */
+        [Flags]
+        public enum ModKey : ushort
+        {
+            None = SDL_Keymod.KMOD_NONE,
+            LeftShift = SDL_Keymod.KMOD_LSHIFT,
+            RightShift = SDL_Keymod.KMOD_RSHIFT,
+            LeftCtrl = SDL_Keymod.KMOD_LCTRL,
+            RightCtrl = SDL_Keymod.KMOD_RCTRL,
+            LeftAlt = SDL_Keymod.KMOD_LALT,
+            RightAlt = SDL_Keymod.KMOD_RALT
+        }
+
         public enum SDL_Keycode
         {
             SDLK_UNKNOWN = 0,
@@ -84,6 +100,9 @@ namespace ClassicAssist.Misc
             SDLK_x = 'x',
             SDLK_y = 'y',
             SDLK_z = 'z',
+            SDLK_æ = 'æ',
+            SDLK_ø = 'ø',
+            SDLK_å = 'å',
 
             SDLK_CAPSLOCK = SDL_Scancode.SDL_SCANCODE_CAPSLOCK | SDLK_SCANCODE_MASK,
 
@@ -609,6 +628,9 @@ namespace ClassicAssist.Misc
             { (int) SDL_Keycode.SDLK_x, Key.X },
             { (int) SDL_Keycode.SDLK_y, Key.Y },
             { (int) SDL_Keycode.SDLK_z, Key.Z },
+            //{ (int) SDL_Keycode.SDLK_æ, Key. },
+            //{ (int) SDL_Keycode.SDLK_ø, Key.Z },
+            //{ (int) SDL_Keycode.SDLK_å, Key.Z },
             { (int) SDL_Keycode.SDLK_0, Key.D0 },
             { (int) SDL_Keycode.SDLK_1, Key.D1 },
             { (int) SDL_Keycode.SDLK_2, Key.D2 },
@@ -676,7 +698,7 @@ namespace ClassicAssist.Misc
             { (int) SDL_Keycode.SDLK_RSHIFT, Key.RightShift },
             { (int) SDL_Keycode.SDLK_APPLICATION, Key.Apps },
             { (int) SDL_Keycode.SDLK_SLASH, Key.OemQuestion },
-            { (int) SDL_Keycode.SDLK_BACKSLASH, Key.OemBackslash },
+            { (int) SDL_Keycode.SDLK_BACKSLASH, Key.Oem5 },
             { (int) SDL_Keycode.SDLK_LEFTBRACKET, Key.OemOpenBrackets },
             { (int) SDL_Keycode.SDLK_RIGHTBRACKET, Key.OemCloseBrackets },
             { (int) SDL_Keycode.SDLK_CAPSLOCK, Key.CapsLock },
@@ -719,14 +741,144 @@ namespace ClassicAssist.Misc
             { (int) SDL_Keycode.SDLK_UNKNOWN, Key.None }
         };
 
-        public static Key SDLKeyToKeys( int sdlKey )
-        {
-            if ( INTERNAL_keyMap.TryGetValue( sdlKey, out Key keys ) )
+        private static readonly Dictionary<int, Dictionary<int, Key>> _localeKeyMap =
+            new Dictionary<int, Dictionary<int, Key>>
             {
-                return keys;
+                {
+                    1055, /* Turkish (Turkey) */
+                    new Dictionary<int, Key> { { 34, Key.Oem3 }, { 42, Key.Oem8 }, { 60, Key.OemBackslash } }
+                },
+                {
+                    2060, /* French (Belgium) */
+                    new Dictionary<int, Key>
+                    {
+                        { 36, Key.Oem1 },
+                        { 41, Key.OemOpenBrackets },
+                        { 58, Key.OemQuestion },
+                        { 59, Key.OemPeriod },
+                        { 60, Key.OemBackslash },
+                        { 94, Key.Oem6 },
+                        { 178, Key.OemQuotes },
+                        { 181, Key.Oem5 },
+                        { 249, Key.Oem3 }
+                    }
+                },
+                {
+                    3082, /* Spanish (Spain) */
+                    new Dictionary<int, Key>
+                    {
+                        { 39, Key.OemOpenBrackets },
+                        { 43, Key.DeadCharProcessed },
+                        { 45, Key.OemMinus },
+                        { 60, Key.OemBackslash },
+                        { 96, Key.Oem1 },
+                        { 161, Key.Oem6 },
+                        { 180, Key.OemQuotes },
+                        { 186, Key.Oem5 },
+                        { 231, Key.OemQuestion },
+                        { 241, Key.Oem3 }
+                    }
+                },
+                {
+                    1044, /* Norwegian - (Norway) "nb-NO" */
+                    new Dictionary<int, Key>
+                    {
+                        { 168, Key.Oem1 },
+                        { 248, Key.Oem3 },
+                        { 229, Key.Oem6 },
+                        { 92, Key.OemOpenBrackets },
+                        { 39, Key.OemQuestion },
+                        { 60, Key.OemBackslash }
+                    }
+                },
+                {
+                    1046, /* Brazilian - (BR) "ABNT2/ABNT"*/
+                    new Dictionary<int, Key>
+                    {
+                        { 39, Key.Oem3 },
+                        { 47, Key.AbntC1 },
+                        { 59, Key.OemQuestion },
+                        { 91, Key.Oem6 },
+                        { 92, Key.OemBackslash },
+                        { 93, Key.Oem5 },
+                        { 126, Key.OemQuotes },
+                        { 180, Key.OemOpenBrackets },
+                        { 231, Key.Oem1 }
+                    }
+                },
+                {
+                    1031, /* de-DE */
+                    new Dictionary<int, Key>
+                    {
+                        { 35, Key.OemQuestion },
+                        { 60, Key.OemBackslash },
+                        { 180, Key.Oem6 },
+                        { 223, Key.OemOpenBrackets },
+                        { 228, Key.OemQuotes },
+                        { 246, Key.Oem3 },
+                        { 252, Key.Oem1 }
+                    }
+                }
+            };
+
+        public static IEnumerable<Keys> ToKeysList( this ModKey flagsEnumValue )
+        {
+            Keys ToKey( ModKey keymod )
+            {
+                return Keys.None;
             }
 
-            return Key.None;
+            return Enum.GetValues( typeof( ModKey ) ).Cast<ModKey>().Where( e => flagsEnumValue.HasFlag( e ) )
+                .Select( ToKey );
+        }
+
+        public static ModKey KeymodFromKeyList( IEnumerable<Key> keys )
+        {
+            ModKey keymod = ModKey.None;
+
+            foreach ( Key key in keys )
+            {
+                switch ( key )
+                {
+                    case Key.LeftShift:
+                        keymod |= ModKey.LeftShift;
+                        break;
+                    case Key.RightShift:
+                        keymod |= ModKey.RightShift;
+                        break;
+                    case Key.LeftCtrl:
+                        keymod |= ModKey.LeftCtrl;
+                        break;
+                    case Key.RightCtrl:
+                        keymod |= ModKey.RightCtrl;
+                        break;
+                    case Key.LeftAlt:
+                        keymod |= ModKey.LeftAlt;
+                        break;
+                    case Key.RightAlt:
+                        keymod |= ModKey.RightAlt;
+                        break;
+                }
+            }
+
+            return keymod;
+        }
+
+        public static Key SDLKeyToKeys( int sdlKey )
+        {
+            if ( _localeKeyMap.ContainsKey( Engine.KeyboardLayoutId ) &&
+                 _localeKeyMap[Engine.KeyboardLayoutId].ContainsKey( sdlKey ) )
+            {
+                return _localeKeyMap[Engine.KeyboardLayoutId][sdlKey];
+            }
+
+            return INTERNAL_keyMap.TryGetValue( sdlKey, out Key keys ) ? keys : Key.None;
+        }
+
+        public static ModKey IntToModKey( int mod )
+        {
+            return (ModKey) ( mod & (int) ( ModKey.RightAlt | ModKey.RightCtrl | ModKey.RightShift | ModKey.LeftAlt |
+                                            ModKey.LeftCtrl | ModKey.LeftShift ) );
         }
 
         public static SDL_Keycode SDL_SCANCODE_TO_KEYCODE( SDL_Scancode X )

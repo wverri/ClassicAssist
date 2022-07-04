@@ -1,10 +1,10 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Assistant;
 using ClassicAssist.Data.BuffIcons;
 using ClassicAssist.Data.SpecialMoves;
-using ClassicAssist.Resources;
+using ClassicAssist.Shared.Resources;
 using ClassicAssist.UO;
-using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
 
@@ -20,13 +20,21 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
             Entity entity = Engine.Items.GetItem( serial ) ?? (Entity) Engine.Mobiles.GetMobile( serial );
 
             return entity?.Distance ?? int.MaxValue;
+        }
+
+        // ReSharper disable once ExplicitCallerInfoArgument
+        [CommandsDisplay( "DistanceCoordinates", Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.XCoordinate ), nameof( ParameterType.YCoordinate ) } )]
+        public static int Distance( int x, int y )
+        {
+            return Math.Max( Math.Abs( x - Engine.Player?.X ?? x ), Math.Abs( y - Engine.Player?.Y ?? y ) );
         }
 
         [CommandsDisplay( Category = nameof( Strings.Entity ),
@@ -37,7 +45,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return false;
             }
 
@@ -45,7 +53,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( entity != null )
             {
-                return entity.Distance < distance;
+                return entity.Distance <= distance;
             }
 
             return false;
@@ -59,7 +67,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -72,10 +80,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.Hue;
             }
 
-            if ( !MacroManager.QuietMode )
-            {
-                UOC.SystemMessage( Strings.Entity_not_found___ );
-            }
+            UOC.SystemMessage( Strings.Entity_not_found___, true );
 
             return 0;
         }
@@ -88,7 +93,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -101,10 +106,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.ID;
             }
 
-            if ( !MacroManager.QuietMode )
-            {
-                UOC.SystemMessage( Strings.Entity_not_found___ );
-            }
+            UOC.SystemMessage( Strings.Entity_not_found___, true );
 
             return 0;
         }
@@ -117,7 +119,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -130,10 +132,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.X;
             }
 
-            if ( !MacroManager.QuietMode )
-            {
-                UOC.SystemMessage( Strings.Entity_not_found___ );
-            }
+            UOC.SystemMessage( Strings.Entity_not_found___, true );
 
             return 0;
         }
@@ -146,7 +145,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -159,10 +158,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.Y;
             }
 
-            if ( !MacroManager.QuietMode )
-            {
-                UOC.SystemMessage( Strings.Entity_not_found___ );
-            }
+            UOC.SystemMessage( Strings.Entity_not_found___, true );
 
             return 0;
         }
@@ -175,7 +171,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -188,10 +184,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return entity.Z;
             }
 
-            if ( !MacroManager.QuietMode )
-            {
-                UOC.SystemMessage( Strings.Entity_not_found___ );
-            }
+            UOC.SystemMessage( Strings.Entity_not_found___, true );
 
             return 0;
         }
@@ -225,7 +218,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                return Direction.Invalid.ToString();
+                return UO.Data.Direction.Invalid.ToString();
             }
 
             Entity entity = UOMath.IsMobile( serial )
@@ -234,10 +227,29 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( entity == null )
             {
-                return Direction.Invalid.ToString();
+                return UO.Data.Direction.Invalid.ToString();
             }
 
             return UOMath.MapDirection( Engine.Player.X, Engine.Player.Y, entity.X, entity.Y ).ToString();
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
+        public static string Direction( object obj = null )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            Entity entity = UOMath.IsMobile( serial )
+                ? Engine.Mobiles.GetMobile( serial )
+                : Engine.Items.GetItem( serial ) as Entity;
+
+            if ( serial == 0 || entity == null )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
+                return UO.Data.Direction.Invalid.ToString();
+            }
+
+            return entity.Direction.ToString();
         }
 
         [CommandsDisplay( Category = nameof( Strings.Entity ),
@@ -253,7 +265,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial <= 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return default;
             }
 

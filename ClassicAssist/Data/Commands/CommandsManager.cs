@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Assistant;
+using ClassicAssist.Data.Hotkeys.Commands;
+using ClassicAssist.Data.Macros;
 using ClassicAssist.Data.Macros.Commands;
-using ClassicAssist.Resources;
+using ClassicAssist.Shared.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
@@ -139,6 +142,35 @@ namespace ClassicAssist.Data.Commands
             else if ( data[0] == 0x03 )
             {
                 text = ParseAsciiSpeech( data, data.Length );
+            }
+
+            if ( text != null && text.Length >= 7 && text.Substring( 0, 7 ).Equals( ">macro " ) )
+            {
+                string macroName = text.Substring( 7, text.Length - 7 );
+
+                Type type = Assembly.GetExecutingAssembly().GetType( macroName );
+
+                if ( type != null && type.IsSubclassOf( typeof( HotkeyCommand ) ) )
+                {
+                    HotkeyCommand hotkeyCommand = (HotkeyCommand) Activator.CreateInstance( type );
+
+                    Task.Run( () => hotkeyCommand?.Execute() );
+
+                    return true;
+                }
+
+                MacroEntry macro = MacroManager.GetInstance().Items.FirstOrDefault( m => m.Name == macroName );
+
+                if ( macro == null )
+                {
+                    UOC.SystemMessage( Strings.Macro_not_found___, 35 );
+                }
+                else
+                {
+                    MacroManager.GetInstance().Execute( macro );
+                }
+
+                return true;
             }
 
             if ( string.IsNullOrEmpty( text ) || text[0] != Options.CurrentOptions.CommandPrefix )

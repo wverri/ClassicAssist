@@ -2,7 +2,7 @@
 using System.Reflection;
 using Assistant;
 using ClassicAssist.Data.Friends;
-using ClassicAssist.Resources;
+using ClassicAssist.Shared.Resources;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
@@ -34,7 +34,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return result;
             }
 
-            UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+            UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
             return false;
         }
 
@@ -48,7 +48,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -56,7 +56,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( m == null )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -88,7 +88,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return;
             }
 
@@ -130,7 +130,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial <= 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return false;
             }
 
@@ -141,7 +141,8 @@ namespace ClassicAssist.Data.Macros.Commands
                 return mobile.Status.HasFlag( MobileStatus.Hidden );
             }
 
-            UOC.SystemMessage( Strings.Mobile_not_found___ );
+            UOC.SystemMessage( Strings.Mobile_not_found___, true );
+
             return false;
         }
 
@@ -151,7 +152,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial <= 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return default;
             }
 
@@ -159,7 +160,8 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( mobile == null )
             {
-                UOC.SystemMessage( Strings.Mobile_not_found___ );
+                UOC.SystemMessage( Strings.Mobile_not_found___, true );
+
                 return default;
             }
 
@@ -229,7 +231,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial <= 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -240,7 +242,32 @@ namespace ClassicAssist.Data.Macros.Commands
                 return mobile.HitsMax - mobile.Hits;
             }
 
-            UOC.SystemMessage( Strings.Mobile_not_found___ );
+            UOC.SystemMessage( Strings.Mobile_not_found___, true );
+
+            return 0;
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Entity ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
+        public static double DiffHitsPercent( object obj = null )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial <= 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
+                return 0;
+            }
+
+            Mobile mobile = Engine.Mobiles.GetMobile( serial );
+
+            if ( mobile != null )
+            {
+                return 100 - (double) mobile.Hits / mobile.HitsMax * 100;
+            }
+
+            UOC.SystemMessage( Strings.Mobile_not_found___, true );
+
             return 0;
         }
 
@@ -269,7 +296,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return Engine.Mobiles.GetMobile( serial )?.Status.HasFlag( MobileStatus.WarMode ) ?? false;
             }
 
-            UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+            UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
             return false;
         }
 
@@ -328,6 +355,18 @@ namespace ClassicAssist.Data.Macros.Commands
             return Engine.Player?.TithingPoints ?? 0;
         }
 
+        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        public static double FasterCastRecovery()
+        {
+            return Engine.Player?.FasterCastRecovery ?? 0;
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Entity ) )]
+        public static double FasterCasting()
+        {
+            return Engine.Player?.FasterCasting ?? 0;
+        }
+
         [CommandsDisplay( Category = nameof( Strings.Entity ),
             Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
         public static bool Poisoned( object obj )
@@ -357,7 +396,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return false;
             }
 
@@ -368,7 +407,8 @@ namespace ClassicAssist.Data.Macros.Commands
                 return mobile.IsMounted;
             }
 
-            UOC.SystemMessage( Strings.Mobile_not_found___ );
+            UOC.SystemMessage( Strings.Mobile_not_found___, true );
+
             return false;
         }
 
@@ -383,7 +423,7 @@ namespace ClassicAssist.Data.Macros.Commands
                 return Engine.Player?.Party != null && Engine.Player.Party.Contains( serial );
             }
 
-            UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+            UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
             return false;
         }
     }

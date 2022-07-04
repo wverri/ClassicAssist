@@ -6,7 +6,7 @@ using System.Threading;
 using Assistant;
 using ClassicAssist.Data.Regions;
 using ClassicAssist.Misc;
-using ClassicAssist.Resources;
+using ClassicAssist.Shared.Resources;
 using ClassicAssist.UO;
 using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network;
@@ -29,7 +29,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return false;
             }
 
@@ -44,7 +44,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return 0;
             }
 
@@ -88,7 +88,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             UseOnceList.Add( match );
 
-            ObjectCommands.UseObject( match.Serial );
+            ObjectCommands.UseObject( match.Serial, true );
 
             return true;
         }
@@ -108,7 +108,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return;
             }
 
@@ -171,7 +171,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return;
             }
 
@@ -190,7 +190,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( player.IsMounted )
             {
-                ObjectCommands.UseObject( player.Serial );
+                ObjectCommands.UseObject( player.Serial, true );
                 return;
             }
 
@@ -209,7 +209,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             int mountSerial = AliasCommands.GetAlias( "mount" );
 
-            ObjectCommands.UseObject( mountSerial );
+            ObjectCommands.UseObject( mountSerial, true );
         }
 
         [CommandsDisplay( Category = nameof( Strings.Actions ),
@@ -224,7 +224,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return;
             }
 
@@ -254,7 +254,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return;
             }
 
@@ -346,7 +346,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return;
             }
 
@@ -368,6 +368,11 @@ namespace ClassicAssist.Data.Macros.Commands
             if ( layerValue == Layer.Invalid )
             {
                 UOC.SystemMessage( Strings.Invalid_layer_value___ );
+                return;
+            }
+
+            if ( Engine.Player.GetLayer( layerValue ) == serial )
+            {
                 return;
             }
 
@@ -396,7 +401,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return false;
             }
 
@@ -439,12 +444,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             AliasCommands.SetMacroAlias( "found", layerSerial );
 
-            if ( MacroManager.QuietMode )
-            {
-                return true;
-            }
-
-            UOC.SystemMessage( string.Format( Strings.Object___0___updated___, "found" ) );
+            UOC.SystemMessage( string.Format( Strings.Object___0___updated___, "found" ), true );
 
             return true;
         }
@@ -490,7 +490,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return;
             }
 
@@ -511,7 +511,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return false;
             }
 
@@ -544,10 +544,168 @@ namespace ClassicAssist.Data.Macros.Commands
             }
         }
 
+        [CommandsDisplay( Category = nameof( Strings.Actions ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.SerialOrAlias ), nameof( ParameterType.String ),
+                nameof( ParameterType.Timeout )
+            } )]
+        public static bool WaitForContext( object obj, string entryName, int timeout )
+        {
+            int serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial == 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
+                return false;
+            }
+
+            bool result = false;
+
+            AutoResetEvent are = new AutoResetEvent( false );
+
+            PacketFilterInfo pfi = new PacketFilterInfo( 0xBF,
+                new[]
+                {
+                    PacketFilterConditions.ShortAtPositionCondition( 0x14, 3 ),
+                    PacketFilterConditions.IntAtPositionCondition( serial, 7 )
+                }, ( bytes, info ) =>
+                {
+                    IEnumerable<ContextMenuEntry> entries = ParseContextMenuEntries( bytes );
+
+                    ContextMenuEntry entry =
+                        entries.FirstOrDefault( e => e.Text.Trim().ToLower().Equals( entryName.Trim().ToLower() ) );
+
+                    if ( entry == null )
+                    {
+                        UOC.SystemMessage( Strings.Context_menu_entry_not_found___, (int) SystemMessageHues.Yellow,
+                            true, true );
+                        are.Set();
+                        return;
+                    }
+
+                    if ( entry.Flags.HasFlag( ContextMenuFlags.Disabled ) )
+                    {
+                        UOC.SystemMessage( Strings.Context_menu_entry_disabled, (int) SystemMessageHues.Yellow,
+                            true, true );
+                        are.Set();
+                        return;
+                    }
+
+                    Engine.SendPacketToServer( new ContextMenuClick( serial, entry.Index ) );
+                    result = true;
+                    are.Set();
+                } );
+
+            Engine.AddReceiveFilter( pfi );
+
+            Engine.SendPacketToServer( new ContextMenuRequest( serial ) );
+
+            try
+            {
+                are.WaitOne( timeout );
+
+                return result;
+            }
+            finally
+            {
+                Engine.RemoveReceiveFilter( pfi );
+            }
+        }
+
+        private static IEnumerable<ContextMenuEntry> ParseContextMenuEntries( byte[] packet )
+        {
+            PacketReader reader = new PacketReader( packet, packet.Length, false );
+
+            reader.ReadInt16();
+            int type = reader.ReadInt16();
+            int serial = reader.ReadInt32();
+            int len = reader.ReadByte();
+
+            int entry, cliloc, flags, hue;
+
+            List<ContextMenuEntry> entries = new List<ContextMenuEntry>();
+
+            switch ( type )
+            {
+                case 1: // Old Type
+                    for ( int x = 0; x < len; x++ )
+                    {
+                        entry = reader.ReadInt16();
+                        cliloc = reader.ReadInt16() + 3000000;
+                        flags = reader.ReadInt16();
+                        hue = 0;
+
+                        if ( ( flags & 0x20 ) == 0x20 )
+                        {
+                            hue = reader.ReadInt16();
+                        }
+
+                        string text = Cliloc.GetProperty( cliloc );
+                        entries.Add( new ContextMenuEntry
+                        {
+                            Index = entry,
+                            Cliloc = cliloc,
+                            Flags = (ContextMenuFlags) flags,
+                            Hue = hue,
+                            Text = text
+                        } );
+                    }
+
+                    break;
+                case 2: // KR -> SA3D -> 2D post 7.0.0.0
+                    for ( int x = 0; x < len; x++ )
+                    {
+                        cliloc = reader.ReadInt32();
+                        entry = reader.ReadInt16();
+                        flags = reader.ReadInt16();
+                        hue = 0;
+
+                        if ( ( flags & 0x20 ) == 0x20 )
+                        {
+                            hue = reader.ReadInt16();
+                        }
+
+                        string text = Cliloc.GetProperty( cliloc );
+
+                        entries.Add( new ContextMenuEntry
+                        {
+                            Index = entry,
+                            Cliloc = cliloc,
+                            Flags = (ContextMenuFlags) flags,
+                            Hue = hue,
+                            Text = text
+                        } );
+                    }
+
+                    break;
+            }
+
+            return entries;
+        }
+
         private enum ShowNamesType
         {
             Mobiles,
             Corpses
+        }
+
+        internal class ContextMenuEntry
+        {
+            public int Cliloc { get; set; }
+            public ContextMenuFlags Flags { get; set; }
+            public int Hue { get; set; }
+            public int Index { get; set; }
+            public string Text { get; set; }
+        }
+
+        [Flags]
+        internal enum ContextMenuFlags
+        {
+            Enabled = 0x00,
+            Disabled = 0x01,
+            Highlighted = 0x04,
+            Coloured = 0x20
         }
     }
 }

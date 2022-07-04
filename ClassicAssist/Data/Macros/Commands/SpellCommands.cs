@@ -1,6 +1,10 @@
 ﻿using System.Diagnostics;
+using Assistant;
 using ClassicAssist.Data.Spells;
-using ClassicAssist.Resources;
+using ClassicAssist.Misc;
+using ClassicAssist.Shared.Resources;
+using ClassicAssist.UO.Data;
+using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
 
 namespace ClassicAssist.Data.Macros.Commands
@@ -24,7 +28,7 @@ namespace ClassicAssist.Data.Macros.Commands
 
             if ( serial == 0 )
             {
-                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id );
+                UOC.SystemMessage( Strings.Invalid_or_unknown_object_id, true );
                 return false;
             }
 
@@ -79,6 +83,47 @@ namespace ClassicAssist.Data.Macros.Commands
             TargetCommands.Target( serial );
 
             return true;
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Spells ) )]
+        public static void InterruptSpell()
+        {
+            PlayerMobile player = Engine.Player;
+
+            if ( player == null )
+            {
+                return;
+            }
+
+            Layer[] layerPriority =
+            {
+                Layer.Shirt, Layer.Shoes, Layer.Pants, Layer.Helm, Layer.Gloves, Layer.Ring, Layer.Neck,
+                Layer.Waist, Layer.InnerTorso, Layer.Bracelet, Layer.MiddleTorso, Layer.Earrings, Layer.Arms,
+                Layer.Cloak, Layer.OuterTorso, Layer.OuterLegs, Layer.InnerLegs, Layer.TwoHanded, Layer.OneHanded
+            };
+
+            Layer selectedLayer = Layer.Invalid;
+            int serial = 0;
+
+            foreach ( Layer layer in layerPriority )
+            {
+                serial = player.GetLayer( layer );
+
+                if ( serial == 0 )
+                {
+                    continue;
+                }
+
+                selectedLayer = layer;
+                break;
+            }
+
+            if ( selectedLayer == Layer.Invalid )
+            {
+                return;
+            }
+
+            UOC.EquipItem( serial, selectedLayer, QueuePriority.High );
         }
     }
 }

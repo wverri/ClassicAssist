@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Assistant;
 using ClassicAssist.Data.Abilities;
@@ -20,6 +21,8 @@ namespace ClassicAssist.UO.Network
 
         public delegate void dMenuClick( int serial, int gumpId, int index, int id, int hue );
 
+        public delegate void dShardChanged( string name );
+
         public delegate void dTargetSentEvent( TargetType targetType, int senderSerial, int flags, int serial, int x,
             int y, int z, int id );
 
@@ -27,6 +30,7 @@ namespace ClassicAssist.UO.Network
         private static PacketHandler[] _extendedHandlers;
         public static event dTargetSentEvent TargetSentEvent;
         public static event dGump GumpEvent;
+        public static event dShardChanged ShardChangedEvent;
 
         public static event dMenuClick MenuClickedEvent;
 
@@ -39,8 +43,10 @@ namespace ClassicAssist.UO.Network
             Register( 0x06, 5, OnUseRequest );
             Register( 0x07, 7, OnLiftRequest );
             Register( 0x08, 15, OnDropRequest );
+            Register( 0x12, 0, OnUseSkill );
             Register( 0x13, 10, OnEquipRequest );
             Register( 0x6C, 19, OnTargetSent );
+            Register( 0x6F, 0, OnSecureTrade );
             Register( 0x7D, 13, OnMenuResponse );
             Register( 0xA0, 3, OnPlayServer );
             Register( 0xB1, 0, OnGumpButtonPressed );
@@ -49,6 +55,46 @@ namespace ClassicAssist.UO.Network
             Register( 0xD7, 0, OnEncodedCommand );
             Register( 0xEF, 31, OnNewClientVersion );
             RegisterExtended( 0x1C, 0, OnSpellCast );
+        }
+
+        private static void OnSecureTrade( PacketReader reader )
+        {
+            byte action = reader.ReadByte();
+            int serial = reader.ReadInt32();
+            int value1 = reader.ReadInt32();
+            int value2 = reader.ReadInt32();
+
+            TradeAction tradeAction = (TradeAction) action;
+
+            if ( tradeAction != TradeAction.Gold )
+            {
+                return;
+            }
+
+            Engine.Trade.GoldLocal = value1;
+            Engine.Trade.PlatinumLocal = value2;
+        }
+
+        private static void OnUseSkill( PacketReader reader )
+        {
+            int command = reader.ReadByte();
+
+            if ( command != 0x24 )
+            {
+                return;
+            }
+
+            Span<byte> span = new Span<byte>( reader.GetData(), (int) reader.Index,
+                (int) ( reader.Size - reader.Index ) );
+
+            string skill = Encoding.ASCII.GetString( span.ToArray() );
+
+            if ( !int.TryParse( skill.Substring( 0, skill.IndexOf( ' ' ) ), out int id ) )
+            {
+                return;
+            }
+
+            Engine.LastSkillID = id;
         }
 
         private static void OnSpellCast( PacketReader reader )
@@ -89,6 +135,7 @@ namespace ClassicAssist.UO.Network
             int index = reader.ReadInt16();
 
             Engine.CurrentShard = Engine.Shards.FirstOrDefault( i => i.Index == index );
+            ShardChangedEvent?.Invoke( Engine.CurrentShard?.Name );
         }
 
         private static void OnClientVersion( PacketReader reader )
@@ -180,13 +227,14 @@ namespace ClassicAssist.UO.Network
             }
 
             int textEntryCount = reader.ReadInt32();
-            Dictionary<int, string> textEntries = new Dictionary<int, string>();
+            List<(int Key, string Value)> textEntries = new List<(int Key, string Value)>();
 
             for ( int i = 0; i < textEntryCount; i++ )
             {
                 int id = reader.ReadInt16();
                 int length = reader.ReadInt16();
-                textEntries.Add( id, reader.ReadUnicodeStringBE( length ) );
+
+                textEntries.Add( ( id, reader.ReadUnicodeStringBE( length ) ) );
             }
 
             Engine.GumpList.TryRemove( gumpId, out _ );

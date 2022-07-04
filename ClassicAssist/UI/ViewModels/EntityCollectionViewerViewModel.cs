@@ -9,9 +9,11 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Assistant;
 using ClassicAssist.Data.Autoloot;
+using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Data.Misc;
 using ClassicAssist.Misc;
-using ClassicAssist.Resources;
+using ClassicAssist.Shared.Resources;
+using ClassicAssist.Shared.UI;
 using ClassicAssist.UI.Models;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO;
@@ -33,6 +35,7 @@ namespace ClassicAssist.UI.ViewModels
         private ICommand _contextContextMenuRequestCommand;
         private ICommand _contextMoveToBackpackCommand;
         private ICommand _contextMoveToContainerCommand;
+        private ICommand _contextTargetCommand;
         private ICommand _contextUseItemCommand;
         private ObservableCollection<EntityCollectionData> _entities;
         private ICommand _equipItemCommand;
@@ -51,6 +54,7 @@ namespace ClassicAssist.UI.ViewModels
 
         private IComparer<Entity> _sorter = new IDThenSerialComparer();
         private string _statusLabel;
+        private ICommand _targetContainerCommand;
         private ICommand _toggleAlwaysOnTopCommand;
         private ICommand _toggleChildItemsCommand;
         private ICommand _togglePropertiesCommand;
@@ -91,6 +95,8 @@ namespace ClassicAssist.UI.ViewModels
             };
 
             UpdateStatusLabel();
+
+            _collection.CollectionChanged += OnCollectionChanged;
         }
 
         public ICommand ApplyFiltersCommand =>
@@ -114,6 +120,10 @@ namespace ClassicAssist.UI.ViewModels
         public ICommand ContextMoveToContainerCommand =>
             _contextMoveToContainerCommand ?? ( _contextMoveToContainerCommand =
                 new RelayCommandAsync( ContextMoveToContainer, o => SelectedItems != null && !IsPerformingAction ) );
+
+        public ICommand ContextTargetCommand =>
+            _contextTargetCommand ?? ( _contextTargetCommand = new RelayCommand( ContextTarget,
+                o => Engine.TargetExists ) );
 
         public ICommand ContextUseItemCommand =>
             _contextUseItemCommand ?? ( _contextUseItemCommand =
@@ -154,7 +164,7 @@ namespace ClassicAssist.UI.ViewModels
         }
 
         public ICommand RefreshCommand =>
-            _refreshCommand ?? ( _refreshCommand = new RelayCommand( Refresh, o => _collection?.Serial != 0 ) );
+            _refreshCommand ?? ( _refreshCommand = new RelayCommand( Refresh, o => !IsPerformingAction ) );
 
         public ObservableCollection<EntityCollectionData> SelectedItems
         {
@@ -168,13 +178,15 @@ namespace ClassicAssist.UI.ViewModels
             set => SetProperty( ref _showProperties, value );
         }
 
-        public static Lazy<int[]> ShrinkEntries { get; set; } = new Lazy<int[]>( LoadShrinkTable );
-
         public string StatusLabel
         {
             get => _statusLabel;
             set => SetProperty( ref _statusLabel, value );
         }
+
+        public ICommand TargetContainerCommand =>
+            _targetContainerCommand ?? ( _targetContainerCommand =
+                new RelayCommand( TargetContainer, o => _collection.Serial > 0 ) );
 
         public ICommand ToggleAlwaysOnTopCommand =>
             _toggleAlwaysOnTopCommand ??
@@ -192,6 +204,52 @@ namespace ClassicAssist.UI.ViewModels
             set => SetProperty( ref _topmost, value );
         }
 
+        private void TargetContainer( object obj )
+        {
+            TargetCommands.Target( _collection.Serial );
+        }
+
+        private void OnCollectionChanged( int totalcount, bool added, Item[] entities )
+        {
+            if ( added )
+            {
+                _dispatcher.Invoke( () =>
+                {
+                    foreach ( Item entity in entities.Where( e => !Entities.Any( f => f.Entity.Equals( e ) ) ).ToList()
+                        .Where( entity => Options.ShowChildItems || entity.Owner == _collection.Serial ) )
+                    {
+                        Entities.Add( entity.ToEntityCollectionData() );
+                    }
+                } );
+            }
+            else
+            {
+                _dispatcher.Invoke( () =>
+                {
+                    foreach ( EntityCollectionData ecd in entities.ToList()
+                        .Select( item => Entities.FirstOrDefault( e => e.Entity.Equals( item ) ) )
+                        .Where( ecd => ecd != null ) )
+                    {
+                        Entities.Remove( ecd );
+                    }
+                } );
+            }
+
+            UpdateStatusLabel();
+        }
+
+        private void ContextTarget( object obj )
+        {
+            Entity item = SelectedItems.FirstOrDefault()?.Entity;
+
+            if ( item == null )
+            {
+                return;
+            }
+
+            TargetCommands.Target( item.Serial );
+        }
+
         private void HideItem( object obj )
         {
             foreach ( Entity entity in SelectedItems.Select( e => e.Entity ) )
@@ -203,6 +261,7 @@ namespace ClassicAssist.UI.ViewModels
         ~EntityCollectionViewerViewModel()
         {
             Data.Options.CurrentOptions.EntityCollectionViewerOptions = Options;
+            _collection.CollectionChanged -= OnCollectionChanged;
         }
 
         private void ToggleAlwaysOnTop( object obj )
@@ -384,42 +443,62 @@ namespace ClassicAssist.UI.ViewModels
 
         private void Refresh( object obj )
         {
-            ItemCollection collection = new ItemCollection( _collection.Serial );
-
-            Entity entity = Engine.Items.GetItem( _collection.Serial ) ??
-                            (Entity) Engine.Mobiles.GetMobile( _collection.Serial );
-
-            if ( entity == null )
+            try
             {
-                Commands.SystemMessage( Strings.Cannot_find_item___ );
-                return;
-            }
+                IsPerformingAction = true;
 
-            switch ( entity )
+                ItemCollection collection = new ItemCollection( _collection.Serial );
+
+                if ( collection.Serial == 0 )
+                {
+                    Item[] e = ItemCollection.GetAllItems( Engine.Items.GetItems() );
+                    _collection.Clear();
+                    _collection.Add( e );
+                    Entities = new ObservableCollection<EntityCollectionData>(
+                        _collection.ToEntityCollectionData( _sorter ) );
+                    return;
+                }
+
+                Entity entity = Engine.Items.GetItem( _collection.Serial ) ??
+                                (Entity) Engine.Mobiles.GetMobile( _collection.Serial );
+
+                if ( entity == null )
+                {
+                    Commands.SystemMessage( Strings.Cannot_find_item___ );
+                    return;
+                }
+
+                switch ( entity )
+                {
+                    case Item item:
+                        if ( item.Container == null )
+                        {
+                            Commands.WaitForContainerContentsUse( item.Serial, 1000 );
+                        }
+
+                        collection = item.Container;
+                        break;
+                    case Mobile mobile:
+                        collection = new ItemCollection( entity.Serial ) { mobile.GetEquippedItems() };
+                        break;
+                }
+
+                if ( collection == null )
+                {
+                    return;
+                }
+
+                _collection = !Options.ShowChildItems
+                    ? collection
+                    : new ItemCollection( collection.Serial ) { ItemCollection.GetAllItems( collection.GetItems() ) };
+
+                Entities = new ObservableCollection<EntityCollectionData>(
+                    _collection.ToEntityCollectionData( _sorter ) );
+            }
+            finally
             {
-                case Item item:
-                    if ( item.Container == null )
-                    {
-                        Commands.WaitForContainerContentsUse( item.Serial, 1000 );
-                    }
-
-                    collection = item.Container;
-                    break;
-                case Mobile mobile:
-                    collection = new ItemCollection( entity.Serial ) { mobile.GetEquippedItems() };
-                    break;
+                IsPerformingAction = false;
             }
-
-            if ( collection == null )
-            {
-                return;
-            }
-
-            _collection = !Options.ShowChildItems
-                ? collection
-                : new ItemCollection( collection.Serial ) { ItemCollection.GetAllItems( collection.GetItems() ) };
-
-            Entities = new ObservableCollection<EntityCollectionData>( _collection.ToEntityCollectionData( _sorter ) );
         }
 
         private async Task ContextUseItem( object arg )
@@ -439,6 +518,8 @@ namespace ClassicAssist.UI.ViewModels
 
         private async Task ContextMoveToContainer( object arg )
         {
+            int[] items = SelectedItems.Select( i => i.Entity.Serial ).ToArray();
+
             _cancellationToken = new CancellationTokenSource();
 
             int serial = 0;
@@ -462,8 +543,6 @@ namespace ClassicAssist.UI.ViewModels
             try
             {
                 IsPerformingAction = true;
-
-                int[] items = SelectedItems.Select( i => i.Entity.Serial ).ToArray();
 
                 foreach ( int item in items )
                 {
@@ -525,14 +604,14 @@ namespace ClassicAssist.UI.ViewModels
                     DataContext = new EntityCollectionViewerViewModel( item.Container )
                 };
 
-                window.ShowDialog();
+                window.Show();
             }
             else
             {
                 ObjectInspectorWindow window =
                     new ObjectInspectorWindow { DataContext = new ObjectInspectorViewModel( ecd.Entity ) };
 
-                window.ShowDialog();
+                window.Show();
             }
         }
 
@@ -571,11 +650,16 @@ namespace ClassicAssist.UI.ViewModels
                     return result;
                 }
 
-                int id = (int) EntityCollectionViewerViewModel.MountIDEntries.Value?[Entity.ID];
+                if ( EntityCollectionViewerViewModel.MountIDEntries.Value.ContainsKey( Entity.ID ) )
+                {
+                    int id = EntityCollectionViewerViewModel.MountIDEntries.Value[Entity.ID];
 
-                result = Art.GetStatic( id, Entity.Hue ).ToBitmapSource();
+                    result = Art.GetStatic( id, Entity.Hue ).ToBitmapSource();
 
-                return result;
+                    return result;
+                }
+
+                return null;
             }
         }
 
@@ -603,7 +687,7 @@ namespace ClassicAssist.UI.ViewModels
                 return entity.Name;
             }
 
-            int id = (int) EntityCollectionViewerViewModel.MountIDEntries.Value?[entity.ID];
+            int id = EntityCollectionViewerViewModel.MountIDEntries.Value[entity.ID];
 
             if ( id == 0 )
             {
@@ -655,8 +739,8 @@ namespace ClassicAssist.UI.ViewModels
                     case PropertyType.Properties:
                     {
                         predicates.Add( i => i.Properties != null && constraint.Clilocs.Any( cliloc =>
-                                                 i.Properties.Any( p => AutolootHelpers.MatchProperty( p, cliloc,
-                                                     constraint, filter.Operator, filter.Value ) ) ) );
+                            i.Properties.Any( p => AutolootHelpers.MatchProperty( p, cliloc,
+                                constraint, filter.Operator, filter.Value ) ) ) );
 
                         break;
                     }
@@ -668,6 +752,18 @@ namespace ClassicAssist.UI.ViewModels
                                 filter.Value ) );
                         break;
                     }
+                    case PropertyType.Predicate:
+                        {
+                            predicates.Add( i => constraint.Predicate != null && constraint.Predicate.Invoke( i,
+                                new AutolootConstraintEntry
+                                {
+                                    Operator = filter.Operator,
+                                    Property = constraint,
+                                    Value = filter.Value
+                                } ) );
+
+                            break;
+                        }
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -691,15 +787,19 @@ namespace ClassicAssist.UI.ViewModels
 
             Item[] items = itemCollection.GetItems();
 
-            IEnumerable<Item> noNames = items.Where( i => string.IsNullOrEmpty( i.Name ) );
+            return items.OrderBy( i => i, comparer ).Select( item => item.ToEntityCollectionData() ).ToList();
+        }
 
-            foreach ( Item item in noNames )
+        public static EntityCollectionData ToEntityCollectionData( this Item item )
+        {
+            StaticTile tileData = TileData.GetStaticTile( item.ID );
+
+            if ( string.IsNullOrEmpty( item.Name ) )
             {
-                item.Name = $"0x{item.Serial:x8}";
+                item.Name = tileData.ID != 0 ? tileData.Name : $"0x{item.Serial:x8}";
             }
 
-            return items.OrderBy( i => i, comparer ).Select( item => new EntityCollectionData { Entity = item } )
-                .ToList();
+            return new EntityCollectionData { Entity = item };
         }
     }
 }

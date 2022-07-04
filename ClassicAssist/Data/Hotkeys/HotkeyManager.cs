@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Assistant;
-using ClassicAssist.Annotations;
 using ClassicAssist.Data.Hotkeys.Commands;
 using ClassicAssist.Data.Macros.Commands;
+using ClassicAssist.Shared.UI;
 using ClassicAssist.UI.Misc;
+using static ClassicAssist.Misc.SDLKeys;
 
 namespace ClassicAssist.Data.Hotkeys
 {
-    public class HotkeyManager : INotifyPropertyChanged
+    public class HotkeyManager : SetPropertyNotifyChanged
     {
         private static HotkeyManager _instance;
         private static readonly object _instanceLock = new object();
@@ -24,7 +23,6 @@ namespace ClassicAssist.Data.Hotkeys
             Key.LeftCtrl, Key.RightCtrl, Key.LeftShift, Key.RightShift, Key.LeftAlt, Key.RightAlt
         };
 
-        private readonly List<Key> _modifiers = new List<Key>();
         private bool _enabled = true;
 
         private ObservableCollectionEx<HotkeyCommand> _items = new ObservableCollectionEx<HotkeyCommand>();
@@ -46,8 +44,6 @@ namespace ClassicAssist.Data.Hotkeys
             get => _items;
             set => SetProperty( ref _items, value );
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public void AddCategory( HotkeyCommand item, IComparer<HotkeyEntry> comparer = null )
         {
@@ -107,46 +103,11 @@ namespace ClassicAssist.Data.Hotkeys
             return _instance;
         }
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged( [CallerMemberName] string propertyName = null )
-        {
-            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
-        }
-
-        // ReSharper disable once RedundantAssignment
-        public void SetProperty<T>( ref T obj, T value, [CallerMemberName] string propertyName = "" )
-        {
-            obj = value;
-            OnPropertyChanged( propertyName );
-        }
-
-        public bool OnHotkeyPressed( Key keys )
+        public bool OnHotkeyPressed( Key keys, ModKey modifier )
         {
             lock ( _lock )
             {
                 bool filter = false;
-
-                if ( _modifierKeys.Contains( keys ) )
-                {
-                    _modifiers.Clear();
-                    _modifiers.Add( keys );
-                    return false;
-                }
-
-                Key modifier = Key.None;
-
-                if ( _modifiers.Count > 0 )
-                {
-                    modifier = _modifiers[0];
-                }
-
-                Key modifier1 = modifier;
-                bool down = modifier != Key.None && Engine.Dispatcher.Invoke( () => Keyboard.IsKeyDown( modifier1 ) );
-
-                if ( !down )
-                {
-                    modifier = Key.None;
-                }
 
                 // Sanity check
                 if ( keys == Key.None )
@@ -154,13 +115,8 @@ namespace ClassicAssist.Data.Hotkeys
                     return false;
                 }
 
-                foreach ( HotkeyCommand hke in Items )
+                foreach ( HotkeyCommand hke in Items.ToList().Where( hke => hke.Children != null ) )
                 {
-                    if ( hke.Children == null )
-                    {
-                        continue;
-                    }
-
                     try
                     {
                         IEnumerable<HotkeyEntry> hotkeyEntries = hke.Children.Where( t =>
@@ -203,17 +159,13 @@ namespace ClassicAssist.Data.Hotkeys
 
             lock ( _lock )
             {
-                foreach ( HotkeyCommand hke in Items )
+                foreach ( HotkeyCommand hke in Items.ToList().Where( hke => hke.Children != null ) )
                 {
-                    if ( hke.Children == null )
-                    {
-                        continue;
-                    }
-
                     try
                     {
-                        Key modifier = _modifierKeys.FirstOrDefault( key =>
-                            Engine.Dispatcher.Invoke( () => Keyboard.IsKeyDown( key ) ) );
+                        ModKey modifier =
+                            KeymodFromKeyList(
+                                Engine.Dispatcher.Invoke( () => _modifierKeys.Where( Keyboard.IsKeyDown ) ) );
 
                         IEnumerable<HotkeyEntry> hotkeyEntries = hke.Children.Where( t =>
                             t.Hotkey.Modifier == modifier && t.Hotkey.Key == Key.None && t.Hotkey.Mouse == mouse );

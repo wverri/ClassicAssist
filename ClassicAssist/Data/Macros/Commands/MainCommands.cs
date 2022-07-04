@@ -1,12 +1,18 @@
-﻿using System.IO;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Threading;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Assistant;
 using ClassicAssist.Data.Hotkeys;
+using ClassicAssist.Helpers;
 using ClassicAssist.Misc;
-using ClassicAssist.Resources;
+using ClassicAssist.Shared.Resources;
 using ClassicAssist.UI.ViewModels;
 using ClassicAssist.UI.Views;
 using ClassicAssist.UO;
@@ -14,6 +20,7 @@ using ClassicAssist.UO.Data;
 using ClassicAssist.UO.Network.Packets;
 using ClassicAssist.UO.Objects;
 using UOC = ClassicAssist.UO.Commands;
+using static ClassicAssist.Misc.NativeMethods;
 
 namespace ClassicAssist.Data.Macros.Commands
 {
@@ -110,6 +117,54 @@ namespace ClassicAssist.Data.Macros.Commands
             t.Start();
         }
 
+        [CommandsDisplay( Category = nameof( Strings.Main ),
+            Parameters = new[] { nameof( ParameterType.SerialOrAlias ) } )]
+        public static void OpenECV( object obj )
+        {
+            int serial = 0;
+
+            serial = AliasCommands.ResolveSerial( obj );
+
+            if ( serial == 0 )
+            {
+                UOC.SystemMessage( Strings.Invalid_container___, SystemMessageHues.Red );
+
+                return;
+            }
+
+            Entity entity = UOMath.IsMobile( serial )
+                ? Engine.Mobiles.GetMobile( serial )
+                : (Entity) Engine.Items.GetItem( serial );
+
+            if ( entity == null )
+            {
+                UOC.SystemMessage( Strings.Cannot_find_item___ );
+                return;
+            }
+
+            ItemCollection collection = new ItemCollection( entity.Serial );
+
+            switch ( entity )
+            {
+                case Item item:
+                    collection = item.Container ?? new ItemCollection( item.Serial );
+                    break;
+                case Mobile mobile:
+                    collection = new ItemCollection( entity.Serial ) { mobile.GetEquippedItems() };
+                    break;
+            }
+
+            Engine.Dispatcher.Invoke( () =>
+            {
+                EntityCollectionViewer window = new EntityCollectionViewer
+                {
+                    DataContext = new EntityCollectionViewerViewModel( collection ), Topmost = true
+                };
+
+                window.Show();
+            } );
+        }
+
         [CommandsDisplay( Category = nameof( Strings.Main ), Parameters = new[] { nameof( ParameterType.OnOff ) } )]
         public static void Hotkeys( string onOff = "toggle" )
         {
@@ -171,7 +226,7 @@ namespace ClassicAssist.Data.Macros.Commands
         }
 
         [CommandsDisplay( Category = nameof( Strings.Main ) )]
-        public static void PlaySound( object param )
+        public static void PlaySound( object param, bool playSync = true )
         {
             switch ( param )
             {
@@ -189,7 +244,16 @@ namespace ClassicAssist.Data.Macros.Commands
                     }
 
                     SoundPlayer soundPlayer = new SoundPlayer( fullPath );
-                    soundPlayer.PlaySync();
+
+                    if ( playSync )
+                    {
+                        soundPlayer.PlaySync();
+                    }
+                    else
+                    {
+                        soundPlayer.Play();
+                    }
+
                     break;
                 }
             }
@@ -222,6 +286,156 @@ namespace ClassicAssist.Data.Macros.Commands
         public static void DisplayQuestPointer( int x, int y, bool enabled = true )
         {
             Engine.SendPacketToClient( new DisplayQuestPointer( enabled, x, y ) );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Main ),
+            Parameters = new[]
+            {
+                nameof( ParameterType.IntegerValue ), nameof( ParameterType.Boolean ),
+                nameof( ParameterType.String )
+            } )]
+        public static bool Snapshot( int delay = 0, bool fullscreen = false, string fileName = "" )
+        {
+            try
+            {
+                if ( delay > 0 )
+                {
+                    Thread.Sleep( delay );
+                }
+
+                IntPtr screenDC;
+                int width, height;
+
+                if ( fullscreen )
+                {
+                    screenDC = GetDC( IntPtr.Zero );
+                    width = (int) SystemParameters.VirtualScreenWidth;
+                    height = (int) SystemParameters.VirtualScreenHeight;
+                }
+                else
+                {
+                    screenDC = GetDC( Engine.WindowHandle );
+                    GetClientRect( Engine.WindowHandle, out RECT rect );
+                    width = rect.Right - rect.Left;
+                    height = rect.Bottom - rect.Top;
+                }
+
+                IntPtr memDC = CreateCompatibleDC( screenDC );
+                IntPtr hBitmap = CreateCompatibleBitmap( screenDC, width, height );
+                SelectObject( memDC, hBitmap );
+
+                BitBlt( memDC, 0, 0, width, height, screenDC, 0, 0, TernaryRasterOperations.SRCCOPY );
+                BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHBitmap( hBitmap, IntPtr.Zero,
+                    Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions() );
+
+                DeleteObject( hBitmap );
+                ReleaseDC( IntPtr.Zero, screenDC );
+                ReleaseDC( IntPtr.Zero, memDC );
+
+                DateTime now = DateTime.Now;
+
+                if ( string.IsNullOrEmpty( fileName ) )
+                {
+                    fileName =
+                        $"ClassicAssist-{now.Year}-{now.Month}-{now.Day}-{now.Hour}-{now.Minute}-{now.Second}.png";
+                }
+
+                string filePath = fileName;
+
+                if ( !Path.IsPathRooted( fileName ) )
+                {
+                    string path = Path.Combine( Engine.StartupPath, "Screenshots" );
+
+                    if ( !Directory.Exists( path ) )
+                    {
+                        Directory.CreateDirectory( path );
+                    }
+
+                    filePath = Path.Combine( path, fileName );
+                }
+
+                using ( FileStream fileStream = new FileStream( filePath, FileMode.Create ) )
+                {
+                    BitmapEncoder encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add( BitmapFrame.Create( bitmapSource ) );
+                    encoder.Save( fileStream );
+                }
+
+                return true;
+            }
+            catch ( Exception e )
+            {
+                UOC.SystemMessage( e.Message, (int) SystemMessageHues.Red );
+                return false;
+            }
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        public static void Logout()
+        {
+            Engine.TickWorkQueue.Enqueue( () =>
+            {
+                dynamic socket =
+                    new ReflectionObject(
+                        Reflection.GetTypePropertyValue<dynamic>( "ClassicUO.Network.NetClient", "Socket", null ) );
+
+                if ( socket.IsConnected )
+                {
+                    socket.Disconnect();
+                }
+
+                dynamic game =
+                    new ReflectionObject(
+                        Reflection.GetTypePropertyValue<dynamic>( "ClassicUO.Client", "Game", null ) );
+
+                object instance = Reflection.CreateInstanceOfType( "ClassicUO.Game.Scenes.LoginScene" );
+
+                game.SetScene( instance );
+            } );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        public static void Quit()
+        {
+            Engine.TickWorkQueue.Enqueue( () =>
+            {
+                dynamic game =
+                    new ReflectionObject(
+                        Reflection.GetTypePropertyValue<dynamic>( "ClassicUO.Client", "Game", null ) );
+
+                game.Exit();
+            } );
+        }
+
+        [CommandsDisplay( Category = nameof( Strings.Main ) )]
+        public static void SetAutologin( bool enabled, string account = "", int serverIndex = -1,
+            int characterIndex = -1 )
+        {
+            Options.CurrentOptions.Autologin = enabled;
+
+            if ( !string.IsNullOrEmpty( account ) )
+            {
+                if ( !AssistantOptions.SavedPasswords.ContainsKey( account ) )
+                {
+                    UOC.SystemMessage( Strings.Unknown_account___ );
+                    return;
+                }
+
+                Options.CurrentOptions.AutologinUsername = account;
+                Options.CurrentOptions.AutologinPassword = AssistantOptions.SavedPasswords[account];    
+            }
+
+            if ( serverIndex != -1 )
+            {
+                Options.CurrentOptions.AutologinServerIndex = serverIndex;
+            }
+
+            if ( characterIndex != -1 )
+            {
+                Options.CurrentOptions.AutologinCharacterIndex = characterIndex;
+            }
+
+            Options.Save( Options.CurrentOptions );
         }
     }
 }

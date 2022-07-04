@@ -136,6 +136,21 @@ namespace ClassicAssist.Tests.MacroCommands
         }
 
         [TestMethod]
+        public void WillCountTypeGroundHue()
+        {
+            Item item1 = new Item( 0x40000001, -1 ) { ID = 0xFF, Hue = 1 };
+            Item item2 = new Item( 0x40000002, -1 ) { ID = 0xFF, Hue = 2 };
+
+            Engine.Items.Add( new[] { item1, item2 } );
+
+            Assert.AreEqual( 1, ObjectCommands.CountTypeGround( 0xFF, 1 ) );
+            Assert.AreEqual( 1, ObjectCommands.CountTypeGround( 0xFF, 2 ) );
+            Assert.AreEqual( 2, ObjectCommands.CountTypeGround( 0xFF ) );
+
+            Engine.Items.Clear();
+        }
+
+        [TestMethod]
         public void WillCountMobileGround()
         {
             Engine.Player = new PlayerMobile( 0x01 );
@@ -261,6 +276,95 @@ namespace ClassicAssist.Tests.MacroCommands
 
             Engine.Items.Remove( container );
             ObjectCommands.ClearIgnoreList();
+        }
+
+        [TestMethod]
+        public void WontFindTypeOutsideSearchRange()
+        {
+            Engine.Player = new PlayerMobile( 1 );
+            Item backpack = new Item( 0x40000000 ) { Container = new ItemCollection( 0x40000000 ) };
+            Item subContainer = new Item( 0x40000001, 0x40000000 ) { Container = new ItemCollection( 0x40000001 ) };
+
+            backpack.Container.Add( subContainer );
+            AliasCommands.SetAlias( "backpack", backpack.Serial );
+
+            backpack.Container.Add( new Item( 0x40000002, 0x40000000 ) { ID = 0xabcd } );
+            subContainer.Container.Add( new Item( 0x40000003, 0x40000001 ) { ID = 0xabcd } );
+
+            Engine.Items.Add( backpack );
+
+            int count = 0;
+
+            while ( ObjectCommands.FindType( 0xabcd, 0, "backpack" ) )
+            {
+                Assert.AreNotEqual( AliasCommands.GetAlias( "found" ), 0x40000003 );
+                ObjectCommands.IgnoreObject( AliasCommands.GetAlias( "found" ) );
+                count++;
+            }
+
+            Assert.AreEqual( 1, count );
+
+            ObjectCommands.ClearIgnoreList();
+
+            count = 0;
+
+            while ( ObjectCommands.FindType( 0xabcd, 1, "backpack" ) )
+            {
+                ObjectCommands.IgnoreObject( AliasCommands.GetAlias( "found" ) );
+                count++;
+            }
+
+            Assert.AreEqual( 2, count );
+
+            ObjectCommands.ClearIgnoreList();
+            Engine.Player = null;
+            Engine.Items.Clear();
+        }
+
+        [TestMethod]
+        public void WontFindTypeStackAmountLess()
+        {
+            Item stack = new Item( 0x40000001 ) { ID = 0xabcd, Count = 100 };
+
+            Engine.Items.Add( stack );
+
+            bool found = ObjectCommands.FindType( 0xabcd, -1, null, -1, 100 );
+
+            Assert.IsTrue( found );
+
+            found = ObjectCommands.FindType( 0xabcd, -1, null, -1, 200 );
+
+            Assert.IsFalse( found );
+
+            Engine.Items.Clear();
+        }
+
+        [TestMethod]
+        public void WillFindTypeStackAmount()
+        {
+            Item stack = new Item( 0x40000001 ) { ID = 0xabcd, Count = 100 };
+
+            Engine.Items.Add( stack );
+
+            bool found = ObjectCommands.FindType( 0xabcd, -1, null, -1, 50 );
+
+            Assert.IsTrue( found );
+
+            Engine.Items.Clear();
+        }
+
+        [TestMethod]
+        public void WillFindTypeStackAmountIgnoreIfMobile()
+        {
+            Mobile mobile = new Mobile( 0x01 ) { ID = 0x190 };
+
+            Engine.Mobiles.Add( mobile );
+
+            bool found = ObjectCommands.FindType( 0x190, -1, null, -1, 50 );
+
+            Assert.IsTrue( found );
+
+            Engine.Mobiles.Clear();
         }
 
         [TestCleanup]

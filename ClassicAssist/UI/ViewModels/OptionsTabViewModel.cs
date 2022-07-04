@@ -4,7 +4,8 @@ using System.Windows.Input;
 using ClassicAssist.Data;
 using ClassicAssist.Data.Macros.Commands;
 using ClassicAssist.Misc;
-using ClassicAssist.Resources;
+using ClassicAssist.Shared.Resources;
+using ClassicAssist.Shared.UI;
 using ClassicAssist.UI.Misc;
 using ClassicAssist.UO.Gumps;
 using Newtonsoft.Json.Linq;
@@ -15,6 +16,7 @@ namespace ClassicAssist.UI.ViewModels
     {
         private Options _currentOptions;
         private ICommand _setLanguageOverrideCommand;
+        private ICommand _setUseClilocLanguageCommand;
 
         public Options CurrentOptions
         {
@@ -25,7 +27,11 @@ namespace ClassicAssist.UI.ViewModels
         public ICommand SetLanguageOverrideCommand =>
             _setLanguageOverrideCommand ?? ( _setLanguageOverrideCommand = new RelayCommand( SetLanguageOverride ) );
 
-        public void Serialize( JObject json )
+        public ICommand SetUseClilocLanguageCommand =>
+            _setUseClilocLanguageCommand ??
+            ( _setUseClilocLanguageCommand = new RelayCommand( SetUseClilocLanguage, o => true ) );
+
+        public void Serialize( JObject json, bool global = false )
         {
             JObject options = new JObject();
 
@@ -68,6 +74,7 @@ namespace ClassicAssist.UI.ViewModels
             options.Add( "AbilitiesGump", CurrentOptions.AbilitiesGump );
             options.Add( "AbilitiesGumpX", CurrentOptions.AbilitiesGumpX );
             options.Add( "AbilitiesGumpY", CurrentOptions.AbilitiesGumpY );
+            options.Add( "SetUOTitle", CurrentOptions.SetUOTitle );
             options.Add( "ShowProfileNameWindowTitle", CurrentOptions.ShowProfileNameWindowTitle );
             options.Add( "SortMacrosAlphabetical", CurrentOptions.SortMacrosAlphabetical );
             options.Add( "ShowResurrectionWaypoints", CurrentOptions.ShowResurrectionWaypoints );
@@ -80,11 +87,13 @@ namespace ClassicAssist.UI.ViewModels
             options.Add( "ChatWindowWidth", CurrentOptions.ChatWindowWidth );
             options.Add( "ChatWindowHeight", CurrentOptions.ChatWindowHeight );
             options.Add( "EntityCollectionViewerOptions", CurrentOptions.EntityCollectionViewerOptions.Serialize() );
+            options.Add( "ExpireTargetsMS", CurrentOptions.ExpireTargetsMS );
+            options.Add( "LogoutDisconnectedPrompt", CurrentOptions.LogoutDisconnectedPrompt );
 
             json?.Add( "Options", options );
         }
 
-        public void Deserialize( JObject json, Options options )
+        public void Deserialize( JObject json, Options options, bool global = false )
         {
             CurrentOptions = options;
 
@@ -122,8 +131,8 @@ namespace ClassicAssist.UI.ViewModels
             CurrentOptions.MaxTargetQueueLength = config?["MaxTargetQueueLength"]?.ToObject<int>() ?? 1;
             CurrentOptions.SmartTargetOption =
                 config?["SmartTargetOption"]?.ToObject<SmartTargetOption>() ?? SmartTargetOption.None;
-            CurrentOptions.LimitMouseWheelTrigger = config?["LimitMouseWheelTrigger"]?.ToObject<bool>() ?? false;
-            CurrentOptions.LimitMouseWheelTriggerMS = config?["LimitMouseWheelTriggerMS"]?.ToObject<int>() ?? 25;
+            CurrentOptions.LimitMouseWheelTrigger = config?["LimitMouseWheelTrigger"]?.ToObject<bool>() ?? true;
+            CurrentOptions.LimitMouseWheelTriggerMS = config?["LimitMouseWheelTriggerMS"]?.ToObject<int>() ?? 200;
             CurrentOptions.AutoAcceptPartyInvite = config?["AutoAcceptPartyInvite"]?.ToObject<bool>() ?? false;
             CurrentOptions.AutoAcceptPartyOnlyFromFriends =
                 config?["AutoAcceptPartyOnlyFromFriends"]?.ToObject<bool>() ?? false;
@@ -142,6 +151,7 @@ namespace ClassicAssist.UI.ViewModels
             CurrentOptions.AbilitiesGumpY = config?["AbilitiesGumpY"]?.ToObject<int>() ?? 100;
             CurrentOptions.ShowProfileNameWindowTitle =
                 config?["ShowProfileNameWindowTitle"]?.ToObject<bool>() ?? false;
+            CurrentOptions.SetUOTitle = config?["SetUOTitle"]?.ToObject<bool>() ?? true;
             CurrentOptions.SortMacrosAlphabetical = config?["SortMacrosAlphabetical"]?.ToObject<bool>() ?? false;
             CurrentOptions.ShowResurrectionWaypoints = config?["ShowResurrectionWaypoints"]?.ToObject<bool>() ?? true;
             CurrentOptions.RehueFriends = config?["RehueFriends"]?.ToObject<bool>() ?? false;
@@ -169,6 +179,8 @@ namespace ClassicAssist.UI.ViewModels
             }
 
             CurrentOptions.EntityCollectionViewerOptions.Deserialize( config?["EntityCollectionViewerOptions"] );
+            CurrentOptions.ExpireTargetsMS = config?["ExpireTargetsMS"]?.ToObject<int>() ?? -1;
+            CurrentOptions.LogoutDisconnectedPrompt = config?["LogoutDisconnectedPrompt"]?.ToObject<bool>() ?? false;
         }
 
         // Replay CurrentOptions changes onto Options.CurrentOptions
@@ -205,6 +217,19 @@ namespace ClassicAssist.UI.ViewModels
             }
 
             AssistantOptions.LanguageOverride = language;
+
+            MessageBox.Show( Strings.Restart_game_for_changes_to_take_effect___,
+                Strings.Restart_game_for_changes_to_take_effect___ );
+        }
+
+        private static void SetUseClilocLanguage( object obj )
+        {
+            if ( !( obj is bool useClilocLanguage ) )
+            {
+                return;
+            }
+
+            AssistantOptions.UseCUOClilocLanguage = useClilocLanguage;
 
             MessageBox.Show( Strings.Restart_game_for_changes_to_take_effect___,
                 Strings.Restart_game_for_changes_to_take_effect___ );
